@@ -7,7 +7,7 @@
 <title>Aidana's living room</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Parisienne&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#0d0e15; --surface:#14151f; --surface2:#1a1b27; --border:#232536; --border2:#2f3247;
@@ -173,6 +173,63 @@
     .choices.many{grid-template-columns:repeat(2,minmax(0,1fr))}
     .bonus .pv{height:48px}
   }
+  /* ---------- Événement Paris ---------- */
+  .title-row{display:flex;align-items:flex-end;gap:12px 22px;flex-wrap:wrap}
+  .paris-ev{background:none;border:0;border-left:1px solid var(--border2);padding:0 0 2px 20px;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:4px;color:var(--text)}
+  .pe-t{font-family:'Parisienne','Snell Roundhand','Apple Chancery','Segoe Script',cursive;font-size:clamp(30px,4vw,42px);line-height:1;color:#f4efe6;transition:color .2s}
+  .paris-ev:hover .pe-t{color:var(--accent)}
+  .pe-d{display:flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .tri{width:18px;height:3px;border-radius:2px;flex:none;background:linear-gradient(90deg,#3a5cc0 0 33%,#f4f2ee 33% 66%,#e0404a 66%)}
+  .pe-play{border:1px solid var(--border2);border-radius:999px;padding:3px 10px;letter-spacing:.08em;color:var(--text);margin-left:2px;transition:border-color .2s,color .2s}
+  .paris-ev:hover .pe-play{border-color:var(--accent);color:var(--accent)}
+  .paris-ev.fresh .pe-play{border-color:var(--gold);color:var(--gold);box-shadow:0 0 0 3px rgba(233,199,123,.12)}
+  .paris{position:fixed;inset:0;z-index:30;background:rgba(6,7,12,.8);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:12px}
+  .paris-box{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:18px;display:grid;grid-template-columns:auto 230px;grid-template-rows:auto minmax(0,1fr);gap:14px 18px;max-height:calc(100dvh - 24px);animation:rise .3s ease}
+  .paris-head{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;gap:12px}
+  .paris-head>div{display:flex;flex-direction:column;gap:4px}
+  .paris-stage{position:relative;height:min(560px,calc(100dvh - 130px));aspect-ratio:2/3;border-radius:12px;overflow:hidden;cursor:pointer;touch-action:none;user-select:none;-webkit-user-select:none}
+  .paris-stage canvas{width:100%;height:100%;image-rendering:pixelated;display:block}
+  .paris-side{display:flex;flex-direction:column;gap:10px;min-height:0}
+  .paris-lead{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .paris-rewards{display:flex;flex-direction:column;gap:8px;overflow:auto;min-height:0}
+  .prw{display:grid;grid-template-columns:46px minmax(0,1fr);gap:6px 10px;align-items:center;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:8px;flex:none}
+  .prw .pv{width:46px;height:46px;background:#0f1019;border-radius:8px;display:flex;align-items:center;justify-content:center;grid-row:span 2}
+  .prw .pv canvas{image-rendering:pixelated;display:block}
+  .prw .tx{display:flex;flex-direction:column;font-size:13px;line-height:1.25;min-width:0}
+  .prw .tx b{font-weight:600}
+  .prw .tx span{font-size:11px;color:var(--muted)}
+  .prw.own{border-color:rgba(242,184,200,.35)}
+  .prw.own .tx span{color:var(--accent)}
+  .prw .sw{display:flex;gap:4px;flex-wrap:wrap}
+  .prw .sw button{font-size:11px;border:1px solid var(--border2);background:none;border-radius:999px;padding:3px 9px;color:var(--muted);cursor:pointer}
+  .prw .sw button.on{border-color:var(--accent);color:var(--accent)}
+  .prw .pv .q{font-family:var(--serif);font-size:28px;color:var(--gold)}
+  .prw.secret{border-style:dashed}
+  .prw .pbar{display:block;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--gold) calc(var(--p)*100%),var(--border) 0)}
+  .p-score{position:absolute;top:8px;left:0;right:0;text-align:center;font-family:var(--serif);font-size:46px;line-height:1.1;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.35);pointer-events:none}
+  .p-best{position:absolute;top:12px;right:12px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.9);text-shadow:0 1px 2px rgba(0,0,0,.5);pointer-events:none}
+  .p-msg{position:absolute;left:14px;right:14px;top:20%;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;background:rgba(13,14,21,.74);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);border-radius:16px;padding:18px 14px;pointer-events:none}
+  .p-msg .pt{font-family:'Parisienne','Snell Roundhand','Apple Chancery','Segoe Script',cursive;font-size:34px;line-height:1.1;color:#f4efe6}
+  .p-msg .pbig{font-family:var(--serif);font-size:58px;line-height:1}
+  .p-msg .ps{font-size:13px;color:#d9d7e4;line-height:1.45}
+  .p-msg .ps b{color:var(--accent);font-weight:600}
+  .p-msg .dim{color:var(--muted);font-size:12px}
+  .p-toast{position:absolute;left:50%;top:70px;transform:translate(-50%,-10px);opacity:0;background:var(--text);color:var(--bg);border-radius:14px;padding:8px 18px;font-weight:600;font-size:15px;text-align:center;pointer-events:none;white-space:nowrap}
+  .p-toast small{display:block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;opacity:.6;font-weight:500}
+  .p-toast.show{animation:ptoast 2.6s ease forwards}
+  @keyframes ptoast{0%{opacity:0;transform:translate(-50%,-10px)}12%{opacity:1;transform:translate(-50%,0)}82%{opacity:1}100%{opacity:0;transform:translate(-50%,0)}}
+  .p-flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+  .p-flash.go{animation:pflash .35s ease}
+  @keyframes pflash{0%{opacity:.7}100%{opacity:0}}
+  @media (max-width:700px){
+    .paris-ev{border-left:0;padding-left:0}
+    .paris{padding:0}
+    .paris-box{grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto auto;border-radius:0;width:100%;height:100dvh;max-height:none;padding:12px 12px calc(12px + env(safe-area-inset-bottom));align-content:start;overflow:auto}
+    .paris-stage{height:min(calc(100dvh - 230px),calc((100vw - 24px)*1.5));justify-self:center}
+    .paris-lead{display:none}
+    .paris-rewards{flex-direction:row;overflow-x:auto;padding-bottom:4px}
+    .prw{width:178px}
+  }
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -181,7 +238,13 @@
   <header>
     <div>
       <p class="eyebrow">November 7 — 20</p>
-      <h1><em>Aidana</em>'s living room</h1>
+      <div class="title-row">
+        <h1><em>Aidana</em>'s living room</h1>
+        <button class="paris-ev" id="parisBtn" type="button" hidden aria-label="Bienvenue à Paris, 10 novembre. Play">
+          <span class="pe-t">Bienvenue à Paris</span>
+          <span class="pe-d"><span class="tri"></span>10 novembre<span class="pe-play">Play ▸</span></span>
+        </button>
+      </div>
     </div>
     <button class="ghost" id="soundBtn" aria-pressed="true">Sound on</button>
   </header>
@@ -229,6 +292,27 @@
   </div>
 
   <footer id="foot"></footer>
+</div>
+
+<div class="paris" id="paris" hidden>
+  <div class="paris-box" role="dialog" aria-modal="true" aria-label="Bienvenue à Paris">
+    <div class="paris-head">
+      <div><span class="pe-t">Bienvenue à Paris</span><span class="pe-d"><span class="tri"></span>10 novembre</span></div>
+      <button class="x" id="parisClose" aria-label="Close">✕</button>
+    </div>
+    <div class="paris-stage" id="parisStage">
+      <canvas id="parisCv" width="160" height="240" aria-label="Flappy game over Paris"></canvas>
+      <div class="p-score" id="parisScore" hidden>0</div>
+      <div class="p-best" id="parisBest"></div>
+      <div class="p-msg" id="parisMsg"></div>
+      <div class="p-toast" id="parisToast"></div>
+      <div class="p-flash" id="parisFlash"></div>
+    </div>
+    <div class="paris-side">
+      <p class="paris-lead">Gifts to win</p>
+      <div class="paris-rewards" id="parisRewards"></div>
+    </div>
+  </div>
 </div>
 
 <div class="modal" id="modal" hidden>
@@ -1285,14 +1369,17 @@ function drawToy(kind,x,y,flip){
     case 'mouse': spr(['.p...','gggg.','ggggt','....t'],{p:'#f2a0a8',g:'#9a98a0',t:'#c9a0a8'},x-2,y-4,flip); break;
     case 'feather': spr(['.....ff','....ff.','...b...','..b....','.b.....','b......'],{f:'#5bc0c8',b:'#c9a45c'},x-3,y-6,flip); break;
     case 'rope': spr(['k.....k','rwrwrwr','k.....k'],{k:'#e8e2d6',r:'#c0504d',w:'#e8e2d6'},x-3,y-3); break;
+    case 'baguette': spr(['...oooooooo..','.oobcbbcbbcbo','obbbbbbbbbbo.','.ooooooooo...'],{o:'#8a4a1c',b:'#d08a3c',c:'#f4cf86'},x-6,y-4,flip); break;
     case 'plush': spr(['b...b','bbbbb','b...b'],{b:'#f2d0a0'},x-2,y-3); p(x,y-2,'#d9b080'); break;
   }
 }
 function drawToysItem(opt){ const k = TOY_KITS[opt] || TOY_KITS.a; drawToy(k[0],123,151); drawToy(k[1],134,151); }
 let TOYS = [], toysKey = null;
 function syncToys(){
-  const k = chosenFor('toys'); if (k === toysKey) return; toysKey = k;
-  TOYS = k ? TOY_KITS[k].map((kind,i)=>({ kind, x: i ? 178 : 84, y: i ? 154 : 150, vx:0, vy:0, carrier:null, flip:false })) : [];
+  const k = chosenFor('toys'), bw = evWhere('ev_baguette'), key = k + '|' + bw; if (key === toysKey) return; toysKey = key;
+  TOYS = k ? TOY_KITS[k].map((kind,i)=>({ kind, room:'room', x: i ? 178 : 84, y: i ? 154 : 150, vx:0, vy:0, carrier:null, flip:false })) : [];
+  if (bw==='room' || bw==='garage'){ const [bx,by] = bw==='room' ? [112,152] : [150,152]; TOYS.push({ kind:'baguette', room:bw, x:bx, y:by, vx:0, vy:0, carrier:null, flip:false }); }
+  PETS.forEach(pt=>{ if (pt.toy && !TOYS.includes(pt.toy)){ pt.toy = null; pt.chase = false; if (['toToy','carry'].includes(pt.state)){ pt.state='sit'; pt.timer=20; } } });
 }
 function updateToys(){
   TOYS.forEach(o=>{
@@ -1676,6 +1763,124 @@ function drawSlot(s,o,t,env){ withOff(s,o,()=>ITEMS[s].draw(o,t,env)); }
 function glowSlot(s,o,t,env){ if (ITEMS[s].glow) withOff(s,o,()=>ITEMS[s].glow(o,t,env)); }
 const BACK = ['window','curtains','frame','ambiance','shelf','plant','lamp','sofa'];
 const GLOWS = ['window','lamp','ambiance','music','mug'];
+/* =====================================================================
+   ÉVÉNEMENT « BIENVENUE À PARIS » — objets à gagner (salon ou garage)
+   ===================================================================== */
+const EVENT = [
+  { slot:'ev_croissant', at:5,   name:'Croissant',          ds:'Fresh from the boulangerie, for the table' },
+  { slot:'ev_eiffel',    at:10,  name:'Eiffel Tower lamp',  ds:'It sparkles at night, like the real one' },
+  { slot:'ev_baguette',  at:20,  name:'Baguette toy',       ds:'For Cerise and Bushinka (not for eating)' },
+  { slot:'ev_flag',      at:50,  name:'French flag',        ds:'Bleu, blanc, rouge' },
+  { slot:'ev_mona',      at:100, name:'Mona Lisa',         ds:'Her smile follows you around the room' }
+];
+const EV_SLOTS = EVENT.map(e=>e.slot);
+const isEv = s => EV_SLOTS.includes(s);
+function evWhere(s){ if (!pickOf(s)) return null; return (state.evWhere && state.evWhere[s]) || 'room'; }
+function setEvWhere(s, w){
+  state.evWhere = state.evWhere || {}; state.evWhere[s] = w;
+  state.stored = state.stored || {};
+  if (w==='room') delete state.stored[s]; else { state.stored[s] = true; if (state.front) state.front = state.front.filter(q=>q!==s); }
+  if (w!=='garage' && G().front) G().front = G().front.filter(q=>q!==s);
+  save();
+}
+function grantEv(s, where){
+  if (pickOf(s)) return false;
+  state.picks[s] = 'x';
+  setEvWhere(s, where || (scene==='garage' && gDone(1) ? 'garage' : 'room'));
+  return true;
+}
+
+function drawCroissant(o,t){
+  ell(6,6,6,1,'rgba(0,0,0,.25)');
+  r(1,5,11,1,'#eef0f4'); r(2,6,9,1,'#c9ccd6');              // petite assiette
+  spr(['....oooo....',
+       '..oobccboo..',
+       '.obcbbdbbcbo',
+       'obd.oooo.dbo',
+       'oo........oo'],
+      { o:'#7a3e16', b:'#d98a3a', c:'#f6c56e', d:'#a85a22' }, 0, 0);
+}
+function eiffelHW(y){ // demi-largeur de la tour à la ligne y (0 = sommet)
+  if (y < 5) return 0;
+  if (y < 18) return 1 + Math.floor((y-5)/9);
+  if (y === 18) return 3;
+  if (y < 27) return 2 + Math.floor((y-19)/3);
+  if (y < 29) return 6;
+  return 5 + Math.round((y-29)*3/9);
+}
+function drawEiffel(o,t,env){
+  const cx = 8, iron = '#8a6444', dark = '#553a26', hi = '#b08458';
+  ell(cx,41,9,1,'rgba(0,0,0,.3)');
+  r(cx-6,39,13,2,'#2a2a32'); r(cx-5,38,11,1,'#3c3c46'); r(cx-6,39,13,1,'#4a4a56');   // socle de lampe
+  for (let y=0;y<38;y++){
+    const hw = eiffelHW(y);
+    if (hw === 0){ if (y > 1) p(cx,y,iron); continue; }
+    if (y===18 || y===27 || y===28){ r(cx-hw,y,hw*2+1,1, y===28 ? dark : hi); continue; }
+    if (y >= 29){ // les quatre pieds et l'arche
+      const inner = Math.round(Math.sqrt(Math.max(0, (y-29)/9))*(hw-2));
+      for (let x=-hw;x<=hw;x++){ const ax = Math.abs(x); if (ax < inner) continue; p(cx+x,y, ax===hw ? dark : ((x+y)&1 ? iron : hi)); }
+      continue;
+    }
+    for (let x=-hw;x<=hw;x++){ const ax = Math.abs(x); p(cx+x,y, ax===hw ? dark : ((x+y)&1 ? iron : dark)); }
+  }
+  p(cx,1, isOff(env) ? '#6a6a70' : '#ffe6a0'); p(cx,0,'#c9c9d0');
+}
+function glowEiffel(o,t,env){
+  if (isOff(env)) return;
+  const cx = 8, sparkle = (t % 160) < 40;
+  p(cx,1,'#fff6d0'); if ((t>>2)&1){ p(cx-1,1,'rgba(255,230,160,.6)'); p(cx+1,1,'rgba(255,230,160,.6)'); }
+  const rn = rng((t>>1) * 7 + 3);
+  for (let y=5;y<38;y+=2){ const hw = eiffelHW(y); if (!hw) continue;
+    for (let x=-hw;x<=hw;x+=2){ const v = rn();
+      if (sparkle ? v < .35 : (Math.abs(x)===hw && v < .5)) p(cx+x,y, sparkle && v < .2 ? '#ffffff' : '#ffc96a'); } }
+}
+function drawFrFlag(o,t){
+  ell(3,43,5,1,'rgba(0,0,0,.3)');
+  r(0,41,7,2,'#3a3a44'); r(1,40,5,1,'#55555f');
+  r(2,2,2,39,'#c9c9d0'); r(2,2,1,39,'#ecebf3'); r(1,0,4,2,'#e9c77b');
+  const cols = ['#2d4ea8','#2d4ea8','#2d4ea8','#2d4ea8','#2d4ea8','#2d4ea8','#f4f2ee','#f4f2ee','#f4f2ee','#f4f2ee','#f4f2ee','#f4f2ee','#d6303a','#d6303a','#d6303a','#d6303a','#d6303a','#d6303a'];
+  cols.forEach((c,i)=>{ const dy = Math.round(Math.sin(t*.12 - i*.45) * (i/18) * 1.6), x = 4+i;
+    r(x, 3+dy, 1, 12, c); p(x, 14+dy, shade(c,.78)); if (i%6===0) p(x,3+dy,shade(c,.85)); });
+}
+function drawMona(o,t){
+  r(0,0,18,24,'#8a6a2a'); r(1,1,16,22,'#c9a45c'); r(1,1,16,1,'#e8cf8a'); r(1,1,1,22,'#e0c27a');
+  for (let k=0;k<18;k+=3){ p(k,0,'#e8cf8a'); p(k,23,'#6a4e1a'); }
+  const ox = 2, oy = 2;   // toile 14 x 20
+  for (let y=0;y<20;y++) r(ox,oy+y,14,1, y < 4 ? '#8c9a86' : (y < 9 ? mixHex('#8c9a86','#5f6a4c',(y-4)/5) : '#4f5640'));
+  r(ox,oy+6,3,2,'#6f7a5c'); r(ox+11,oy+5,3,3,'#6f7a5c'); p(ox+1,oy+9,'#7c6a48'); p(ox+12,oy+8,'#7c6a48');   // paysage brumeux
+  r(ox+4,oy+2,6,11,'#2a1e14'); r(ox+3,oy+5,1,7,'#2a1e14'); r(ox+10,oy+5,1,7,'#2a1e14');                       // cheveux
+  r(ox+5,oy+3,4,6,'#d8b47a'); r(ox+5,oy+3,4,1,'#c49a5e'); p(ox+5,oy+8,'#c49a5e'); p(ox+8,oy+8,'#c49a5e');     // visage
+  p(ox+5,oy+5,'#3a2a1a'); p(ox+7,oy+5,'#3a2a1a'); p(ox+6,oy+7,'#a8704a'); p(ox+7,oy+7,'#a8704a');              // yeux, sourire
+  r(ox+6,oy+9,2,1,'#c49a5e');
+  r(ox+2,oy+10,10,10,'#2e2618'); r(ox+1,oy+13,12,7,'#2e2618'); r(ox+5,oy+10,4,2,'#d8b47a'); r(ox+4,oy+12,6,1,'#5a4426');
+  r(ox+4,oy+16,6,2,'#d8b47a'); p(ox+4,oy+16,'#c49a5e'); p(ox+9,oy+17,'#c49a5e');                                // mains croisées
+  r(ox+2,oy+14,1,6,'#3e3220'); r(ox+11,oy+14,1,6,'#3e3220');
+}
+function drawBaguetteItem(o,t){ drawToy('baguette', 7, 5, false); }
+Object.assign(ITEMS, {
+  ev_croissant: { draw:drawCroissant, off:[71,117], sortY:137.5, bbox:()=>({x:0,y:0,w:13,h:8}) },
+  ev_eiffel:    { draw:drawEiffel, glow:glowEiffel, light:1, off:[24,99], sortY:141, bbox:()=>({x:0,y:0,w:18,h:43}) },
+  ev_baguette:  { draw:drawBaguetteItem, off:[104,148], bbox:()=>({x:0,y:0,w:14,h:6}) },
+  ev_flag:      { draw:drawFrFlag, off:[226,106], sortY:150, bbox:()=>({x:0,y:0,w:23,h:44}) },
+  ev_mona:      { draw:drawMona, back:true, off:[201,17], bbox:()=>({x:0,y:0,w:18,h:24}) }
+});
+EV_SLOTS.forEach(s=>{
+  ALL_SLOTS.push(s);
+  if (s==='ev_baguette') return;
+  (ITEMS[s].back ? BACK_SPECIALS : FLOOR_SPECIALS).push(s);
+  if (ITEMS[s].glow) GLOW_SLOTS.push(s);
+});
+// position par défaut dans le garage (translation du dessin local)
+const EV_G = { ev_pigeon:[123,140], ev_croissant:[218,116], ev_eiffel:[22,55], ev_flag:[229,62], ev_mona:[213,42], ev_baguette:[150,150] };
+const EV_GSORT = { ev_croissant:158.5, ev_eiffel:98, ev_flag:106 };
+function gEvOn(s){ return !(G().off && G().off[s]); }
+function evTap(s, b){
+  const cx = b.x + b.w/2, cy = b.y;
+  if (s==='ev_croissant'){ burst(cx, cy+2, 6, ['#f6c56e','#d98a3a','#fff1c9'], false); label('ev', 'Miam <b>♥</b>', cx, cy-1); blip(880,.05,0,'sine',.04); blip(1100,.06,.06,'sine',.04); }
+  else if (s==='ev_mona'){ label('ev', 'Bonjour <b>♥</b>', cx, cy-2); SFX.select(); }
+  else if (s==='ev_flag'){ burst(cx, cy+6, 8, ['#2d4ea8','#f4f2ee','#d6303a'], false); label('ev', 'Vive la France', cx, cy-2); SFX.select(); }
+}
+
 
 /* =====================================================================
    CERISE & BUSHINKA — elles se promènent
@@ -1702,8 +1907,8 @@ function releasePet(pt){
 }
 function decideRoom(pt){
   pt.heldBy = null; pt.chase = false;
-  const corner = chosenFor('petcorner'), free = TOYS.filter(o=>!o.carrier);
-  const laps = humans().filter(h=>h.room==='room' && seatOf(h) && !PETS.some(q=>q!==pt && q.lapOf===h));
+  const corner = chosenFor('petcorner'), free = TOYS.filter(o=>!o.carrier && o.room==='room');
+  const laps = humans().filter(h=>h.room==='room' && seatOf(h) && !PETS.some(q=>q!==pt && q.lapOf===h) && BIRD.lapOf!==h);
   if (laps.length && Math.random() < .35){ const h = laps[Math.floor(Math.random()*laps.length)], st = seatOf(h); pt.lapOf = h; goTo(pt, st.x, st.y+18, 'toLap'); return; }
   if (free.length && Math.random() < .28){ const o = free[Math.floor(Math.random()*free.length)]; pt.toy = o; pt.plays = 2 + (Math.random()*3|0); goTo(pt,o.x,o.y,'toToy'); return; }
   const roll = Math.random();
@@ -1843,6 +2048,8 @@ function decide(pt){
   if (pt.room==='garage'){
     const r0 = Math.random(), bed = gBedSpot(pt.kind);
     if (r0 < .12 && !race) return goExit(pt);
+    const gt = TOYS.filter(o=>o.room==='garage' && !o.carrier);
+    if (gt.length && Math.random() < .3){ const o = gt[Math.floor(Math.random()*gt.length)]; pt.toy = o; pt.plays = 2 + (Math.random()*3|0); goTo(pt,o.x,o.y,'toToy'); return; }
     if (bed && r0 < .36){ goTo(pt, bed.x, Math.min(157, Math.max(124, bed.y + 5)), 'toGBed'); return; }
     if (r0 < .78){ const [x,y] = walkTarget(); goTo(pt,x,y,'walk'); return; }
     if (r0 < .9){ pt.state='sit'; pt.timer = rand(40,120)|0; } else { pt.state='sleep'; pt.timer = rand(120,240)|0; }
@@ -2145,6 +2352,7 @@ function lightSources(){
   if (on('sp_disco'))     add('sp_disco','x',128,22,46,.4,'210,190,255');
   if (on('sp_fireflies')) add('sp_fireflies','x',204,44,28,.55,'210,255,120');
   if (on('sp_tree'))      add('sp_tree','x',191,138,32,.55,'255,200,120');
+  if (on('ev_eiffel'))    add('ev_eiffel','x',8,4,44,.75,'255,200,120');
   if (race) out.push({ x:race.x + race.dir*26, y:race.y - 2, r:38, i:.6, c:'255,240,200' });
   else if (on('sp_bmw')) add('sp_bmw','x',144,148,34,.5,'255,240,200');
   return out;
@@ -2202,7 +2410,8 @@ const GDAYS = [
 ];
 let scene = 'room';
 function G(){ if (!state.garage) state.garage = { opened:{}, picks:{}, unwrapped:false }; return state.garage; }
-function gPick(slot){ return G().picks[slot] || null; }
+function gPick(slot){ return G().stored && G().stored[slot] ? null : (G().picks[slot] || null); }   // présent dans le garage
+function gOwn(slot){ return G().picks[slot] || null; }
 function gDone(i){ return !!G().opened[i]; }
 function gCount(){ return Object.keys(G().opened).length; }
 
@@ -2515,6 +2724,7 @@ const GITEMS = {
   gplate:   { bbox:()=>({x:110,y:36,w:42,h:15}) }
 };
 function drawGItem(slot,o,t,preview){
+  if (isEv(slot)){ X.save(); X.translate(EV_G[slot][0], EV_G[slot][1]); ITEMS[slot].draw('x', t, gEvOn(slot) || preview ? null : { off:true }); X.restore(); return; }
   switch (slot){
     case 'car': return G().unwrapped ? drawM5(t) : drawWrapped(t);
     case 'glights': return drawGLights(o,t,preview);
@@ -2545,7 +2755,8 @@ function gOff(s){ return (G().pos && G().pos[s]) || [0,0]; }
 function withG(s, fn){ const [dx,dy] = gOff(s); X.save(); X.translate(dx,dy); fn(); X.restore(); }
 const G_BACK = ['gdoor','gposter','gplate','gshelf','gtools','gneon','glights'];
 const G_SORT = { gdisplay:139, car:147, glounge:156, gpets:157.9, gtires:158 };
-function gHas(s){ return s==='car' ? gDone(1) : !!gPick(s); }
+Object.assign(G_SORT, EV_GSORT); G_BACK.push('ev_mona');
+function gHas(s){ if (isEv(s)) return s!=='ev_baguette' && s!=='ev_pigeon' && evWhere(s)==='garage'; return s==='car' ? gDone(1) : !!gPick(s); }
 function gFront(){ return (G().front || []).filter(gHas); }
 function gIsFront(s){ return gFront().includes(s); }
 function gLightsOn(){ return !!gPick('glights') && !G().lightsOff; }
@@ -2602,6 +2813,8 @@ function gFloorEnts(){
   });
   humans().forEach(h=>{ if (h.room==='garage') ents.push({ y:h.y + (h===LEO?.01:0), d:()=>drawHuman(h,T) }); });
   if (residents()) PETS.forEach(pt=>{ if (pt.room==='garage') ents.push({ y: pt.state==='gbed' ? G_SORT.gpets + gOff('gpets')[1] + .05 : pt.y, d:()=>drawPet(pt,T) }); });
+  TOYS.filter(o=>o.room==='garage').forEach(o=>ents.push({ y: o.carrier ? o.carrier.y + .1 : o.y, d:()=>drawToy(o.kind, o.x, o.carrier ? o.carrier.y - 5 : o.y, o.flip) }));
+  { const be = birdEnt('garage'); if (be) ents.push(be); }
   return ents.sort((a,b)=>a.y-b.y);
 }
 function gDrawOrder(){
@@ -2620,7 +2833,7 @@ function gHit(x,y){
   }
   return null;
 }
-function gEditSlots(){ return Object.keys(GITEMS).filter(s=>!['gwalls','gfloor'].includes(s) && gHas(s) && !(s==='gdisplay' && gPick('gdisplay')==='a')); }
+function gEditSlots(){ return [...Object.keys(GITEMS), ...EV_SLOTS].filter(s=>!['gwalls','gfloor'].includes(s) && gHas(s) && !(s==='gdisplay' && gPick('gdisplay')==='a')); }
 function gBringToFront(s){ if (!s) return; G().front = (G().front || []).filter(q=>q!==s); G().front.push(s); }
 function gClamp(s, dx, dy){
   const save0 = G().pos && G().pos[s]; if (G().pos) delete G().pos[s];
@@ -2648,6 +2861,7 @@ function renderGarage(){
   if (gNeonOn()){ const [nx,ny] = at('gneon',131,25); srcs.push({ x:nx, y:ny, r:34, i:.5, c:{ a:'255,230,90', b:'140,220,255', c:'255,90,160', d:'90,240,230' }[neon] }); }
   if (lounge==='b'){ const [lx,ly] = at('glounge',26,116); srcs.push({ x:lx, y:ly, r:24, i:.45, c:'160,120,255' }); }
   if (lounge==='c'){ const [lx,ly] = at('glounge',20,130); srcs.push({ x:lx, y:ly, r:22, i:.4, c:'150,200,255' }); }
+  if (gHas('ev_eiffel') && gEvOn('ev_eiffel')){ const [ex,ey] = at('ev_eiffel', EV_G.ev_eiffel[0]+8, EV_G.ev_eiffel[1]+4); srcs.push({ x:ex, y:ey, r:44, i:.75, c:'255,200,120' }); }
   if (gDone(1) && G().unwrapped){ const [cx,cy] = at('car',CX0-2,128 + carLift()); srcs.push({ x:cx, y:cy, r:26 + carFlash, i:.5 + carFlash*.02, c:'230,240,255' }); }
   const door = gPick('gdoor');
   if (door){ const [dx,dy] = at('gdoor',71,66), open = Math.max(doorP, door==='b' ? .35 : 0);
@@ -2659,6 +2873,7 @@ function renderGarage(){
   if (L) withG('glights', ()=>drawGLights(L,T,gLightsOn()));
   if (gNeonOn()) withG('gneon', ()=>drawGNeon(neon,T,true));
   if (lounge==='b') withG('glounge', ()=>drawGLounge('b',T,true));
+  if (gHas('ev_eiffel') && gEvOn('ev_eiffel')) withG('ev_eiffel', ()=>{ X.translate(EV_G.ev_eiffel[0], EV_G.ev_eiffel[1]); glowEiffel('x',T,null); });
   if (gDone(1) && G().unwrapped){ withG('car', ()=>{ const dy = carLift(); r(CX0+1,127+dy,7,1,'#ffffff'); p(CX0+2,128+dy,'#e8f2ff'); }); }
   if (carFlash > 0) carFlash--;
   drawSnow(); drawSky(); drawParts();
@@ -2684,9 +2899,13 @@ function garageTap(x,y){
   const hits = [];
   PETS.forEach(pt=>{ if (pt.room!=='garage' || !residents()) return; const g = petGeom(pt); if (x>=g.sx-3 && x<=g.sx+g.w+3 && y>=g.sy-3 && y<=g.sy+g.h+2) hits.push({ z:g.fy, pt, g }); });
   humans().forEach(h=>{ if (h.room!=='garage') return; const g = humanGeom(h); if (x>=g.x0-1 && x<=g.x0+17 && y>=g.y0-1 && y<=g.y0+g.h+1) hits.push({ z:h.y, h, g }); });
+  TOYS.forEach(o=>{ if (o.room==='garage' && !o.carrier && Math.abs(x-o.x) < 6 && y > o.y-8 && y < o.y+3) hits.push({ z:o.y+.2, toy:o }); });
+  { const bh = birdHitAt('garage', x, y); if (bh) hits.push(bh); }
   if (hits.length){
     const hit = hits.sort((a,b)=>b.z-a.z)[0];
-    if (hit.pt){ const pt = hit.pt; if (pt.state==='sleep' || pt.state==='gbed'){ pt.state='sit'; pt.timer=40; if (pt.y < 124) pt.y = 150; } pt.hop = 8; burst(hit.g.sx+hit.g.w/2, hit.g.sy, 8, ['#f2b8c8','#ff7aa8','#ffd1dc'], true); label(pt.id, `${petName(pt)} <b>♥</b>`, hit.g.sx+hit.g.w/2, hit.g.sy-2); SFX.pet(pt.kind); }
+    if (hit.bird) tapBird(hit.g);
+    else if (hit.toy){ const o = hit.toy, a = Math.random()*Math.PI*2; o.vx = Math.cos(a)*2.4; o.vy = Math.sin(a)*1.2; SFX.tick(); }
+    else if (hit.pt){ const pt = hit.pt; if (pt.state==='sleep' || pt.state==='gbed'){ pt.state='sit'; pt.timer=40; if (pt.y < 124) pt.y = 150; } pt.hop = 8; burst(hit.g.sx+hit.g.w/2, hit.g.sy, 8, ['#f2b8c8','#ff7aa8','#ffd1dc'], true); label(pt.id, `${petName(pt)} <b>♥</b>`, hit.g.sx+hit.g.w/2, hit.g.sy-2); SFX.pet(pt.kind); }
     else { const h = hit.h, g = hit.g; burst(g.x0+8, g.y0, 8, ['#f2b8c8','#ff7aa8','#ffd1dc'], true); if (h.state==='idle') h.timer = Math.max(h.timer, 40); label(h.id, `${h===HER ? CONFIG.herName : CONFIG.myName} <b>♥</b>`, g.x0+8, g.y0-3); SFX.select(); }
     return;
   }
@@ -2707,6 +2926,8 @@ function garageTap(x,y){
   else if (s==='gdoor') toggleGDoor();
   else if (s==='glights') toggleGLights();
   else if (s==='gneon'){ G().off = G().off || {}; G().off.gneon = gNeonOn(); save(); blip(gNeonOn() ? 1200 : 600,.04,0,'square',.04); toast(gNeonOn() ? 'Neon on' : 'Neon off'); }
+  else if (s==='ev_eiffel'){ G().off = G().off || {}; G().off.ev_eiffel = gEvOn('ev_eiffel'); save(); blip(gEvOn('ev_eiffel') ? 1200 : 600,.04,0,'square',.04); toast(gEvOn('ev_eiffel') ? 'Light on' : 'Light off'); }
+  else if (s && isEv(s)) evTap(s, gTight(s));
 }
 
 /* ---------- Calendrier du garage ---------- */
@@ -2724,7 +2945,7 @@ function buildGarageGrid(){
     if (!unl) ico.innerHTML = ICON.lock;
     else if (done){ const cv = document.createElement('canvas');
       if (d.slot==='gwalls' || d.slot==='gfloor') renderFnTo(cv,40,40,()=>X.drawImage(getGarageBase(gPick('gwalls'), gPick('gfloor')),-104,-64));
-      else renderGItemTo(cv, d.slot, gPick(d.slot), 0);
+      else renderGItemTo(cv, d.slot, gOwn(d.slot), 0);
       ico.appendChild(cv); }
     else { ico.innerHTML = ICON.gift; const dot = document.createElement('span'); dot.className='dot'; b.appendChild(dot); }
     b.addEventListener('click', ()=>openGarageDay(i, b));
@@ -2748,7 +2969,7 @@ function openGarageDay(i, tile){
     const pv = document.createElement('div'); pv.className = 'pv'; const cv = document.createElement('canvas'); pv.appendChild(cv); c.appendChild(pv);
     const nm = document.createElement('div'); nm.className = 'nm'; nm.textContent = o.name; c.appendChild(nm);
     const ds = document.createElement('div'); ds.className = 'ds'; ds.textContent = o.ds; c.appendChild(ds);
-    if (done && !d.gift){ if (o.id===gPick(d.slot)){ const tg = document.createElement('span'); tg.className='tag'; tg.textContent='✓ In your garage'; c.appendChild(tg); } else c.classList.add('dim'); c.disabled = true; }
+    if (done && !d.gift){ if (o.id===gOwn(d.slot)){ const tg = document.createElement('span'); tg.className='tag'; tg.textContent='✓ In your garage'; c.appendChild(tg); } else c.classList.add('dim'); c.disabled = true; }
     else if (d.gift) c.disabled = true;
     else c.addEventListener('click', ()=>{ gsel = o.id; SFX.select(); wrap.querySelectorAll('.card').forEach(k=>k.classList.toggle('sel', k===c)); setAction('Place in the garage', false, 'accent', ()=>placeG(i, d, gsel)); });
     wrap.appendChild(c);
@@ -2821,7 +3042,7 @@ function onMeet(kind){
   else [392,494,587].forEach((f,i)=>blip(f,.5,i*.05,'sine',.04));
 }
 
-function drawSeated(){ if (photoMode) return; humans().filter(h=>humanGeom(h).seated).forEach(h=>drawHuman(h,T)); if (residents()) PETS.filter(onLap).forEach(pt=>drawPet(pt,T)); }
+function drawSeated(){ if (photoMode) return; humans().filter(h=>humanGeom(h).seated).forEach(h=>drawHuman(h,T)); if (residents()) PETS.filter(onLap).forEach(pt=>drawPet(pt,T)); if (BIRD.room==='room' && BIRD.state==='lap') drawBird(); }
 function drawObj(s){
   const o = chosenFor(s);
   if (s==='petcorner'){
@@ -2853,8 +3074,9 @@ function floorEnts(){
     humans().forEach(h=>{ if (h.room==='room' && !humanGeom(h).seated) ents.push({ y:h.y + (h===LEO?.01:0), d:()=>drawHuman(h,T) }); });
     if (residents()) PETS.filter(pt=>pt.room==='room' && !inBack(pt) && !onLap(pt) && pt.state!=='inCar').forEach(pt=>ents.push({ y:pt.y, d:()=>drawPet(pt,T) }));
     if (race) ents.push({ y:race.y + 7, d:drawRaceCar });
+    { const be = birdEnt('room'); if (be) ents.push(be); }
   }
-  TOYS.forEach(o=>ents.push({ y: o.carrier ? o.carrier.y + .1 : o.y, d:()=>drawToy(o.kind, o.x, o.carrier ? o.carrier.y - 5 : o.y, o.flip) }));
+  TOYS.filter(o=>o.room==='room').forEach(o=>ents.push({ y: o.carrier ? o.carrier.y + .1 : o.y, d:()=>drawToy(o.kind, o.x, o.carrier ? o.carrier.y - 5 : o.y, o.flip) }));
   return ents.sort((a,b)=>a.y-b.y);
 }
 
@@ -2865,7 +3087,7 @@ let editing = false, drag = null, selSlot = null;
 const hitCv = document.createElement('canvas'); hitCv.width = W; hitCv.height = H;
 const hitCtx = hitCv.getContext('2d', { willReadFrequently:true });
 const tightCache = {};
-function placedSlots(){ return ALL_SLOTS.filter(s=>!['walls','floor','toys','character'].includes(s) && chosenFor(s)); }
+function placedSlots(){ return ALL_SLOTS.filter(s=>!['walls','floor','toys','character','ev_baguette','ev_pigeon'].includes(s) && chosenFor(s)); }
 // ordre de dessin, de l'arrière vers l'avant
 function drawOrder(){
   const out = [...BACK, ...BACK_SPECIALS].filter(s=>chosenFor(s) && !isFront(s));
@@ -2927,7 +3149,6 @@ function setEditing(on){
   $('editBtn').classList.toggle('on', on);
   paintTools();
   if (!on){ save(); buildGrid(); toast('Decor saved'); }
-  if (on && scene==='garage') G().doorOpen = G().doorOpen;
   else { toast('Edit mode: drag the objects'); document.querySelector('.room').scrollIntoView({behavior:'smooth', block:'center'}); }
 }
 room.addEventListener('pointerdown', e=>{
@@ -3117,7 +3338,10 @@ function paintTools(){
   gb.classList.toggle('glow', scene==='room' && GDAYS.some((_,i)=>isUnlocked(i+1) && !gDone(i+1)));
   $('gLightBtn').hidden = $('gDoorBtn').hidden = true;
   if (scene==='garage'){
-    ['wheelBtn','invBtn','storeBtn','curtainBtn','photoBtn','exitPhotoBtn','shootBtn'].forEach(id=>{ $(id).hidden = true; });
+    ['wheelBtn','curtainBtn','photoBtn','exitPhotoBtn','shootBtn'].forEach(id=>{ $(id).hidden = true; });
+    const gl = gOwnedObjects(), gns = gl.filter(s=>invPlace(s)!=='here').length;
+    $('invBtn').hidden = editing || photoMode || !gl.length; $('invBtn').textContent = gns ? `Inventory (${gns} stored)` : 'Inventory';
+    $('storeBtn').hidden = !(editing && selSlot && selSlot!=='car');
     $('editBtn').hidden = !gEditSlots().length;
     $('resetPosBtn').hidden = !editing;
     $('editHint').hidden = !editing; $('editHint').textContent = 'Drag objects to move them.';
@@ -3131,45 +3355,67 @@ function paintTools(){
 const NO_STORE = ['walls','floor','character'];
 function ownedObjects(){ return ALL_SLOTS.filter(s=>!NO_STORE.includes(s) && pickOf(s)); }
 function itemName(slot){
-  const sp = SPECIALS.find(q=>q.slot===slot); if (sp) return sp.name;
+  const sp = SPECIALS.find(q=>q.slot===slot) || EVENT.find(q=>q.slot===slot); if (sp) return sp.name;
   for (const d of DAYS) for (const pk of d.picks) if (pk.slot===slot){ const o = pk.opts.find(q=>q.id===pickOf(slot)); if (o) return o.name; }
   return slot;
 }
 function setStored(slot, on){
+  if (isEv(slot)){ setEvWhere(slot, on ? 'stored' : 'room'); buildGrid(); paintTools(); return; }
   state.stored = state.stored || {};
   if (on){ state.stored[slot] = true; if (state.front) state.front = state.front.filter(q=>q!==slot); }
   else delete state.stored[slot];
   save(); buildGrid(); paintTools();
 }
+const GSTORE = ['glights','gdoor','gtools','gneon','gtires','gdisplay','glounge','gshelf','gposter','gpets','gplate'];
+function gOwnedObjects(){ return [...GSTORE.filter(s=>gOwn(s)), ...EV_SLOTS.filter(s=>pickOf(s))]; }
+function gItemName(s){ if (isEv(s)) return itemName(s); if (s==='car') return 'Black M5'; const d = GDAYS.find(q=>q.slot===s), o = d && d.opts && d.opts.find(q=>q.id===gOwn(s)); return o ? o.name : s; }
+function gStored(s){ return !!(G().stored && G().stored[s]); }
+function gSetStored(s, on){
+  G().stored = G().stored || {};
+  if (on){ G().stored[s] = true; if (G().front) G().front = G().front.filter(q=>q!==s); if (s==='gdoor'){ G().doorOpen = false; doorP = 0; } }
+  else delete G().stored[s];
+  save();
+}
+// où se trouve l'objet, vu depuis la pièce affichée : 'here' | 'other' | 'stored'
+function invPlace(s){
+  if (isEv(s)){ const w = evWhere(s); return w===(scene==='garage' ? 'garage' : 'room') ? 'here' : (w==='stored' ? 'stored' : 'other'); }
+  return scene==='garage' ? (gStored(s) ? 'stored' : 'here') : (chosenFor(s) ? 'here' : 'stored');
+}
 function openInventory(){
   if (editing) setEditing(false);
   if (photoMode) exitPhoto();
+  const inG = scene==='garage', here = inG ? 'garage' : 'room', roomName = inG ? 'garage' : 'room', otherName = inG ? 'living room' : 'garage';
   current = null; previews = []; selected = {};
-  $('dlgTitle').textContent = 'Inventory';
+  $('dlgTitle').textContent = inG ? 'Garage inventory' : 'Inventory';
   $('dlgSig').textContent = '— ' + CONFIG.myName;
-  const list = ownedObjects();
-  typewrite(list.length ? 'Everything you\'ve collected. Store what you don\'t want in the room right now, and bring it back whenever you like.' : 'Nothing here yet. Open your first doors to start collecting.');
+  const list = inG ? gOwnedObjects() : ownedObjects();
+  typewrite(list.length ? (inG ? 'Everything that belongs in the garage. Store what you don\'t want out right now — and the Paris gifts can live here or in the living room.' : 'Everything you\'ve collected. Store what you don\'t want in the room right now, and bring it back whenever you like.') : 'Nothing here yet. Open your first doors to start collecting.');
   dlgBody.innerHTML = '';
   const sub = document.createElement('p'); sub.className = 'sub'; dlgBody.appendChild(sub);
   const wrap = document.createElement('div'); wrap.className = 'choices many inv'; dlgBody.appendChild(wrap);
-  const paintSub = ()=>{ const out = list.filter(s=>!chosenFor(s)).length; sub.textContent = `${list.length - out} in the room · ${out} stored`; };
+  const paintSub = ()=>{ const n = list.filter(s=>invPlace(s)==='here').length; sub.textContent = `${n} in the ${roomName} · ${list.length - n} elsewhere`; };
   list.forEach(slot=>{
     const c = document.createElement('button'); c.className = 'card'; c.type = 'button';
     const pv = document.createElement('div'); pv.className = 'pv'; const cv = document.createElement('canvas'); pv.appendChild(cv); c.appendChild(pv);
-    const nm = document.createElement('div'); nm.className = 'nm'; nm.textContent = itemName(slot); c.appendChild(nm);
+    const nm = document.createElement('div'); nm.className = 'nm'; nm.textContent = inG ? gItemName(slot) : itemName(slot); c.appendChild(nm);
     const tg = document.createElement('span'); tg.className = 'tag'; c.appendChild(tg);
-    const paint = ()=>{ const inRoom = !!chosenFor(slot); c.classList.toggle('stored', !inRoom); tg.textContent = inRoom ? 'In the room · tap to store' : 'Stored · tap to place'; };
+    const paint = ()=>{ const w = invPlace(slot); c.classList.toggle('stored', w!=='here');
+      tg.textContent = w==='here' ? `In the ${roomName} · tap to store` : (w==='other' ? `In the ${otherName} · tap to bring here` : 'Stored · tap to place'); };
     c.addEventListener('click', ()=>{
-      const inRoom = !!chosenFor(slot); setStored(slot, inRoom);
-      blip(inRoom ? 500 : 900, .06, 0, 'sine', .06);
-      if (!inRoom){ const b = bboxOf(slot, pickOf(slot)); burst(b.x+b.w/2, b.y+b.h/2, 14, ['#e9c77b','#fff1c9','#f2b8c8'], false); }
-      paint(); paintSub();
+      const w = invPlace(slot), put = w!=='here';
+      if (isEv(slot)) setEvWhere(slot, put ? here : 'stored');
+      else if (inG) gSetStored(slot, !put);
+      else setStored(slot, !put);
+      blip(put ? 900 : 500, .06, 0, 'sine', .06);
+      if (put){ const b = (slot==='ev_baguette' || slot==='ev_pigeon') ? { x:110, y:136, w:12, h:12 } : (inG ? gTight(slot) : bboxOf(slot, pickOf(slot))); burst(b.x+b.w/2, b.y+b.h/2, 14, ['#e9c77b','#fff1c9','#f2b8c8'], false); }
+      paint(); paintSub(); buildGrid(); paintTools();
     });
     paint(); wrap.appendChild(c);
-    previews.push({ cv, pv, slot, opt:pickOf(slot) });
+    const g = inG && !isEv(slot);
+    previews.push({ cv, pv, slot, opt: g ? gOwn(slot) : pickOf(slot), g });
   });
   paintSub();
-  requestAnimationFrame(()=>previews.forEach(q=>{ renderItemTo(q.cv,q.slot,q.opt,T); fitCanvas(q.cv, q.pv.clientWidth-12, q.pv.clientHeight-12); }));
+  requestAnimationFrame(()=>previews.forEach(q=>{ if (q.g) renderGItemTo(q.cv,q.slot,q.opt,T); else renderItemTo(q.cv,q.slot,q.opt,T); fitCanvas(q.cv, q.pv.clientWidth-12, q.pv.clientHeight-12); }));
   setAction('Close', false, '', closeModal);
   modal.hidden = false; document.body.style.overflow = 'hidden'; SFX.open();
 }
@@ -3369,9 +3615,11 @@ room.addEventListener('pointerdown', e=>{
   const hits = [];
   PETS.forEach(pt=>{ if (pt.room!=='room') return; const g = petGeom(pt); if (x>=g.sx-3 && x<=g.sx+g.w+3 && y>=g.sy-3 && y<=g.sy+g.h+2) hits.push({z:inBack(pt)?0:(onLap(pt)?.6:g.fy), pt, g}); });
   humans().forEach(h=>{ if (h.room!=='room') return; const g = humanGeom(h); if (x>=g.x0-1 && x<=g.x0+17 && y>=g.y0-1 && y<=g.y0+g.h+1) hits.push({ z: g.seated ? .5 : h.y, h, g }); });
-  TOYS.forEach(o=>{ if (!o.carrier && Math.abs(x-o.x) < 6 && y > o.y-8 && y < o.y+3) hits.push({ z:o.y+.2, toy:o }); });
+  TOYS.forEach(o=>{ if (o.room==='room' && !o.carrier && Math.abs(x-o.x) < 6 && y > o.y-8 && y < o.y+3) hits.push({ z:o.y+.2, toy:o }); });
+  { const bh = birdHitAt('room', x, y); if (bh) hits.push(bh); }
   if (!hits.length){
     const s = hitSlot(x,y);
+    if (s && isEv(s) && !lightOf(s)){ evTap(s, tightBox(s)); return; }
     if (s && s!=='window' && lightOf(s)){
       state.off = state.off || {}; state.off[s] = isOn(s); save();
       blip(isOn(s) ? 1200 : 600, .04, 0, 'square', .04);
@@ -3383,7 +3631,8 @@ room.addEventListener('pointerdown', e=>{
     return;
   }
   const hit = hits.sort((a,b)=>b.z-a.z)[0];
-  if (hit.pt){
+  if (hit.bird) tapBird(hit.g);
+  else if (hit.pt){
     const pt = hit.pt;
     if (pt.state==='sleep'){ pt.state='sit'; pt.timer=40; }
     if (!inBack(pt) && !onLap(pt)) pt.hop = 8;
@@ -3565,17 +3814,18 @@ function revealFinal(){
   setTimeout(()=>toast('New: photo mode is now available below the room'), 4200);
 }
 
-function refresh(){ buildGrid(); updateHud(); updateStatus(); }
+function refresh(){ buildGrid(); updateHud(); updateStatus(); paintParisBtn(); }
 
 /* ---------- Boucle (20 images/s) ---------- */
 let last = 0, F = 0, lastDay = dayNumber();
 function loop(ts){
   if (ts - last >= 50){
     last = ts; F++; if (F%2===0) T++;
-    syncToys();
+    syncToys(); syncBird();
+    if (!photoMode && !race) updateBird();
     if (residents() && !photoMode){ PETS.forEach(updatePet); humans().forEach(updateHuman); updateToys(); updateRace(); }
     stepParts();
-    if (scene==='garage') renderGarage(); else renderRoom();
+    if (!fg){ if (scene==='garage') renderGarage(); else renderRoom(); }
     updateLabels();
     if (!modal.hidden && F%2===0) previews.forEach(q=> q.g ? renderGItemTo(q.cv,q.slot,q.opt,T) : renderItemTo(q.cv,q.slot,q.opt,T));
   }
@@ -3583,6 +3833,440 @@ function loop(ts){
 }
 setInterval(()=>{ updateStatus(); const dn = dayNumber(); if (dn !== lastDay){ lastDay = dn; refresh(); } }, 1000);
 document.addEventListener('visibilitychange', ()=>{ if (!document.hidden) refresh(); });
+
+
+/* =====================================================================
+   ÉVÉNEMENT — BIENVENUE À PARIS (10 novembre) : un petit Flappy parisien
+   ===================================================================== */
+const EV_DAY = 4;   // 10 novembre
+function parisOpen(){ return isUnlocked(EV_DAY); }
+function PS(){ if (!state.paris) state.paris = { best:0, plays:0 }; return state.paris; }
+const FW = 160, FH = 240, GROUND = 214;
+const pcv = $('parisCv'), pctx = pcv.getContext('2d'); pctx.imageSmoothingEnabled = false;
+let fg = null, fRaf = 0, fAcc = 0, fLast = 0;
+
+// ---- décors pré-calculés (jour, coucher de soleil, nuit) ----
+function skyline(c, night, dusk){
+  const prev = X; X = c;
+  const sil = night ? '#1b2040' : (dusk ? '#6a3c5e' : '#7d92b4'), sil2 = night ? '#262c55' : (dusk ? '#9a5a72' : '#b8c8dc');
+  // Sacré-Cœur sur sa colline
+  ell(126,GROUND-30,40,14,sil2); r(116,GROUND-62,20,18,sil2); ell(126,GROUND-62,6,6,sil2); r(125,GROUND-74,2,6,sil2); ell(116,GROUND-52,3,4,sil2); ell(136,GROUND-52,3,4,sil2);
+  // la tour Eiffel au loin
+  const tx = 46;
+  for (let y=0;y<96;y++){ const yy = GROUND-30-96+y; let hw = y < 10 ? 0 : (y < 50 ? 1 + (y-10)/18 : (y < 72 ? 3 + (y-50)/5 : 8 + (y-72)/2.5));
+    hw = Math.round(hw);
+    if (y >= 78){ const inner = Math.round(Math.sqrt((y-78)/18)*(hw-3)); for (let x=-hw;x<=hw;x++) if (Math.abs(x) >= inner) p(tx+x,yy,sil); }
+    else r(tx-hw,yy,hw*2+1,1,sil);
+    if (y===50 || y===72) r(tx-hw-1,yy,hw*2+3,1,sil); }
+  if (night){ p(tx,GROUND-126,'#fff2b0'); for (let k=0;k<26;k++){ const y = 12 + (k*37)%80, hw = y<50?2:5; p(tx-hw+((k*13)%(hw*2+1)), GROUND-126+y, '#ffd27a'); } }
+  // toits haussmanniens
+  const rn = rng(night ? 11 : (dusk ? 7 : 3));
+  for (let x=0;x<FW;){ const w = 14 + (rn()*14|0), h = 26 + (rn()*22|0), col = night ? '#141831' : (dusk ? '#5e3a58' : '#8ea2bf');
+    r(x,GROUND-h,w,h,col); r(x+1,GROUND-h-4,w-2,4,col); r(x+2,GROUND-h-6,w-4,2,col);
+    if (rn() < .7){ r(x+3,GROUND-h-10,2,4,col); r(x+w-6,GROUND-h-9,2,3,col); }
+    if (night) for (let k=0;k<4;k++) if (rn() < .55) r(x+2+(rn()*(w-5)|0), GROUND-h+4+(rn()*(h-8)|0), 1, 2, '#ffcf7a');
+    x += w; }
+  X = prev;
+}
+function makeSky(kind){
+  const c = document.createElement('canvas'); c.width = FW; c.height = FH; const g = c.getContext('2d');
+  const stops = { day:['#7fb8e8','#cfe6f5','#f6efe0'], dusk:['#3d3a7a','#e07a7a','#ffd09a'], night:['#070a1e','#151a44','#2c2a5a'] }[kind];
+  const gr = g.createLinearGradient(0,0,0,GROUND); gr.addColorStop(0,stops[0]); gr.addColorStop(.6,stops[1]); gr.addColorStop(1,stops[2]);
+  g.fillStyle = gr; g.fillRect(0,0,FW,FH);
+  if (kind==='night'){ const rn = rng(5); for (let k=0;k<60;k++){ g.fillStyle = rn() < .2 ? '#ffffff' : 'rgba(255,255,255,.55)'; g.fillRect(rn()*FW|0, rn()*130|0, 1, 1); }
+    g.fillStyle = '#fff4d6'; g.beginPath(); g.arc(122,34,9,0,7); g.fill(); g.fillStyle = '#151a44'; g.beginPath(); g.arc(126,31,8,0,7); g.fill(); }
+  if (kind==='dusk'){ g.fillStyle = '#ffe0a0'; g.beginPath(); g.arc(98,GROUND-40,16,0,7); g.fill(); }
+  if (kind==='day'){ g.fillStyle = 'rgba(255,255,255,.85)'; [[20,40,18],[100,60,24],[60,24,12]].forEach(([x,y,w])=>{ g.fillRect(x,y,w,4); g.fillRect(x+3,y-3,w-7,3); }); }
+  skyline(g, kind==='night', kind==='dusk');
+  return c;
+}
+let SKIES = null;
+function skies(){ return SKIES || (SKIES = { day:makeSky('day'), dusk:makeSky('dusk'), night:makeSky('night') }); }
+
+// ---- le pigeon parisien (béret rouge) ----
+const PIGEON = [
+  ['.......s......',
+   '....rrrrrrr...',
+   '...qrrrrrrrR..',
+   '.....hhhh.....',
+   '....hhhhkh....',
+   '....hhhhhhyy..',
+   '...nnnnhh.....',
+   'tt.bbbbbbbb...',
+   'tttbwwwwwbbb..',
+   '.ttbbwwwwbbb..',
+   '....bbbbbbb...',
+   '.....o..o.....'],
+  ['.......s......',
+   '....rrrrrrr...',
+   '...qrrrrrrrR..',
+   '.....hhhh.....',
+   '....hhhhkh....',
+   '....hhhhhhyy..',
+   '...nnwwwhh....',
+   'tt.bwwwwwbb...',
+   'tttbbbwwbbbb..',
+   '.ttbbbbbbbbb..',
+   '....bbbbbbb...',
+   '.....o..o.....'],
+  ['.......s......',
+   '....rrrrrrr...',
+   '...qrrrrrrrR..',
+   '.....hhhh.....',
+   '....hhhhkh....',
+   '....hhhhhhyy..',
+   '...nnnnhh.....',
+   'tt.bbbbbbbb...',
+   'tttbbbbbbbbb..',
+   '.ttbbwwwwbbb..',
+   '....bwwwwwb...',
+   '.....o..o.....']
+];
+const PIG_PAL = { r:'#c92b3a', R:'#8e1c28', q:'#f2737c', s:'#6e1420', h:'#8f96a8', k:'#14141a', y:'#e8a24a', n:'#5f9a86', b:'#a4abbb', w:'#737a8e', t:'#5d6374', o:'#e07a5a' };
+const pigCv = PIGEON.map(rows=>{ const c = document.createElement('canvas'); c.width = 14; c.height = 12; const prev = X; X = c.getContext('2d'); spr(rows,PIG_PAL,0,0); X = prev; return c; });
+
+const MAC_COLS = [['#f4a6c0','#d97a98'],['#b7e0a8','#86b878'],['#cdb6f0','#9f86c8'],['#ffe08a','#d8b45a'],['#a8d8f0','#78a8c8']];
+function drawMacaron(x,y,k){
+  const [a,d] = MAC_COLS[k % MAC_COLS.length];
+  spr(['.aaaaa.','aAaaaaa','ddddddd','fffffff','aaaaaaa','.ddddd.'],{ a, A:'#ffffff', d, f:'#fff4e0' }, x-3, y-3);
+}
+function drawBuilding(x, top, seed){
+  const w = 26, rn = rng(seed);
+  // toit mansardé en zinc + cheminées
+  r(x+2,top,w-4,2,'#5d6a7c'); r(x+1,top+2,w-2,6,'#6f7d92'); r(x,top+8,w,1,'#4c5868');
+  for (let k=0;k<3;k++){ r(x+4+k*7,top+3,3,4,'#2a3140'); p(x+4+k*7,top+3,'#9fb0c8'); }
+  r(x+4,top-4,3,4,'#b8644a'); r(x+w-8,top-3,3,3,'#b8644a'); r(x+4,top-4,3,1,'#d98a6a');
+  r(x,top+9,w,2,'#efe4cc'); r(x,top+11,w,1,'#b9a888');                       // corniche
+  for (let y=top+12; y<GROUND; y++) r(x,y,w,1, (y-top)%12===0 ? '#cfbe98' : '#e6d6b2');
+  r(x,top+12,1,GROUND-top-12,'#f3e8d0'); r(x+w-1,top+12,1,GROUND-top-12,'#bfae8a');
+  for (let y=top+15; y<GROUND-14; y+=12) for (let k=0;k<3;k++){ const wx = x+3+k*8;
+    r(wx,y,4,7,'#34445a'); p(wx,y,'#5a7090'); r(wx-1,y+7,6,1,'#2a2a2e'); p(wx-1,y+6,'#2a2a2e'); p(wx+4,y+6,'#2a2a2e'); }
+  // rez-de-chaussée : une petite boutique avec auvent
+  const aw = rn() < .5 ? ['#c8303a','#f4f0e6'] : ['#2f6a4a','#f4f0e6'];
+  for (let k=0;k<w;k++) r(x+k,GROUND-13,1,3, aw[(k>>1)&1]);
+  r(x+2,GROUND-10,w-4,10,'#3a2e28'); r(x+4,GROUND-8,8,6,'#ffd88a'); r(x+14,GROUND-9,6,9,'#5a3a2a');
+}
+function drawGirder(x, bottom){
+  const w = 22, c = '#7a5638', d = '#4f3622', hi = '#a07a52';
+  r(x,0,2,bottom,d); r(x+w-2,0,2,bottom,d); r(x+1,0,1,bottom,hi);
+  for (let y=0; y<bottom-4; y++){ const k = y % 18, a = Math.round(k*(w-6)/17);
+    p(x+3+a, y, c); p(x+w-4-a, y, c); if (k===0) r(x+2,y,w-4,1,c); }
+  r(x-2,bottom-4,w+4,4,d); r(x-2,bottom-4,w+4,1,hi); for (let k=0;k<w+4;k+=4) p(x-1+k,bottom-2,'#c9a45c');
+  // petite lanterne suspendue
+  r(x+w/2-1,bottom,2,3,'#2a2a2e'); r(x+w/2-3,bottom+3,6,5,'#2a2a2e'); r(x+w/2-2,bottom+4,4,3,'#ffd88a');
+}
+function drawGround(off){
+  r(0,GROUND,FW,FH-GROUND,'#8a8478'); r(0,GROUND,FW,2,'#c9c0aa');
+  for (let y=GROUND+3; y<FH; y+=4){ const sh = ((y-GROUND)>>2)&1 ? 3 : 0;
+    for (let x=-8; x<FW+8; x+=6){ const xx = Math.floor(x - (off % 6) + sh); r(xx,y,5,3,'#9c958a'); p(xx,y,'#b3ad9f'); } }
+}
+
+function fgNew(){ return { st:'ready', y:110, vy:0, t:0, score:0, pipes:[], next:70, dist:0, flap:0, over:0, macs:0, newRewards:[] }; }
+function fSpeed(){ return 1.1 + Math.min(.35, fg.score*.005); }
+function fGap(){ return Math.max(68, 86 - fg.score*.2); }
+function fFlap(){
+  if (!fg) return;
+  if (fg.st==='over'){ if (fg.over > 40) { fg = fgNew(); paintParisUI(); } return; }
+  if (fg.st==='ready'){ fg.st = 'play'; PS().plays++; save(); paintParisUI(); }
+  fg.vy = -3.05; fg.flap = 10; blip(740,.05,0,'triangle',.035);
+}
+function fStep(){
+  fg.t++;
+  if (fg.st==='ready'){ fg.y = 110 + Math.sin(fg.t*.08)*4; fg.dist += .6; return; }
+  if (fg.st==='over'){ fg.over++; if (fg.y < GROUND-6){ fg.vy = Math.min(5, fg.vy + .25); fg.y += fg.vy; } return; }
+  fg.vy = Math.min(4.2, fg.vy + .16); fg.y += fg.vy; if (fg.flap > 0) fg.flap--;
+  const sp = fSpeed(); fg.dist += sp;
+  if ((fg.next -= sp) <= 0){
+    const gap = fGap(), lo = 30 + gap/2, hi = GROUND - 26 - gap/2, cy = lo + Math.random()*(hi-lo);
+    fg.pipes.push({ x:FW+4, top:cy-gap/2, bot:cy+gap/2, seed:(Math.random()*1e6)|0, passed:false,
+      mac: Math.random() < .85 ? { x:FW+4+40+(Math.random()*16-8), y:cy + (Math.random()*30-15), k:(Math.random()*5)|0, got:false } : null });
+    fg.next = 96;
+  }
+  const bx = 44, by = fg.y;
+  fg.pipes.forEach(pp=>{
+    pp.x -= sp; if (pp.mac) pp.mac.x -= sp;
+    if (!pp.passed && pp.x + 26 < bx - 5){ pp.passed = true; fAdd(1); blip(988,.05,0,'sine',.04); }
+    // collisions (boîte du pigeon ≈ 10 x 8)
+    const L = bx-5, R = bx+5, T0 = by-4, B0 = by+4;
+    if (R > pp.x+2 && L < pp.x+24 && T0 < pp.top) fCrash();          // poutrelle (en haut, 22 px centrée)
+    if (R > pp.x && L < pp.x+26 && B0 > pp.bot - 4) fCrash();          // immeuble (toit à pp.bot)
+    const m = pp.mac; if (m && !m.got && Math.abs(m.x - bx) < 7 && Math.abs(m.y - by) < 7){ m.got = true; fAdd(1); fg.macs++;
+      [1319,1568].forEach((f,i)=>blip(f,.06,i*.05,'sine',.04)); }
+  });
+  fg.pipes = fg.pipes.filter(pp=>pp.x > -40);
+  if (fg.y > GROUND-5 || fg.y < -20) fCrash();
+}
+function fAdd(n){
+  fg.score += n;
+  EVENT.forEach(ev=>{ if (fg.score >= ev.at && !pickOf(ev.slot)){ grantEv(ev.slot); fg.newRewards.push(ev.slot); parisBanner(ev); } });
+  $('parisScore').textContent = fg.score;
+}
+function fCrash(){
+  if (fg.st!=='play') return;
+  fg.st = 'over'; fg.over = 0; fg.vy = -2;
+  blip(180,.2,0,'sawtooth',.05); blip(120,.3,.08,'sawtooth',.05);
+  const P = PS(); const rec = fg.score > P.best; if (rec) P.best = fg.score; save();
+  const fl = $('parisFlash'); fl.classList.remove('go'); void fl.offsetWidth; fl.classList.add('go');
+  setTimeout(()=>paintParisUI(rec), 500);
+}
+function fDraw(){
+  const prev = X; X = pctx;
+  const S = skies(), sc = fg.score;
+  pctx.globalAlpha = 1; pctx.drawImage(S.day,0,0);
+  const dusk = Math.max(0, Math.min(1, (sc-15)/10)), night = Math.max(0, Math.min(1, (sc-45)/10));
+  if (dusk > 0){ pctx.globalAlpha = dusk; pctx.drawImage(S.dusk,0,0); }
+  if (night > 0){ pctx.globalAlpha = night; pctx.drawImage(S.night,0,0); }
+  pctx.globalAlpha = 1;
+  if (night > .5 && (fg.t % 200) < 60){ const rn = rng(fg.t>>2); for (let k=0;k<14;k++) p(46 + (rn()*12-6|0), GROUND-118 + (rn()*80|0), '#ffffff'); }
+  fg.pipes.forEach(pp=>{ const x = Math.round(pp.x); drawGirder(x+2, Math.round(pp.top)); drawBuilding(x, Math.round(pp.bot), pp.seed);
+    const m = pp.mac; if (m && !m.got) drawMacaron(Math.round(m.x), Math.round(m.y + Math.sin((fg.t + pp.seed)*.1)*2), m.k); });
+  drawGround(fg.dist);
+  // pigeon
+  const fr = fg.st==='over' ? 2 : (fg.flap > 5 ? 1 : (fg.flap > 0 ? 2 : ((fg.t>>3)%3===0 ? 1 : 0)));
+  const ang = fg.st==='ready' ? 0 : Math.max(-.45, Math.min(1.1, fg.vy*.16));
+  pctx.save(); pctx.translate(44, Math.round(fg.y)); pctx.rotate(ang); pctx.drawImage(pigCv[fr], -7, -6); pctx.restore();
+  // petite écharpe tricolore qui flotte
+  if (fg.st!=='over'){ const sy = Math.round(fg.y) + 1; ['#2d4ea8','#f4f2ee','#d6303a'].forEach((c,i)=>p(36 - i, sy + Math.round(Math.sin(fg.t*.3 + i)*1), c)); }
+  X = prev;
+}
+function fLoop(now){
+  if (!fg) return;
+  if (!fLast) fLast = now;
+  fAcc += Math.min(100, now - fLast); fLast = now;
+  while (fAcc >= 1000/60){ fStep(); fAcc -= 1000/60; }
+  fDraw();
+  fRaf = requestAnimationFrame(fLoop);
+}
+
+// ---- interface ----
+function parisBanner(ev){
+  const el = $('parisToast'); el.innerHTML = `<small>${ev.at} points · ${ev.secret ? 'secret unlocked' : 'unlocked'}</small>${ev.name}`;
+  if (ev.secret) coo();
+  el.classList.remove('show'); void el.offsetWidth; el.classList.add('show');
+  SFX.place(); paintRewards();
+}
+function paintRewards(){
+  const box = $('parisRewards'); box.innerHTML = '';
+  const best = PS().best;
+  EVENT.forEach(ev=>{
+    const own = !!pickOf(ev.slot), w = evWhere(ev.slot);
+    const c = document.createElement('div'); c.className = 'prw' + (own ? ' own' : '');
+    const pv = document.createElement('div'); pv.className = 'pv'; const cv = document.createElement('canvas'); pv.appendChild(cv); c.appendChild(pv);
+    const tx = document.createElement('div'); tx.className = 'tx';
+    const secret = ev.secret && !own;
+    tx.innerHTML = `<b>${secret ? 'Secret gift' : ev.name}</b><span>${own ? (w==='garage' ? 'In the garage' : (w==='room' ? 'In the living room' : 'In the inventory')) : `${ev.at} points`}</span>`;
+    c.appendChild(tx);
+    if (own){
+      const sw = document.createElement('div'); sw.className = 'sw';
+      [['room','Living room'],['garage','Garage']].forEach(([k,lab])=>{
+        if (k==='garage' && !gDone(1)) return;
+        const b = document.createElement('button'); b.type = 'button'; b.textContent = lab; b.className = w===k ? 'on' : '';
+        b.addEventListener('click', ev2=>{ ev2.stopPropagation(); setEvWhere(ev.slot, k); SFX.select(); paintRewards(); buildGrid(); paintTools(); toast(`${itemName(ev.slot)} → ${lab.toLowerCase()}`); });
+        sw.appendChild(b);
+      });
+      c.appendChild(sw);
+    } else {
+      const bar = document.createElement('i'); bar.className = 'pbar'; bar.style.setProperty('--p', Math.min(1, best/ev.at)); c.appendChild(bar);
+    }
+    box.appendChild(c);
+    if (secret){ pv.innerHTML = '<span class="q">?</span>'; c.classList.add('secret'); return; }
+    renderItemTo(cv, ev.slot, 'x', T); if (!own) cv.style.filter = 'brightness(0) opacity(.35)';
+    requestAnimationFrame(()=>fitCanvas(cv, pv.clientWidth-6, pv.clientHeight-6));
+  });
+}
+function paintParisUI(record){
+  const msg = $('parisMsg'), P = PS();
+  $('parisScore').textContent = fg ? fg.score : 0;
+  $('parisScore').hidden = !fg || fg.st==='ready';
+  $('parisBest').textContent = P.best ? `Best ${P.best}` : '';
+  if (!fg || fg.st==='ready'){
+    msg.hidden = false;
+    msg.innerHTML = `<span class="pt">Bonjour, ${CONFIG.herName}</span><span class="ps">Tap to fly over Paris.<br>Every building and every macaron is a point.</span>`;
+  } else if (fg.st==='play') msg.hidden = true;
+  else {
+    msg.hidden = false;
+    const got = fg.newRewards.map(s=>itemName(s));
+    const nx = EVENT.find(ev=>!pickOf(ev.slot));
+    msg.innerHTML = `<span class="pt">${record ? 'New record!' : 'Oh là là'}</span><span class="pbig">${fg.score}</span>`
+      + (got.length ? `<span class="ps">Unlocked: <b>${got.join(', ')}</b><br>Choose where it goes below.</span>` : (nx ? `<span class="ps">${nx.secret ? 'A secret gift is waiting' : 'Next gift'} at ${nx.at} points.</span>` : `<span class="ps">Everything unlocked. Paris is yours.</span>`))
+      + `<span class="ps dim">Tap to try again</span>`;
+  }
+  paintRewards();
+}
+function openParis(){
+  if (!parisOpen()){ const dt = dateOfDay(EV_DAY); toast(`Opens on ${MOIS[dt.getMonth()]} ${dt.getDate()}.`); SFX.nope(); return; }
+  if (editing) setEditing(false);
+  if (photoMode) exitPhoto();
+  fg = fgNew(); fAcc = 0; fLast = 0;
+  $('paris').hidden = false; document.body.style.overflow = 'hidden';
+  paintParisUI(); SFX.open();
+  cancelAnimationFrame(fRaf); fRaf = requestAnimationFrame(fLoop);
+}
+function closeParis(){
+  $('paris').hidden = true; document.body.style.overflow = '';
+  cancelAnimationFrame(fRaf); fg = null;
+  PS().seen = true; save(); paintParisBtn(); paintTools(); buildGrid(); updateHud();
+}
+function paintParisBtn(){
+  const b = $('parisBtn'); b.hidden = !parisOpen();
+  b.classList.toggle('fresh', !PS().seen);
+}
+$('parisBtn').addEventListener('click', openParis);
+$('parisClose').addEventListener('click', closeParis);
+$('parisStage').addEventListener('pointerdown', e=>{ e.preventDefault(); fFlap(); });
+document.addEventListener('keydown', e=>{
+  if ($('paris').hidden) return;
+  if (e.key==='Escape'){ closeParis(); return; }
+  if (e.key===' ' || e.key==='ArrowUp' || e.key==='Enter'){ e.preventDefault(); fFlap(); }
+});
+
+
+/* =====================================================================
+   MONSIEUR PIGEON — l'animal secret (250 points au jeu de Paris)
+   ===================================================================== */
+const BIRD_NAME = 'Monsieur Pigeon';
+const BERET = ['.....s....','...rrrrr..','..qrrrrrR.'];
+const BSPR = {
+  stand:[...BERET,'....hhkh..','....hhhhy.','...nnhh...','tbbbbbbb..','.tbwwwbb..','..bbbbb...','...o.o....'],
+  step: [...BERET,'....hhkh..','....hhhhy.','...nnhh...','tbbbbbbb..','.tbwwwbb..','..bbbbb...','..o...o...'],
+  peck: ['..........','..........','..........','.......s..','.....rrrrr','....qrrrrR','tbbbbbhhkh','.tbwwwbhhy','..bbbbb...','...o.o....'],
+  flyU: ['.....s....','...rrrrr..','w.qrrrrrR.','ww..hhkh..','.ww.hhhhy.','..wnnhh...','tbbbbbbb..','.tbbbbbb..','..bbbbb...','..........'],
+  flyD: [...BERET,'....hhkh..','....hhhhy.','...nnhh...','tbbbbbbb..','.tbwwbbb..','..wwwbb...','.ww.......'],
+  sleep:['..........','..........','.....s....','...rrrrr..','..qrrrrrR.','....hhch..','...nhhhhy.','tbbbbbbb..','.tbwwwbb..','..bbbbb...']
+};
+const BPAL = { r:'#c92b3a', q:'#f2737c', R:'#8e1c28', s:'#6e1420', h:'#8f96a8', k:'#14141a', c:'#4a5060', y:'#e8a24a', n:'#5f9a86', b:'#a4abbb', w:'#737a8e', t:'#2d4ea8', o:'#e07a5a' };
+const TRI = ['#2d4ea8','#f4f2ee','#d6303a'];
+function drawBirdSpr(frame, x, y, z, flip, shadow, t){
+  if (shadow !== false) ell(x, y, z > 2 ? 3 : 4, 1, z > 2 ? 'rgba(0,0,0,.18)' : 'rgba(0,0,0,.28)');
+  const x0 = x-5, y0 = y-10-z, ty = y0 + (frame==='sleep' ? 7 : 6), live = frame==='flyU' || frame==='flyD';
+  spr(BSPR[frame], BPAL, x0, y0, flip);
+  // petite queue bleu blanc rouge, comme l'écharpe du jeu
+  TRI.forEach((c,i)=>{ const cx = flip ? x0 + 9 + i : x0 - i;
+    const dy = i ? Math.round(Math.sin((t||0) * (live ? .5 : .12) + i*1.3) * (live ? 1 : .6)) : 0;
+    p(cx, ty + dy, c); p(cx, ty + 1 + dy, c); });
+}
+ITEMS.ev_pigeon = { draw:(o,t)=>drawBirdSpr('stand',7,11,0,false,undefined,t), bbox:()=>({x:0,y:0,w:13,h:12}) };
+EVENT.push({ slot:'ev_pigeon', at:250, secret:true, name:BIRD_NAME, ds:'A Parisian pigeon who decided to move in' });
+EV_SLOTS.push('ev_pigeon'); ALL_SLOTS.push('ev_pigeon');
+
+const BIRD = { room:null, x:120, y:150, z:0, sx:0, sy:0, sz:0, tx:0, ty:0, tz:0, fp:1, fd:1, cruise:0, hops:0, dir:1, state:'idle', timer:40, anim:0, lapOf:null, perch:null, toy:null, pecks:0 };
+const pickOne = a => a[Math.floor(Math.random()*a.length)];
+function birdWhere(){ const w = evWhere('ev_pigeon'); return (w==='room' || w==='garage') ? w : null; }
+function syncBird(){
+  const w = birdWhere(); if (w === BIRD.room) return;
+  BIRD.room = w; if (!w) return;
+  const [x,y] = walkTarget(); Object.assign(BIRD, { x, y:Math.max(124,y-20), z:40, lapOf:null, perch:null, toy:null });
+  birdFly(x, y, 0, 'fly', 10);
+}
+function birdFly(x, y, z, st, cruise, hops){
+  const b = BIRD; b.sx = b.x; b.sy = b.y; b.sz = b.z; b.tx = x; b.ty = y; b.tz = z;
+  b.fd = Math.max(1, Math.hypot(x-b.x, y-b.y, (z-b.z)*.6)); b.fp = 0; b.cruise = cruise || 0; b.hops = hops || 0; b.state = st;
+  if (Math.abs(x-b.x) > .5) b.dir = x > b.x ? 1 : -1;
+}
+function perchSpots(){
+  const out = [], rm = BIRD.room;
+  if (evWhere('ev_flag')===rm){
+    if (rm==='room'){ const [dx,dy] = offOf('ev_flag','x'); out.push({ k:'flag', x:dx+3, y:dy+43, z:42, sy:ITEMS.ev_flag.sortY + userOff('ev_flag')[1] + .1 }); }
+    else { const [gx,gy] = gOff('ev_flag'), [ex,ey] = EV_G.ev_flag; out.push({ k:'flag', x:ex+gx+3, y:ey+gy+43, z:42, sy:EV_GSORT.ev_flag + gy + .1 }); }
+  }
+  if (rm==='garage' && gDone(1) && G().unwrapped){ const [cx,cy] = gOff('car'); out.push({ k:'car', x:146+cx, y:147+cy, z:36 - carLift(), sy:147+cy+.1 }); }
+  return out;
+}
+function birdLaps(){ return BIRD.room==='room' ? humans().filter(h=>h.room==='room' && seatOf(h) && !PETS.some(q=>q.lapOf===h)) : []; }
+function birdDecide(){
+  const b = BIRD; b.toy = null; b.perch = null; b.lapOf = null;
+  const r0 = Math.random(), laps = birdLaps(), spots = perchSpots(), toys = TOYS.filter(o=>o.room===b.room && !o.carrier);
+  if (laps.length && r0 < .25){ const h = pickOne(laps), st = seatOf(h); b.lapOf = h; birdFly(st.x+3, st.y+18, 14, 'toLap', 14); return; }
+  if (spots.length && r0 < .5){ const sp = pickOne(spots); b.perch = sp.k; birdFly(sp.x, sp.y, sp.z, 'toPerch', 10); return; }
+  if (toys.length && r0 < .66){ const o = pickOne(toys); b.toy = o; b.pecks = 3 + (Math.random()*4|0); const side = o.x > b.x ? -5 : 5;
+    if (b.z > 2) birdFly(o.x+side, o.y, 0, 'toToy', 6); else birdFly(o.x+side, o.y, 0, 'toToy', 0, Math.max(1, Math.round(Math.hypot(o.x-b.x,o.y-b.y)/9))); return; }
+  if (gDone(1) && !race && r0 < .7){ const e = ROOM_DOOR[b.room]; birdFly(e.x, Math.min(150, e.y), 22, 'toExit', 16); return; }
+  if (r0 < .86){ const [x,y] = walkTarget(); birdFly(x, y, 0, 'fly', 16 + Math.random()*22); return; }
+  if (r0 < .95 && b.z < 2){ const y = Math.max(124, Math.min(157, b.y + rand(-14,14))), x = clampX(b.x + rand(-34,34), y); birdFly(x, y, 0, 'hop', 0, Math.max(1, Math.round(Math.hypot(x-b.x,y-b.y)/9))); return; }
+  if (b.z > 2){ const [x,y] = walkTarget(); birdFly(x, y, 0, 'fly', 12); return; }
+  b.state = 'idle'; b.timer = rand(40,110)|0;
+}
+function birdSpot(){ return perchSpots().find(q=>q.k===BIRD.perch); }
+function birdArrive(){
+  const b = BIRD;
+  switch (b.state){
+    case 'toLap': if (seatOf(b.lapOf) && !PETS.some(q=>q.lapOf===b.lapOf)){ b.state = 'lap'; b.timer = rand(300,700)|0; } else { b.lapOf = null; birdFly(b.x, Math.min(157, b.y+4), 0, 'fly', 6); } return;
+    case 'toPerch': if (birdSpot()){ b.state = 'perch'; b.timer = rand(160,420)|0; } else birdDecide(); return;
+    case 'toToy': b.state = 'peck'; b.timer = 8; return;
+    case 'toExit': {
+      const to = b.room==='garage' ? 'room' : 'garage';
+      b.room = to; setEvWhere('ev_pigeon', to);
+      const e = ROOM_DOOR[to]; b.x = e.x; b.y = Math.min(150, e.y); b.z = 22;
+      const [x,y] = walkTarget(); birdFly(x, y, 0, 'fly', 14); return; }
+    default: b.z = Math.max(0, b.tz); b.state = 'idle'; b.timer = rand(30,90)|0;
+  }
+}
+function updateBird(){
+  const b = BIRD; if (!b.room) return;
+  b.anim++;
+  switch (b.state){
+    case 'fly': case 'hop': case 'toLap': case 'toPerch': case 'toToy': case 'toExit': {
+      if (b.state==='toLap'){ const st = seatOf(b.lapOf); if (!st){ b.lapOf = null; b.state = 'fly'; b.tz = 0; } else { b.tx = st.x+3; b.ty = st.y+18; } }
+      if (b.state==='toPerch'){ const sp = birdSpot(); if (!sp){ b.perch = null; b.state = 'fly'; b.tz = 0; } else { b.tx = sp.x; b.ty = sp.y; b.tz = sp.z; } }
+      if (b.state==='toToy' && (!b.toy || !TOYS.includes(b.toy) || b.toy.room!==b.room)){ b.toy = null; b.state = 'fly'; }
+      const sp = b.hops ? .7 : 1.25; b.fp = Math.min(1, b.fp + sp/b.fd);
+      const p = b.fp, e = p*p*(3-2*p);
+      b.x = b.sx + (b.tx-b.sx)*e; b.y = b.sy + (b.ty-b.sy)*e;
+      b.z = b.sz + (b.tz-b.sz)*e + (b.hops ? Math.abs(Math.sin(p*Math.PI*b.hops))*3 : Math.sin(p*Math.PI)*b.cruise);
+      if (p >= 1) birdArrive();
+      break; }
+    case 'idle': if (--b.timer <= 0) birdDecide(); break;
+    case 'peck': {
+      const o = b.toy;
+      if (!o || !TOYS.includes(o) || o.room!==b.room){ birdDecide(); break; }
+      if (Math.abs(o.x - b.x) > 9 || Math.abs(o.y - b.y) > 5){ const side = o.x > b.x ? -5 : 5; birdFly(o.x+side, o.y, 0, 'toToy', 0, 1); break; }
+      b.dir = o.x > b.x ? 1 : -1;
+      if (--b.timer <= 0){ b.timer = 14; o.vx += b.dir*.7; o.vy += rand(-.3,.3); burst(o.x, o.y-2, 2, ['#ffffff','#f4cf86'], false); if (--b.pecks <= 0){ b.toy = null; b.state = 'idle'; b.timer = 40; } }
+      break; }
+    case 'perch': { const sp = birdSpot(); if (!sp){ b.perch = null; birdFly(b.x, b.y, 0, 'fly', 4); break; } b.x = sp.x; b.y = sp.y; b.z = sp.z;
+      if (b.anim % 90 === 0 && Math.random() < .5) b.dir *= -1;
+      if (--b.timer <= 0){ b.perch = null; const [x,y] = walkTarget(); birdFly(x, y, 0, 'fly', 8); } break; }
+    case 'lap': { const st = seatOf(b.lapOf);
+      if (!st || --b.timer <= 0){ const p0 = st || { x:b.x, y:b.y-18 }; b.lapOf = null; b.x = p0.x+3; b.y = p0.y+18; b.z = 14; const [x,y] = walkTarget(); birdFly(x, y, 0, 'fly', 12); break; }
+      b.x = st.x+3; b.y = st.y+18; b.z = 14; break; }
+  }
+}
+function birdFrame(){
+  const b = BIRD;
+  if (b.state==='lap') return 'sleep';
+  if (b.state==='peck') return (b.timer > 8) ? 'stand' : 'peck';
+  if (b.state==='idle') return (b.anim % 70) > 60 ? 'peck' : 'stand';
+  if (b.state==='perch') return 'stand';
+  if (b.hops) return (b.z > .8) ? 'step' : 'stand';
+  return ((b.anim>>1)&1) ? 'flyU' : 'flyD';
+}
+// position à l'écran (pieds) et profondeur
+function birdGeom(){
+  const b = BIRD;
+  if (b.state==='lap'){ const st = seatOf(b.lapOf); if (st) return { x:st.x+3, y:st.y+4, z:0, sort:-1, shadow:false }; }
+  if (b.state==='perch'){ const sp = birdSpot(); if (sp) return { x:sp.x, y:sp.y, z:sp.z, sort:sp.sy, shadow:false }; }
+  return { x:b.x, y:b.y, z:b.z, sort:b.y + .02, shadow:true };
+}
+function drawBird(){
+  const b = BIRD, g = birdGeom();
+  drawBirdSpr(birdFrame(), Math.round(g.x), Math.round(g.y), Math.round(g.z), b.dir < 0, g.shadow, b.anim);
+  if (b.state==='lap'){ const k = (b.anim % 60) / 60, zx = Math.round(g.x + 4 + k*4), zy = Math.round(g.y - 10 - k*8), a = (1-k).toFixed(2);
+    spr(['zzz','..z','.z.','zzz'], { z:`rgba(236,235,243,${a})` }, zx, zy); }
+}
+function birdEnt(room){ if (BIRD.room!==room || BIRD.state==='lap') return null; return { y:birdGeom().sort, d:drawBird }; }
+function birdHitAt(room, x, y){
+  if (BIRD.room!==room) return null; const g = birdGeom(), top = g.y - g.z - 11, bot = g.y - g.z + 1;
+  return (Math.abs(x - g.x) <= 6 && y >= top && y <= bot) ? { z: g.sort < 0 ? .7 : g.sort + 1, bird:true, g } : null;
+}
+function coo(){ blip(392,.12,0,'sine',.05); blip(330,.18,.11,'sine',.05); blip(370,.14,.3,'sine',.04); }
+function tapBird(g){
+  const b = BIRD;
+  label('pigeon', `${BIRD_NAME} <b>♥</b>`, g.x, g.y - g.z - 11); coo();
+  burst(g.x, g.y - g.z - 6, 5, ['#d6dae4','#ffffff','#f2b8c8'], true);
+  if (b.state==='lap'){ b.timer = 1; return; }
+  if (b.state==='perch'){ b.dir *= -1; return; }
+  if (b.z < 2 && b.state!=='peck'){ const y = Math.max(124, Math.min(157, b.y + rand(-10,10))), x = clampX(b.x + rand(-40,40), y); birdFly(x, y, 0, 'fly', 18); }
+}
 
 /* =====================================================================
    CODES SECRETS
@@ -3625,13 +4309,16 @@ const CHEATS = {
   SHANGHAI(){ return viewCheat('shanghai','Shanghai'); },
   MIAMI(){ return viewCheat('miami','Miami'); },
   LONDON(){ return viewCheat('london','London'); },
-  TOYS(){ if (race) return 'Busy driving'; if (scene==='garage') return 'The toys are in the living room'; if (!TOYS.length) return 'No toys yet (day 10)'; PETS.forEach((pt,i)=>{ releasePet(pt); const o = TOYS[i % TOYS.length]; pt.toy = o; pt.plays = 5; goTo(pt,o.x,o.y,'toToy'); }); return 'Playtime!'; },
+  TOYS(){ if (race) return 'Busy driving'; if (scene==='garage') return 'The toys are in the living room'; const TS = TOYS.filter(o=>o.room==='room'); if (!TS.length) return 'No toys yet (day 10)'; PETS.forEach((pt,i)=>{ summon(pt,'room'); releasePet(pt); const o = TS[i % TS.length]; pt.toy = o; pt.plays = 5; goTo(pt,o.x,o.y,'toToy'); }); return 'Playtime!'; },
   CYCLE(){ if (!chosenFor('window')) return 'You need the window first (day 2)'; lightMode = null; cycleBase = VH; cycleF = 480; return 'A whole day in 24 seconds'; },
   CURTAINS(){ if (!chosenFor('curtains')) return 'You need curtains first (day 3)'; toggleCurtains(); return state.curtainsClosed ? 'Curtains closed' : 'Curtains open'; },
   PHOTO(){ if (!isFinal()) return 'Photo mode arrives on November 20'; if (photoMode){ exitPhoto(); return 'Photo mode closed'; } enterPhoto(); return 'Photo mode'; },
   WHEEL(){ openWheel(); return wheelAvailable() ? 'The wheel is waiting' : 'Already spun today'; },
   LIGHTS(){ const ls = ALL_SLOTS.filter(s=>s!=='window' && lightOf(s)); if (!ls.length) return 'No lights yet'; const allOff = ls.every(s=>!isOn(s)); state.off = state.off || {}; ls.forEach(s=>{ state.off[s] = !allOff; }); save(); return allOff ? 'Everything is on' : 'Everything is off'; },
-  INVENTORY(){ if (scene==='garage') return 'The inventory is in the living room'; openInventory(); return 'Inventory'; },
+  BONJOUR(){ if (!parisOpen()) return 'Paris opens on November 10'; openParis(); return 'Bienvenue à Paris'; },
+  TOUREIFFEL(){ if (!DEV) return 'Nice try'; EVENT.forEach(ev=>grantEv(ev.slot)); refresh(); paintTools(); return 'All Paris gifts unlocked'; },
+  PIGEON(){ const where = scene==='garage' ? 'garage' : 'room'; setEvWhere('ev_pigeon', where); syncBird(); const [x,y] = walkTarget(); BIRD.lapOf = null; BIRD.perch = null; birdFly(x, y, 0, 'fly', 34); coo(); buildGrid(); paintTools(); return `${BIRD_NAME} flies in`; },
+  INVENTORY(){ openInventory(); return 'Inventory'; },
   DOOR(){ if (!gPick('gdoor')) return 'The garage door arrives on day 5'; if (scene!=='garage') setScene('garage'); toggleGDoor(); return G().doorOpen ? 'Garage door open' : 'Garage door closed'; },
   GARAGE(){ setScene(scene==='garage' ? 'room' : 'garage'); return scene==='garage' ? 'Welcome to the garage' : 'Back to the living room'; },
   FLOOR(){ return cyclePick('floor', 'Floor'); },
@@ -3651,8 +4338,8 @@ const CHEATS = {
 // les anciens codes en français marchent toujours
 Object.assign(CHEATS, { NEIGE:CHEATS.SNOW, BISOU:CHEATS.KISS, MIAOU:CHEATS.MEOW, OUAF:CHEATS.WOOF, CALIN:CHEATS.CUDDLE, CANAPE:CHEATS.SOFA,
   DANSE:CHEATS.DANCE, NUIT:CHEATS.NIGHT, JOUR:CHEATS.DAY, PETALES:CHEATS.PETALS, ETOILES:CHEATS.STARS, JOUETS:CHEATS.TOYS,
-  RIDEAUX:CHEATS.CURTAINS, ROUE:CHEATS.WHEEL, LUMIERES:CHEATS.LIGHTS, INVENTAIRE:CHEATS.INVENTORY, PORTE:CHEATS.DOOR, SOL:CHEATS.FLOOR, MUR:CHEATS.WALLS, MURS:CHEATS.WALLS, WALL:CHEATS.WALLS, LONDRES:CHEATS.LONDON, SINGAPOUR:CHEATS.SINGAPORE, CALINS:CHEATS.HUG, COURSE:CHEATS.RACE, INDICE:CHEATS.HINT });
-const FUN_CODES = ['GARAGE','FLOOR','WALLS','HUG','KISS','BACKFLIP','HEARTS','LONDON','MIAMI','SINGAPORE','SHANGHAI','ABUDHABI','RACE','WHEEL','LIGHTS','CYCLE','CURTAINS','SNOW','KISS','ZOOMIES','CERISE','BUSHINKA','CUDDLE','SOFA','DANCE','DISCO','NIGHT','DAY','PETALS','STARS','PARIS','ALMATY','VANCOUVER','DUBAI','TOYS','INVENTORY','HINT'];
+  RIDEAUX:CHEATS.CURTAINS, ROUE:CHEATS.WHEEL, LUMIERES:CHEATS.LIGHTS, INVENTAIRE:CHEATS.INVENTORY, ROUCOU:CHEATS.PIGEON, FLAPPY:CHEATS.BONJOUR, PORTE:CHEATS.DOOR, SOL:CHEATS.FLOOR, MUR:CHEATS.WALLS, MURS:CHEATS.WALLS, WALL:CHEATS.WALLS, LONDRES:CHEATS.LONDON, SINGAPOUR:CHEATS.SINGAPORE, CALINS:CHEATS.HUG, COURSE:CHEATS.RACE, INDICE:CHEATS.HINT });
+const FUN_CODES = ['GARAGE','FLOOR','WALLS','HUG','KISS','BACKFLIP','HEARTS','LONDON','MIAMI','SINGAPORE','SHANGHAI','ABUDHABI','RACE','WHEEL','LIGHTS','CYCLE','CURTAINS','SNOW','KISS','ZOOMIES','CERISE','BUSHINKA','CUDDLE','SOFA','DANCE','DISCO','NIGHT','DAY','PETALS','STARS','PARIS','ALMATY','VANCOUVER','DUBAI','TOYS','INVENTORY','BONJOUR','HINT'];
 function nobody(){ return 'Nobody is in the living room yet'; }
 function petCheat(pt){
   if (!residents()) return nobody();
@@ -3675,7 +4362,7 @@ function runCheat(){
   const inp = $('cheatInput'), code = inp.value.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/gi,'').toUpperCase();
   inp.value = '';
   if (!code) return;
-  const fn = CHEATS[code];
+  const fn = (code==='PIGEON' || code==='ROUCOU') && !pickOf('ev_pigeon') ? null : CHEATS[code];
   if (fn){ SFX.place(); toast(fn()); inp.blur(); }
   else { SFX.nope(); const f = $('cheatForm'); f.classList.remove('shake'); void f.offsetWidth; f.classList.add('shake'); toast('Unknown code'); }
 }
@@ -3690,7 +4377,9 @@ $('garageBtn').addEventListener('click', ()=>setScene(scene==='garage' ? 'room' 
 $('gLightBtn').addEventListener('click', toggleGLights);
 $('gDoorBtn').addEventListener('click', toggleGDoor);
 $('invBtn').addEventListener('click', openInventory);
-$('storeBtn').addEventListener('click', ()=>{ if (!selSlot) return; const n = itemName(selSlot); setStored(selSlot, true); selSlot = null; paintTools(); blip(500,.06,0,'sine',.06); toast(`${n} stored in the inventory`); });
+$('storeBtn').addEventListener('click', ()=>{ if (!selSlot) return;
+  if (scene==='garage'){ const n = gItemName(selSlot); if (isEv(selSlot)) setEvWhere(selSlot,'stored'); else gSetStored(selSlot, true); selSlot = null; paintTools(); blip(500,.06,0,'sine',.06); toast(`${n} stored in the inventory`); return; }
+  const n = itemName(selSlot); setStored(selSlot, true); selSlot = null; paintTools(); blip(500,.06,0,'sine',.06); toast(`${n} stored in the inventory`); });
 $('photoBtn').addEventListener('click', enterPhoto);
 $('exitPhotoBtn').addEventListener('click', exitPhoto);
 $('shootBtn').addEventListener('click', shoot);
