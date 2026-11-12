@@ -247,7 +247,65 @@
     .paris-rewards{flex-direction:row;overflow-x:auto;padding-bottom:4px}
     .prw{width:178px}
   }
-  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  /* ---------- Événement Sudoku + lettre ---------- */
+  .su-t{font-family:var(--serif);font-style:italic;font-size:clamp(30px,4vw,40px);line-height:1;color:#f4efe6}
+  .sugrid{width:13px;height:13px;flex:none;border:1px solid var(--muted);background:linear-gradient(90deg,transparent 4px,var(--muted) 4px 5px,transparent 5px 8px,var(--muted) 8px 9px,transparent 9px),linear-gradient(transparent 4px,var(--muted) 4px 5px,transparent 5px 8px,var(--muted) 8px 9px,transparent 9px)}
+  .su-box{grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto;width:min(480px,100%);overflow:auto}
+  .su-main{display:flex;flex-direction:column;align-items:center;gap:12px}
+  .su-grid{display:grid;grid-template-columns:repeat(9,1fr);width:min(420px,100%);aspect-ratio:1;border:2px solid #c9c4d8;border-radius:10px;overflow:hidden;background:#c9c4d8;gap:1px}
+  .su-grid.win{animation:suwin .9s ease}
+  @keyframes suwin{0%{box-shadow:0 0 0 0 rgba(242,184,200,.8)}100%{box-shadow:0 0 0 18px rgba(242,184,200,0)}}
+  .suc{background:#17171f;border:0;color:var(--accent);font:600 clamp(16px,4.6vw,22px)/1 var(--sans);cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;transition:background .12s}
+  .suc.br{box-shadow:inset -2px 0 0 #c9c4d8}.suc.bb{box-shadow:inset 0 -2px 0 #c9c4d8}.suc.br.bb{box-shadow:inset -2px 0 0 #c9c4d8,inset 0 -2px 0 #c9c4d8}
+  .suc.given{color:var(--text);font-weight:700;cursor:default}
+  .suc.peer{background:#1f1f2b}.suc.same{background:#2c2440}
+  .suc.sel{background:#3a2a44;outline:2px solid var(--accent);outline-offset:-2px}
+  .suc.bad{color:#ff6a6a;background:#3a1a22}
+  .suc:disabled{cursor:default}
+  .su-info{font-size:13px;color:var(--muted);min-height:18px;text-align:center}
+  .su-pad{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;width:min(420px,100%)}
+  .su-pad button{background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:10px;font:600 18px/1 var(--sans);padding:12px 0;cursor:pointer}
+  .su-pad button:hover{border-color:var(--accent);color:var(--accent)}
+  .su-pad .erase{color:var(--muted)}
+  .su-reward{width:min(420px,100%);display:flex;flex-direction:column;gap:10px}
+  .su-letter{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,#2a2234,#1f1b28);border:1px solid rgba(242,184,200,.4);border-radius:14px;padding:12px 14px;color:var(--text);cursor:pointer;text-align:left}
+  .su-letter:hover{border-color:var(--accent)}
+  .su-letter .tx{display:flex;flex-direction:column;gap:2px}.su-letter small{color:var(--accent);font-size:12px}
+  .mini-env{width:44px;height:30px;flex:none;border-radius:3px;background:linear-gradient(160deg,transparent 48%,#d8c8ac 49% 51%,transparent 52%),linear-gradient(200deg,transparent 48%,#d8c8ac 49% 51%,transparent 52%),#f3e8d4;position:relative}
+  .mini-env::after{content:'♥';position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);font-size:11px;color:#b8323e}
+  .su-rw{grid-template-columns:minmax(0,1fr)}
+  .letter{position:fixed;inset:0;z-index:40;background:rgba(6,7,12,.86);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:20px;perspective:1400px}
+  .letter-x{position:absolute;top:16px;right:16px;z-index:5}
+  .env-stage{display:flex;flex-direction:column;align-items:center;gap:16px;transition:opacity .5s ease,transform .5s ease}
+  .letter.out .env-stage{opacity:0;transform:translateY(40px) scale(.9);pointer-events:none}
+  .envelope{position:relative;width:min(360px,84vw);aspect-ratio:3/2;cursor:pointer;perspective:900px;animation:rise .4s ease}
+  .env-back{position:absolute;inset:0;background:#e6d7bd;border-radius:8px;box-shadow:0 18px 40px rgba(0,0,0,.45)}
+  .env-paper{position:absolute;left:7%;right:7%;top:6%;height:80%;background:#fbf6ec;border-radius:4px;transition:transform .7s ease .45s;z-index:1}
+  .letter.open .env-paper{transform:translateY(-48%)}
+  .env-front{position:absolute;inset:0;z-index:2;background:#f3e8d4;border-radius:8px;clip-path:polygon(0 34%,50% 66%,100% 34%,100% 100%,0 100%);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:9%}
+  .env-to{font-family:'Parisienne','Snell Roundhand','Apple Chancery','Segoe Script',cursive;font-size:clamp(26px,7vw,34px);color:#7a2a3a;line-height:1}
+  .env-from{font-family:var(--serif);font-style:italic;font-size:17px;color:#6a5040;margin-top:2px}
+  .env-flap{position:absolute;left:0;right:0;top:0;height:60%;z-index:3;background:#ecdfc6;clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top center;transition:transform .6s ease,z-index 0s .3s;border-radius:8px 8px 0 0}
+  .letter.open .env-flap{transform:rotateX(180deg);z-index:0}
+  .env-seal{position:absolute;left:50%;top:56%;transform:translate(-50%,-50%);z-index:4;width:36px;height:36px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#d84a58,#9a1f2e);color:#ffd8de;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 2px 6px rgba(0,0,0,.35);transition:opacity .3s}
+  .letter.open .env-seal{opacity:0}
+  .env-hint{font-size:13px;color:var(--muted)}
+  .letter-card{position:absolute;width:min(440px,90vw);aspect-ratio:3/2;opacity:0;transform:translateY(60px) scale(.85);transition:opacity .6s ease .2s,transform .7s cubic-bezier(.2,.8,.2,1) .2s;pointer-events:none;cursor:pointer}
+  .letter.out .letter-card{opacity:1;transform:none;pointer-events:auto}
+  .lc-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.3,.7,.2,1)}
+  .letter.flip .lc-inner{transform:rotateY(180deg)}
+  .lc-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:10px;background:#fbf6ec;box-shadow:0 24px 60px rgba(0,0,0,.5);overflow:hidden}
+  .lc-back{padding:12px;display:flex;flex-direction:column;gap:8px}
+  .lc-back canvas{flex:1;width:100%;min-height:0;object-fit:cover;image-rendering:pixelated;border-radius:6px}
+  .lc-hint{font-size:12px;color:#8a7a6a;text-align:center;letter-spacing:.06em}
+  .lc-front{transform:rotateY(180deg);background:#fcf9f2;color:#3a2e2e;font-family:var(--serif);font-size:clamp(15px,4.1vw,20px);line-height:1.4}
+  .lc-flowers{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+  .lc-text{position:absolute;inset:14% 13%;display:flex;flex-direction:column;justify-content:center;gap:5px}
+  .lc-hello{font-style:italic;font-size:1.15em;margin-bottom:4px}
+  .lc-sign{font-family:'Parisienne','Snell Roundhand','Apple Chancery','Segoe Script',cursive;font-size:1.7em;color:#9a2a3a;margin-top:6px;line-height:1}
+  .lc-sign{align-self:flex-end;margin-right:4%}
+  @media (prefers-reduced-motion:reduce){
+*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
@@ -264,6 +322,10 @@
         <button class="paris-ev" id="kzBtn" type="button" hidden aria-label="Алға, Қазақстан! 11 November. Play">
           <span class="kz-t">Алға, Қазақстан!</span>
           <span class="pe-d"><span class="kzflag"></span>11 қараша<span class="pe-play">Play ▸</span></span>
+        </button>
+        <button class="paris-ev" id="suBtn" type="button" hidden aria-label="Sudoku, 12 November. Play">
+          <span class="su-t">Sudoku</span>
+          <span class="pe-d"><span class="sugrid"></span>12 November<span class="pe-play">Play ▸</span></span>
         </button>
       </div>
     </div>
@@ -288,6 +350,7 @@
       <div class="grp">
         <button class="ghost" id="wheelBtn" hidden>Wheel of fortune</button>
         <button class="ghost" id="invBtn" hidden>Inventory</button>
+        <button class="ghost" id="letterBtn" hidden>✉ Léo's letter</button>
         <button class="ghost" id="storeBtn" hidden>Store in inventory</button>
         <button class="ghost" id="curtainBtn" hidden>Close the curtains</button>
         <button class="ghost" id="photoBtn" hidden>Photo mode</button>
@@ -351,6 +414,53 @@
     <div class="kz-side">
       <p class="paris-lead">Gifts to win · today only</p>
       <div class="kz-rewards" id="kzRewards"></div>
+    </div>
+  </div>
+</div>
+
+<div class="paris su" id="su" hidden>
+  <div class="paris-box su-box" role="dialog" aria-modal="true" aria-label="Sudoku">
+    <div class="paris-head">
+      <div><span class="su-t">Sudoku</span><span class="pe-d"><span class="sugrid"></span>12 November · medium</span></div>
+      <button class="x" id="suClose" aria-label="Close">✕</button>
+    </div>
+    <div class="su-main">
+      <div class="su-grid" id="suGrid"></div>
+      <p class="su-info" id="suInfo"></p>
+      <div class="su-pad" id="suPad"></div>
+      <div class="su-reward" id="suReward" hidden>
+        <p class="paris-lead">Your gifts</p>
+        <button class="su-letter" id="suLetterBtn" type="button"><span class="mini-env" aria-hidden="true"></span><span class="tx"><b>A letter from Léo</b><small>Tap to open it</small></span></button>
+        <div class="kz-rewards su-rw" id="suRewards"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="letter" id="letter" hidden>
+  <button class="x letter-x" id="letterClose" aria-label="Close">✕</button>
+  <div class="env-stage">
+    <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Open the envelope">
+      <div class="env-back"></div>
+      <div class="env-paper"></div>
+      <div class="env-front"><span class="env-to">Pour ma chérie</span><span class="env-from">— Léo</span></div>
+      <div class="env-flap"></div>
+      <span class="env-seal">♥</span>
+    </div>
+    <p class="env-hint">Tap the envelope to open it</p>
+  </div>
+  <div class="letter-card" id="letterCard" role="button" tabindex="0" aria-label="Turn the letter over">
+    <div class="lc-inner">
+      <div class="lc-face lc-back"><canvas id="letterArt" width="120" height="80"></canvas><span class="lc-hint">Tap to turn it over</span></div>
+      <div class="lc-face lc-front">
+        <svg class="lc-flowers" id="lcFlowers" viewBox="0 0 300 200" preserveAspectRatio="none" aria-hidden="true"></svg>
+        <div class="lc-text">
+          <p class="lc-hello">Hello mon petit triangle,</p>
+          <p>I hope you're feeling a little better.</p>
+          <p>Call me when you're free. I have something for you.</p>
+          <p class="lc-sign">Bisous !</p>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -2007,6 +2117,44 @@ function evAt(s, room){
 function evSort(s, room){ return room==='room' ? ITEMS[s].sortY + userOff(s)[1] : (room==='gaming' ? EV_MSORT[s] + mOff(s)[1] : EV_GSORT[s] + gOff(s)[1]); }
 function yurtSleepers(room){ return PETS.some(pt=>pt.room===room && pt.state==='yurt'); }
 
+/* ---------- Coin du sorcier (récompense du Sudoku) ---------- */
+function wizBook(t){ return Math.round(Math.sin(t*.06)*2); }
+function drawWizard(o,t,env){
+  const on = !isOff(env);
+  ell(20,45,15,2,'rgba(0,0,0,.3)');
+  // petite table ronde en bois
+  r(19,33,3,11,'#5a3a22'); r(14,43,13,1,'#4a2e1a'); r(14,42,2,2,'#4a2e1a'); r(25,42,2,2,'#4a2e1a');
+  ell(20,32,13,3,'#7a5232'); ell(20,31,13,2,'#9a6a40'); r(8,32,25,1,'#5a3a22');
+  // fioles de potion
+  const pulse = k=> on ? (Math.sin(t*.12 + k*2)*.5 + .5) : 0;
+  ell(11,27,3,3,'#5a2a7a'); ell(11,27,2,2, on ? mixHex('#a050e0','#e0a0ff',pulse(0)) : '#6a3a8a'); r(10,22,2,3,'#c9c4d8'); r(10,21,2,1,'#8a5a3a');   // flacon rond violet
+  r(18,22,3,9,'#2a5a3a'); r(18,24,3,6, on ? mixHex('#40d080','#a0ffc0',pulse(1)) : '#3a7a52'); r(18,19,3,3,'#c9c4d8'); r(18,18,3,1,'#8a5a3a');   // fiole haute verte
+  r(26,26,4,4,'#1a3a6a'); r(26,27,4,3, on ? mixHex('#40a0ff','#b0e0ff',pulse(2)) : '#2a5a8a'); r(27,24,2,2,'#c9c4d8'); p(27,23,'#8a5a3a');           // petite fiole bleue
+  if (on){ const k = t % 30; p(11, 24 - (k>>2), 'rgba(224,170,255,.8)'); p(19, 17 - ((t+12)%24>>2), 'rgba(170,255,200,.8)'); }
+  // le grimoire qui flotte
+  const by = wizBook(t);
+  r(9,8+by,22,9,'#5a2a1a'); r(10,7+by,10,9,'#f4ecd8'); r(20,7+by,10,9,'#ece2c8'); r(19,7+by,2,10,'#3a1a10');
+  for (let k=0;k<4;k++){ r(12,9+by+k*2,6,1,'#b8a888'); r(22,9+by+k*2,6,1,'#b0a080'); }
+  const ph = (t % 90) / 90;                                                // une page se tourne
+  if (ph < .4){ const w = Math.round(Math.cos(ph/.4*Math.PI)*9), x = w >= 0 ? 20 : 20 + w; r(x, 6+by, Math.abs(w)||1, 9, '#fbf6e8'); r(x, 6+by, Math.abs(w)||1, 1, '#ffffff'); }
+  if (on) p(20, 4+by, 'rgba(255,240,200,.9)');
+  // la plume qui écrit dans le vide
+  const qx = 34 + Math.round(Math.sin(t*.25)*2), qy = 4 + Math.round(Math.abs(Math.sin(t*.5))*2);
+  for (let k=0;k<6;k++){ p(qx - k, qy + k, k < 4 ? '#f4f2ee' : '#c9c4d8'); if (k>0 && k<4) p(qx - k + 1, qy + k, '#e0dcd4'); }
+  p(qx-6, qy+6, '#2a2a30');
+  if (on) for (let k=1;k<7;k++){ const tt = t - k*3, sx = 28 + Math.round(Math.sin(tt*.25)*2) - k, sy = 10 + Math.round(Math.abs(Math.sin(tt*.5))*2) + (k%2); p(sx, sy, `rgba(255,214,120,${(1-k/7).toFixed(2)})`); }
+}
+function glowWizard(o,t,env){
+  if (isOff(env)) return;
+  const pulse = k=> Math.sin(t*.12 + k*2)*.5 + .5;
+  p(11,27,'#f0d0ff'); p(19,26, pulse(1) > .5 ? '#d8ffe8' : '#a0ffc0'); p(27,28,'#d8f0ff');
+  const by = wizBook(t); p(20, 4+by, '#fff6d0'); if ((t>>2)%2) p(14, 3+by, '#ffffff');
+  for (let k=1;k<5;k++){ const tt = t - k*3, sx = 28 + Math.round(Math.sin(tt*.25)*2) - k, sy = 10 + Math.round(Math.abs(Math.sin(tt*.5))*2) + (k%2); p(sx, sy, `rgba(255,224,140,${(1-k/5).toFixed(2)})`); }
+}
+ITEMS.ev_candles = { draw:drawWizard, glow:glowWizard, light:1, off:[152,106], sortY:151, bbox:()=>({x:0,y:0,w:40,h:47}) };
+EV_SLOTS.push('ev_candles'); ALL_SLOTS.push('ev_candles'); FLOOR_SPECIALS.push('ev_candles'); GLOW_SLOTS.push('ev_candles');
+EV_G.ev_candles = [140,112]; EV_GSORT.ev_candles = 158.4;
+
 function gEvOn(s){ return !(G().off && G().off[s]); }
 function evTap(s, b){
   const cx = b.x + b.w/2, cy = b.y;
@@ -2504,6 +2652,7 @@ function lightSources(){
   if (on('sp_fireflies')) add('sp_fireflies','x',204,44,28,.55,'210,255,120');
   if (on('sp_tree'))      add('sp_tree','x',191,138,32,.55,'255,200,120');
   if (on('ev_eiffel'))    add('ev_eiffel','x',8,4,44,.75,'255,200,120');
+  if (on('ev_candles'))   add('ev_candles','x',20,22,46,.7,'220,170,255');
   if (race) out.push({ x:race.x + race.dir*26, y:race.y - 2, r:38, i:.6, c:'255,240,200' });
   else if (on('sp_bmw')) add('sp_bmw','x',144,148,34,.5,'255,240,200');
   return out;
@@ -3012,6 +3161,7 @@ function renderGarage(){
   if (gNeonOn()){ const [nx,ny] = at('gneon',131,25); srcs.push({ x:nx, y:ny, r:34, i:.5, c:{ a:'255,230,90', b:'140,220,255', c:'255,90,160', d:'90,240,230' }[neon] }); }
   if (lounge==='b'){ const [lx,ly] = at('glounge',26,116); srcs.push({ x:lx, y:ly, r:24, i:.45, c:'160,120,255' }); }
   if (lounge==='c'){ const [lx,ly] = at('glounge',20,130); srcs.push({ x:lx, y:ly, r:22, i:.4, c:'150,200,255' }); }
+  if (gHas('ev_candles') && gEvOn('ev_candles')){ const [ex,ey] = at('ev_candles', EV_G.ev_candles[0]+20, EV_G.ev_candles[1]+22); srcs.push({ x:ex, y:ey, r:46, i:.7, c:'220,170,255' }); }
   if (gHas('ev_eiffel') && gEvOn('ev_eiffel')){ const [ex,ey] = at('ev_eiffel', EV_G.ev_eiffel[0]+8, EV_G.ev_eiffel[1]+4); srcs.push({ x:ex, y:ey, r:44, i:.75, c:'255,200,120' }); }
   if (gDone(1) && G().unwrapped){ const [cx,cy] = at('car',CX0-2,128 + carLift()); srcs.push({ x:cx, y:cy, r:26 + carFlash, i:.5 + carFlash*.02, c:'230,240,255' }); }
   const door = gPick('gdoor');
@@ -3024,6 +3174,7 @@ function renderGarage(){
   if (L) withG('glights', ()=>drawGLights(L,T,gLightsOn()));
   if (gNeonOn()) withG('gneon', ()=>drawGNeon(neon,T,true));
   if (lounge==='b') withG('glounge', ()=>drawGLounge('b',T,true));
+  if (gHas('ev_candles') && gEvOn('ev_candles')) withG('ev_candles', ()=>{ X.translate(EV_G.ev_candles[0], EV_G.ev_candles[1]); glowWizard('x',T,null); });
   if (gHas('ev_eiffel') && gEvOn('ev_eiffel')) withG('ev_eiffel', ()=>{ X.translate(EV_G.ev_eiffel[0], EV_G.ev_eiffel[1]); glowEiffel('x',T,null); });
   if (gDone(1) && G().unwrapped){ withG('car', ()=>{ const dy = carLift(); r(CX0+1,127+dy,7,1,'#ffffff'); p(CX0+2,128+dy,'#e8f2ff'); }); }
   if (carFlash > 0) carFlash--;
@@ -3077,6 +3228,7 @@ function garageTap(x,y){
   else if (s==='gdoor') toggleGDoor();
   else if (s==='glights') toggleGLights();
   else if (s==='gneon'){ G().off = G().off || {}; G().off.gneon = gNeonOn(); save(); blip(gNeonOn() ? 1200 : 600,.04,0,'square',.04); toast(gNeonOn() ? 'Neon on' : 'Neon off'); }
+  else if (s==='ev_candles'){ G().off = G().off || {}; G().off.ev_candles = gEvOn('ev_candles'); save(); toast(gEvOn('ev_candles') ? 'Lumos' : 'Nox'); }
   else if (s==='ev_eiffel'){ G().off = G().off || {}; G().off.ev_eiffel = gEvOn('ev_eiffel'); save(); blip(gEvOn('ev_eiffel') ? 1200 : 600,.04,0,'square',.04); toast(gEvOn('ev_eiffel') ? 'Light on' : 'Light off'); }
   else if (s && isEv(s)) evTap(s, gTight(s));
 }
@@ -3434,9 +3586,9 @@ function renderMItemTo(cv, slot, opt, t){
 }
 
 /* ---------- Moteur de la gaming room (positions, profondeur, toucher) ---------- */
-const EV_M = { ev_croissant:[96,85], ev_eiffel:[196,58], ev_baguette:[120,150], ev_flag:[230,104], ev_mona:[206,62], ev_pigeon:[123,140],
+const EV_M = { ev_candles:[160,108], ev_croissant:[96,85], ev_eiffel:[196,58], ev_baguette:[120,150], ev_flag:[230,104], ev_mona:[206,62], ev_pigeon:[123,140],
   ev_baursak:[150,86], ev_dombra:[214,60], ev_tuskiiz:[200,64], ev_yurt:[90,124], ev_kzflag:[4,104], ev_berkut:[123,140] };
-const EV_MSORT = { ev_croissant:110.5, ev_eiffel:101, ev_flag:148, ev_baursak:110.6, ev_yurt:150, ev_kzflag:148 };
+const EV_MSORT = { ev_candles:155, ev_croissant:110.5, ev_eiffel:101, ev_flag:148, ev_baursak:110.6, ev_yurt:150, ev_kzflag:148 };
 const M_WALLFURN = { mdesk:109, mconsole:113, marcade:120 };   // base de ces meubles : ils restent contre le mur
 function mOff(s){ const o = (M().pos && M().pos[s]) || [0,0]; return M_WALLFURN[s] !== undefined ? [o[0], Math.min(o[1], 122 - M_WALLFURN[s])] : o; }
 function withM(s, fn){ const [dx,dy] = mOff(s); X.save(); X.translate(dx,dy); fn(); X.restore(); }
@@ -3542,6 +3694,7 @@ function renderGaming(){
   if (mPick('msnack')==='b'){ const [fx,fy] = at('msnack',220,120); srcs.push({ x:fx, y:fy, r:20, i:.45, c:'255,220,140' }); }
   if (mPick('mpets')==='a'){ const [px,py] = at('mpets',73,112); srcs.push({ x:px, y:py, r:18, i:.4, c:rgb(120) }); }
   if (mPick('mrug')==='b'){ const [px,py] = at('mrug',128,144); srcs.push({ x:px, y:py, r:30, i:.35, c:rgb(60) }); }
+  if (mHas('ev_candles') && mEvOn('ev_candles')){ const [ex,ey] = at('ev_candles', EV_M.ev_candles[0]+20, EV_M.ev_candles[1]+22); srcs.push({ x:ex, y:ey, r:46, i:.7, c:'220,170,255' }); }
   if (mHas('ev_eiffel') && mEvOn('ev_eiffel')){ const [ex,ey] = at('ev_eiffel', EV_M.ev_eiffel[0]+8, EV_M.ev_eiffel[1]+4); srcs.push({ x:ex, y:ey, r:44, i:.75, c:'255,200,120' }); }
   const win = mPick('mwindow');
   if (win && VD > .2){ const [wx,wy] = at('mwindow',48,36); srcs.push({ x:wx, y:wy, r:60, i:.6*VD, c:'255,244,220' }); }
@@ -3564,6 +3717,7 @@ function renderGaming(){
   }
   if (L) withM('mlights', ()=>drawMLights(L,T,on));
   if (mNeonOn()) withM('mneon', ()=>drawMNeon(mPick('mneon'),T,true));
+  if (mHas('ev_candles') && mEvOn('ev_candles')) withM('ev_candles', ()=>{ X.translate(EV_M.ev_candles[0], EV_M.ev_candles[1]); glowWizard('x',T,null); });
   if (mHas('ev_eiffel') && mEvOn('ev_eiffel')) withM('ev_eiffel', ()=>{ X.translate(EV_M.ev_eiffel[0], EV_M.ev_eiffel[1]); glowEiffel('x',T,null); });
   if (deskFlash > 0) deskFlash--;
   drawSnow(); drawSky(); drawParts();
@@ -3601,6 +3755,7 @@ function gamingTap(x,y){
   else if (s==='mrifle'){ blip(1800,.03,0,'square',.03); blip(240,.12,.03,'triangle',.05); label('mrifle', 'One tap <b>♥</b>', cx, b.y-2); }
   else if (s==='mposter'){ label('mposter', 'Map check ✓', cx, b.y-2); SFX.select(); }
   else if (s==='mscore'){ label('mscore', `${CONFIG.herName} wins again`, cx, b.y+b.h+8); SFX.select(); }
+  else if (s==='ev_candles'){ M().off = M().off || {}; M().off.ev_candles = mEvOn('ev_candles'); save(); toast(mEvOn('ev_candles') ? 'Lumos' : 'Nox'); }
   else if (s==='ev_eiffel'){ M().off = M().off || {}; M().off.ev_eiffel = mEvOn('ev_eiffel'); save(); toast(mEvOn('ev_eiffel') ? 'Light on' : 'Light off'); }
   else if (s && isEv(s)) evTap(s, b);
 }
@@ -4065,7 +4220,7 @@ function paintTools(){
 const NO_STORE = ['walls','floor','character'];
 function ownedObjects(){ return ALL_SLOTS.filter(s=>!NO_STORE.includes(s) && pickOf(s)); }
 function itemName(slot){
-  const sp = SPECIALS.find(q=>q.slot===slot) || EVENT.find(q=>q.slot===slot) || KZEV.find(q=>q.slot===slot); if (sp) return sp.name;
+  const sp = SPECIALS.find(q=>q.slot===slot) || EVENT.find(q=>q.slot===slot) || KZEV.find(q=>q.slot===slot) || SUEV.find(q=>q.slot===slot); if (sp) return sp.name;
   for (const d of DAYS) for (const pk of d.picks) if (pk.slot===slot){ const o = pk.opts.find(q=>q.id===pickOf(slot)); if (o) return o.name; }
   return slot;
 }
@@ -5321,6 +5476,8 @@ function closeKz(){
 function paintEventBtns(){
   $('parisBtn').hidden = true;
   const b = $('kzBtn'); b.hidden = !kzOpen(); b.classList.toggle('fresh', !KS().seen);
+  const sb = $('suBtn'); sb.hidden = !suOpen(); sb.classList.toggle('fresh', !SU().seen);
+  $('letterBtn').hidden = !SU().letter;
 }
 $('kzBtn').addEventListener('click', openKz);
 $('kzClose').addEventListener('click', closeKz);
@@ -5332,6 +5489,142 @@ document.addEventListener('keydown', e=>{
   if (e.key===' ' || e.key==='ArrowUp' || e.key==='Enter'){ e.preventDefault(); if (!e.repeat){ kHeld = true; kJump(); } }
 });
 document.addEventListener('keyup', e=>{ if (e.key===' ' || e.key==='ArrowUp' || e.key==='Enter') kHeld = false; });
+
+
+/* =====================================================================
+   ÉVÉNEMENT — SUDOKU (12 novembre) : une lettre de Léo + des bougies enchantées
+   ===================================================================== */
+const SU_DAY = 6;
+const SU_P = '000000010009250004038001607206000300010060070007000208803500140900073500050000000';
+const SU_S = '724386915169257834538941627286794351315862479497135268873529146941673582652418793';
+const SUEV = [ { slot:'ev_candles', name:"Wizard's corner", ds:'A grimoire that reads itself, a quill that writes alone' } ];
+function suOpen(){ return DEV || dayNumber() === SU_DAY; }
+function SU(){ if (!state.sudoku) state.sudoku = { g: SU_P.split('').map(Number) }; return state.sudoku; }
+let suSel = -1;
+const suGiven = i => SU_P[i] !== '0';
+function suConflicts(g){
+  const bad = new Set();
+  for (let i=0;i<81;i++){ if (!g[i]) continue; const r0 = Math.floor(i/9), c0 = i%9;
+    for (let j=i+1;j<81;j++){ if (g[j]!==g[i]) continue; const r1 = Math.floor(j/9), c1 = j%9;
+      if (r0===r1 || c0===c1 || (Math.floor(r0/3)===Math.floor(r1/3) && Math.floor(c0/3)===Math.floor(c1/3))){ bad.add(i); bad.add(j); } } }
+  return bad;
+}
+function paintSudoku(){
+  const g = SU().g, box = $('suGrid'), bad = suConflicts(g), sel = suSel, sv = sel >= 0 ? g[sel] : 0;
+  if (!box.children.length){
+    for (let i=0;i<81;i++){ const b = document.createElement('button'); b.type = 'button'; b.className = 'suc'; const r0 = Math.floor(i/9), c0 = i%9;
+      if (c0===2 || c0===5) b.classList.add('br'); if (r0===2 || r0===5) b.classList.add('bb');
+      b.addEventListener('click', ()=>{ suSel = i; SFX.tick(); paintSudoku(); }); box.appendChild(b); }
+  }
+  [...box.children].forEach((b,i)=>{
+    const r0 = Math.floor(i/9), c0 = i%9, sr = Math.floor(sel/9), sc = sel%9;
+    b.textContent = g[i] || '';
+    b.classList.toggle('given', suGiven(i));
+    b.classList.toggle('sel', i===sel);
+    b.classList.toggle('peer', sel>=0 && i!==sel && (r0===sr || c0===sc || (Math.floor(r0/3)===Math.floor(sr/3) && Math.floor(c0/3)===Math.floor(sc/3))));
+    b.classList.toggle('same', !!sv && i!==sel && g[i]===sv);
+    b.classList.toggle('bad', bad.has(i) && !suGiven(i));
+    b.disabled = !!SU().solved;
+  });
+  const left = g.filter(v=>!v).length;
+  $('suInfo').textContent = SU().solved ? 'Solved. Well done, my love.' : (left ? `${left} empty square${left>1?'s':''} left` : (bad.size ? 'Almost… something doesn’t fit' : ''));
+  $('suPad').hidden = !!SU().solved;
+  $('suReward').hidden = !SU().solved;
+}
+function suInput(n){
+  if (SU().solved || suSel < 0 || suGiven(suSel)) return;
+  SU().g[suSel] = n; save(); blip(n ? 520 + n*40 : 300, .04, 0, 'triangle', .035);
+  if (SU().g.join('') === SU_S){ SU().solved = true; SU().letter = true; save(); suWin(); }
+  paintSudoku();
+}
+function suWin(){
+  SUEV.forEach(ev=>grantEv(ev.slot));
+  SFX.final();
+  for (let k=0;k<5;k++) setTimeout(()=>{ const el = $('suGrid'); el.classList.remove('win'); void el.offsetWidth; el.classList.add('win'); }, k*10);
+  toast('Sudoku solved! Two gifts for you');
+  paintSuReward(); paintTools(); buildGrid();
+}
+function paintSuReward(){ paintEvRewards(SUEV, $('suRewards'), 1); }
+function openSu(){
+  if (!suOpen() && !SU().solved){ toast('The sudoku was on November 12.'); SFX.nope(); return; }
+  if (editing) setEditing(false);
+  if (photoMode) exitPhoto();
+  $('su').hidden = false; document.body.style.overflow = 'hidden'; SFX.open();
+  suSel = -1; paintSudoku(); if (SU().solved) paintSuReward();
+}
+function closeSu(){ $('su').hidden = true; document.body.style.overflow = ''; SU().seen = true; save(); paintEventBtns(); paintTools(); }
+$('suBtn').addEventListener('click', openSu);
+$('suClose').addEventListener('click', closeSu);
+for (let n=1;n<=9;n++){ const b = document.createElement('button'); b.type = 'button'; b.textContent = n; b.addEventListener('click', ()=>suInput(n)); $('suPad').appendChild(b); }
+{ const b = document.createElement('button'); b.type = 'button'; b.className = 'erase'; b.innerHTML = '⌫'; b.setAttribute('aria-label','Erase'); b.addEventListener('click', ()=>suInput(0)); $('suPad').appendChild(b); }
+$('suLetterBtn').addEventListener('click', openLetter);
+document.addEventListener('keydown', e=>{
+  if ($('su').hidden || !$('letter').hidden) return;
+  if (e.key==='Escape'){ closeSu(); return; }
+  if (/^[1-9]$/.test(e.key)){ suInput(+e.key); e.preventDefault(); }
+  else if (e.key==='Backspace' || e.key==='Delete' || e.key==='0'){ suInput(0); e.preventDefault(); }
+  else if (e.key.startsWith('Arrow')){ if (suSel < 0) suSel = 0; else { const d = { ArrowLeft:-1, ArrowRight:1, ArrowUp:-9, ArrowDown:9 }[e.key]; suSel = Math.max(0, Math.min(80, suSel + d)); } paintSudoku(); e.preventDefault(); }
+});
+
+/* ---------- La lettre : enveloppe → verso illustré → message ---------- */
+function drawMovieNight(cv){
+  const w = 120, h = 80; cv.width = w; cv.height = h;
+  const prev = X; X = cv.getContext('2d'); X.clearRect(0,0,w,h);
+  for (let y=0;y<h;y++) r(0,y,w,1, mixHex('#141228','#241a38', y/h));
+  // l'écran et sa lumière
+  r(18,8,84,40,'#0a0a12'); r(20,10,80,36,'#1c2a50');
+  for (let y=0;y<36;y++) r(20,10+y,80,1, mixHex('#f2b46a','#5a3a7a', y/36));
+  ell(76,22,8,8,'#fff1c4'); for (let x=20;x<100;x++){ const hh = 6 + Math.round(3*Math.sin(x*.18) + 2*Math.sin(x*.07)); r(x,46-hh,1,hh,'#2a1a3a'); }
+  r(44,30,2,6,'#2a1a3a'); r(48,32,2,4,'#2a1a3a'); p(45,29,'#2a1a3a'); p(49,31,'#2a1a3a');          // deux silhouettes dans le film
+  X.save(); X.globalCompositeOperation = 'lighter'; const g = X.createRadialGradient(60,30,4,60,40,70); g.addColorStop(0,'rgba(255,190,120,.22)'); g.addColorStop(1,'rgba(0,0,0,0)'); X.fillStyle = g; X.fillRect(0,0,w,h); X.restore();
+  // le canapé, vu de dos
+  r(22,58,76,22,'#6a3a4a'); r(22,58,76,3,'#8a4a5a'); r(18,62,6,18,'#5a2e3c'); r(96,62,6,18,'#5a2e3c'); r(59,61,2,19,'#5a2e3c');
+  // Léo (cheveux courts) et Aidana (longs cheveux), sa tête sur son épaule
+  const L = CONFIG.me, A = CONFIG.her;
+  r(66,50,12,10,L.blazer); r(64,52,16,8,L.blazer); ell(72,45,5,5,L.hair); r(67,45,10,3,L.hair);
+  r(68,48,1,3,L.skin);
+  r(44,52,12,8,A.tweed); r(42,54,16,6,A.tweed); ell(55,47,5,5,A.hair); r(50,47,10,11,A.hair); r(49,56,8,3,A.hair);
+  // un bol de pop-corn entre eux, un cœur qui flotte
+  r(57,56,8,4,'#d8303a'); r(57,57,8,1,'#ffffff'); [[57,55],[59,54],[61,55],[63,54],[64,55],[60,53]].forEach(([x,y])=>p(x,y,'#fff4d6'));
+  [[61,40],[63,40],[60,41],[64,41],[61,42],[63,42],[62,43]].forEach(([x,y])=>p(x,y,'#ff7aa8')); p(62,41,'#ff7aa8'); p(62,42,'#ff7aa8');
+  X = prev;
+}
+function buildFlowers(){
+  const svg = $('lcFlowers'); if (!svg || svg.childNodes.length) return;
+  const NS = 'http://www.w3.org/2000/svg', el = (n,a)=>{ const e = document.createElementNS(NS,n); for (const k in a) e.setAttribute(k,a[k]); svg.appendChild(e); return e; };
+  const leaf = (x,y,ang,l,c)=>el('ellipse',{ cx:x, cy:y, rx:l, ry:l*.42, fill:c||'#a9bc98', transform:`rotate(${ang} ${x} ${y})`, opacity:.9 });
+  const flower = (x,y,rr,c,center)=>{ for (let k=0;k<5;k++){ const a = k*72 - 90, px = x + Math.cos(a*Math.PI/180)*rr*.9, py = y + Math.sin(a*Math.PI/180)*rr*.9;
+      el('ellipse',{ cx:px, cy:py, rx:rr*.62, ry:rr*.48, fill:c, transform:`rotate(${a} ${px} ${py})` }); }
+    el('circle',{ cx:x, cy:y, r:rr*.38, fill:center||'#e9c46a' }); };
+  const lavender = (x,y,ang,len)=>{ // brin de gypsophile : tiges fines et petits nuages blancs
+    for (let k=0;k<5;k++){ const a = (ang - 40 + k*20)*Math.PI/180, l = len*(.7 + (k%2)*.3), ex = x + Math.cos(a)*l, ey = y + Math.sin(a)*l;
+      el('line',{ x1:x, y1:y, x2:ex, y2:ey, stroke:'#a9b898', 'stroke-width':.7 });
+      [[0,0],[1.6,-1],[-1.4,1.2]].forEach(([dx,dy])=>el('circle',{ cx:ex+dx, cy:ey+dy, r:1.25, fill:'#ffffff', stroke:'#e2ddd2', 'stroke-width':.4 })); } };
+  const stem = (x1,y1,x2,y2)=>el('path',{ d:`M${x1} ${y1} Q${(x1+x2)/2+6} ${(y1+y2)/2-6} ${x2} ${y2}`, stroke:'#9cb08a', 'stroke-width':1.1, fill:'none' });
+  const corner = (x,y,sx,sy)=>{
+    stem(x, y, x+sx*46, y+sy*14); stem(x, y, x+sx*14, y+sy*44);
+    [[18,4,20],[32,9,-15],[44,12,30]].forEach(([d,o,a])=>leaf(x+sx*d, y+sy*o, a*sx*sy, 6));
+    [[5,20,60],[9,33,-30],[12,44,40]].forEach(([o,d,a])=>leaf(x+sx*o, y+sy*d, a*sx*sy, 5.5, '#b7c7a6'));
+    flower(x+sx*10, y+sy*10, 6.5, '#f3e1dc', '#e2b65a'); flower(x+sx*26, y+sy*6, 4.2, '#a9bfe0', '#f2d58a'); flower(x+sx*6, y+sy*27, 4.2, '#e8bfc4', '#f2d58a');
+    flower(x+sx*38, y+sy*16, 3, '#ffffff', '#e2b65a'); flower(x+sx*17, y+sy*36, 3, '#ffffff', '#e2b65a');
+    lavender(x+sx*16, y+sy*16, sx>0 ? (sy>0 ? 45 : -45) : (sy>0 ? 135 : -135), 13);
+  };
+  corner(4,4,1,1); corner(296,4,-1,1); corner(4,196,1,-1); corner(296,196,-1,-1);
+  [[150,8],[150,192],[8,100],[292,100]].forEach(([x,y],i)=>{ leaf(x-7,y,i<2?0:90,4.5); leaf(x+7,y,i<2?0:90,4.5); flower(x,y,3.2,i%2 ? '#a9bfe0' : '#e8bfc4','#f2d58a'); });
+  [[90,10],[210,12],[80,190],[222,188]].forEach(([x,y])=>flower(x,y,2,'#ffffff','#e2b65a'));
+}
+function openLetter(){
+  buildFlowers();
+  const L = $('letter'); L.hidden = false; L.className = 'letter';
+  drawMovieNight($('letterArt'));
+  SFX.open();
+}
+function closeLetter(){ $('letter').hidden = true; $('letter').className = 'letter'; }
+$('envelope').addEventListener('click', ()=>{ const L = $('letter'); if (L.classList.contains('open')) return; L.classList.add('open'); [523,659,784].forEach((f,i)=>blip(f,.12,i*.1,'sine',.04)); setTimeout(()=>L.classList.add('out'), 1300); });
+$('letterCard').addEventListener('click', ()=>{ const L = $('letter'); if (!L.classList.contains('out')) return; L.classList.toggle('flip'); blip(L.classList.contains('flip') ? 880 : 660, .08, 0, 'sine', .04); });
+$('letterClose').addEventListener('click', closeLetter);
+$('letterBtn').addEventListener('click', openLetter);
+document.addEventListener('keydown', e=>{ if (!$('letter').hidden && e.key==='Escape') closeLetter(); });
 
 /* =====================================================================
    CODES SECRETS
@@ -5384,6 +5677,8 @@ const CHEATS = {
   ALGA(){ if (!kzOpen()) return 'Алға, Қазақстан! was on November 11'; openKz(); return 'Алға, Қазақстан!'; },
   KZTEST(){ if (!DEV) return 'Nice try'; KZEV.forEach(ev=>grantEv(ev.slot)); refresh(); paintTools(); return 'All Kazakhstan gifts unlocked'; },
   BERKUT(){ return callFlyer(EAGLE); },
+  SUDOKU(){ if (!suOpen() && !SU().solved) return 'The sudoku was on November 12'; openSu(); return 'Sudoku'; },
+  SUTEST(){ if (!DEV) return 'Nice try'; SU().g = SU_S.split('').map(Number); SU().g[80] = 0; save(); openSu(); suSel = 80; paintSudoku(); return 'One square left'; },
   TOUREIFFEL(){ if (!DEV) return 'Nice try'; EVENT.forEach(ev=>grantEv(ev.slot)); refresh(); paintTools(); return 'All Paris gifts unlocked'; },
   PIGEON(){ return callFlyer(BIRD); },
   INVENTORY(){ openInventory(); return 'Inventory'; },
