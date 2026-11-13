@@ -304,7 +304,30 @@
   .lc-hello{font-style:italic;font-size:1.15em;margin-bottom:4px}
   .lc-sign{font-family:'Parisienne','Snell Roundhand','Apple Chancery','Segoe Script',cursive;font-size:1.7em;color:#9a2a3a;margin-top:6px;line-height:1}
   .lc-sign{align-self:flex-end;margin-right:4%}
+  /* ---------- Événement Quiz CR7 ---------- */
+  .qz-t{font-family:'Rubik','Arial Black',system-ui,sans-serif;font-weight:800;font-size:clamp(24px,3.4vw,32px);line-height:1.1;color:#fff;letter-spacing:.01em}
+  .qz-t::first-letter{color:#e0303a}
+  .qz7{width:16px;height:16px;flex:none;border-radius:4px;background:#d0202c;color:#fff;font:800 11px/16px 'Rubik',system-ui,sans-serif;text-align:center;letter-spacing:0}
+  .qz-box{grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto auto;width:min(520px,100%);overflow:auto}
+  .qz-body{display:flex;flex-direction:column;gap:12px}
+  .qz-top{display:flex;justify-content:space-between;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .qz-bar{display:block;height:3px;border-radius:2px;background:linear-gradient(90deg,#e0303a calc(var(--p)*100%),var(--border) 0)}
+  .qz-q{font-family:var(--serif);font-size:clamp(20px,5vw,26px);line-height:1.25;margin:4px 0}
+  .qz-opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .qz-o{background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:12px;padding:14px 12px;font:500 15px/1.2 var(--sans);cursor:pointer;text-align:left;transition:border-color .15s,background .15s}
+  .qz-o:hover:not(:disabled){border-color:var(--accent)}
+  .qz-o:disabled{cursor:default}
+  .qz-o.ok{background:rgba(80,200,120,.16);border-color:#50c878;color:#bff0cf}
+  .qz-o.no{background:rgba(224,48,58,.16);border-color:#e0303a;color:#ffc4c8}
+  .qz-fb{font-size:14px;line-height:1.45;color:var(--muted)}
+  .qz-fb.good::first-line{color:#7ad89a}.qz-fb.bad::first-line{color:#ff9aa0}
+  .qz-next{align-self:flex-end;background:var(--text);color:var(--bg);border:0;border-radius:999px;padding:10px 18px;font:600 14px var(--sans);cursor:pointer}
+  .qz-end{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;padding:10px 0}
+  .qz-score{font-family:var(--serif);font-size:64px;line-height:1}.qz-score small{font-size:24px;color:var(--muted)}
+  .qz-end p{color:var(--muted);font-size:15px}
+  @media (max-width:700px){ .qz-opts{grid-template-columns:minmax(0,1fr)} }
   @media (prefers-reduced-motion:reduce){
+
 *{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -326,6 +349,10 @@
         <button class="paris-ev" id="suBtn" type="button" hidden aria-label="Sudoku, 12 to 13 November. Play">
           <span class="su-t">Sudoku</span>
           <span class="pe-d"><span class="sugrid"></span>12–13 November<span class="pe-play">Play ▸</span></span>
+        </button>
+        <button class="paris-ev" id="qzBtn" type="button" hidden aria-label="CR7 quiz, 13 November. Play">
+          <span class="qz-t">CR7 Quiz</span>
+          <span class="pe-d"><span class="qz7">7</span>13 November<span class="pe-play">Play ▸</span></span>
         </button>
       </div>
     </div>
@@ -462,6 +489,20 @@
           <p class="lc-sign">Bisous !</p>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<div class="paris qzw" id="qz" hidden>
+  <div class="paris-box qz-box" role="dialog" aria-modal="true" aria-label="CR7 quiz">
+    <div class="paris-head">
+      <div><span class="qz-t">CR7 Quiz</span><span class="pe-d"><span class="qz7">7</span>13 November · 10 questions</span></div>
+      <button class="x" id="qzClose" aria-label="Close">✕</button>
+    </div>
+    <div class="qz-body" id="qzBody"></div>
+    <div class="su-reward" id="qzReward" hidden>
+      <p class="paris-lead">Your gift</p>
+      <div class="kz-rewards su-rw" id="qzRewards"></div>
     </div>
   </div>
 </div>
@@ -2108,7 +2149,7 @@ Object.assign(ITEMS, {
   if (s==='ev_berkut') return;
   (ITEMS[s].back ? BACK_SPECIALS : FLOOR_SPECIALS).push(s);
 });
-Object.assign(EV_G, { ev_baursak:[24,119], ev_dombra:[220,4], ev_tuskiiz:[171,71], ev_yurt:[64,123], ev_kzflag:[6,96], ev_berkut:[123,140] });
+Object.assign(EV_G, { ev_jersey:[204,52], ev_baursak:[24,119], ev_dombra:[220,4], ev_tuskiiz:[171,71], ev_yurt:[64,123], ev_kzflag:[6,96], ev_berkut:[123,140] });
 Object.assign(EV_GSORT, { ev_baursak:158.6, ev_yurt:152, ev_kzflag:140 });
 // où sont dessinés les objets « posés » d'un événement (traduction du dessin local) et leur profondeur
 function evAt(s, room){
@@ -3058,7 +3099,7 @@ function gOff(s){ return (G().pos && G().pos[s]) || [0,0]; }
 function withG(s, fn){ const [dx,dy] = gOff(s); X.save(); X.translate(dx,dy); fn(); X.restore(); }
 const G_BACK = ['gdoor','gposter','gplate','gshelf','gtools','gneon','glights'];
 const G_SORT = { gdisplay:139, car:147, glounge:156, gpets:157.9, gtires:158 };
-Object.assign(G_SORT, EV_GSORT); G_BACK.push('ev_mona','ev_dombra','ev_tuskiiz');
+Object.assign(G_SORT, EV_GSORT); G_BACK.push('ev_mona','ev_dombra','ev_tuskiiz','ev_jersey');
 function gHas(s){ if (isEv(s)) return s!=='ev_baguette' && s!=='ev_pigeon' && evWhere(s)==='garage'; return s==='car' ? gDone(1) : !!gPick(s); }
 function gFront(){ return (G().front || []).filter(gHas); }
 function gIsFront(s){ return gFront().includes(s); }
@@ -3589,13 +3630,13 @@ function renderMItemTo(cv, slot, opt, t){
 }
 
 /* ---------- Moteur de la gaming room (positions, profondeur, toucher) ---------- */
-const EV_M = { ev_candles:[160,108], ev_croissant:[96,85], ev_eiffel:[196,58], ev_baguette:[120,150], ev_flag:[230,104], ev_mona:[206,62], ev_pigeon:[123,140],
+const EV_M = { ev_jersey:[38,58], ev_candles:[160,108], ev_croissant:[96,85], ev_eiffel:[196,58], ev_baguette:[120,150], ev_flag:[230,104], ev_mona:[206,62], ev_pigeon:[123,140],
   ev_baursak:[150,86], ev_dombra:[214,60], ev_tuskiiz:[200,64], ev_yurt:[90,124], ev_kzflag:[4,104], ev_berkut:[123,140] };
 const EV_MSORT = { ev_candles:155, ev_croissant:110.5, ev_eiffel:101, ev_flag:148, ev_baursak:110.6, ev_yurt:150, ev_kzflag:148 };
 const M_WALLFURN = { mdesk:109, mconsole:113, marcade:120 };   // base de ces meubles : ils restent contre le mur
 function mOff(s){ const o = (M().pos && M().pos[s]) || [0,0]; return M_WALLFURN[s] !== undefined ? [o[0], Math.min(o[1], 122 - M_WALLFURN[s])] : o; }
 function withM(s, fn){ const [dx,dy] = mOff(s); X.save(); X.translate(dx,dy); fn(); X.restore(); }
-const M_BACK = ['mrug','mwindow','mscore','mposter','mrifle','mneon','mshelf','mlights','ev_mona','ev_dombra','ev_tuskiiz'];
+const M_BACK = ['mrug','mwindow','mscore','mposter','mrifle','mneon','mshelf','mlights','ev_jersey','ev_mona','ev_dombra','ev_tuskiiz'];
 const M_SORT = Object.assign({ mdesk:110, mconsole:114, marcade:121, mchair:130, mpets:152, msnack:153 }, EV_MSORT);
 function mHas(s){ if (isEv(s)) return s!=='ev_baguette' && s!=='ev_pigeon' && s!=='ev_berkut' && evWhere(s)==='gaming'; return s==='mdesk' ? mDone(1) : !!mPick(s); }
 function mFront(){ return (M().front || []).filter(mHas); }
@@ -4084,13 +4125,13 @@ function renderBItemTo(cv, slot, opt, t){
 }
 
 /* ---------- Moteur de la bar (positions, profondeur, toucher) ---------- */
-const EV_B = { ev_candles:[176,104], ev_croissant:[188,80], ev_eiffel:[4,98], ev_baguette:[128,152], ev_flag:[6,104], ev_mona:[84,64], ev_pigeon:[123,140],
+const EV_B = { ev_jersey:[80,48], ev_candles:[176,104], ev_croissant:[188,80], ev_eiffel:[4,98], ev_baguette:[128,152], ev_flag:[6,104], ev_mona:[84,64], ev_pigeon:[123,140],
   ev_baursak:[150,80], ev_dombra:[82,22], ev_tuskiiz:[84,64], ev_yurt:[104,118], ev_kzflag:[226,104], ev_berkut:[123,140] };
 const EV_BSORT = { ev_candles:152, ev_croissant:125.6, ev_eiffel:141, ev_flag:148, ev_baursak:125.7, ev_yurt:142, ev_kzflag:148 };
 const B_WALLFURN = { bcounter:122, bpiano:112, bcellar:112 };   // ces meubles restent contre le mur
 function bOff(s){ const o = (BR().pos && BR().pos[s]) || [0,0]; return B_WALLFURN[s] !== undefined ? [o[0], Math.min(o[1], 122 - B_WALLFURN[s])] : o; }
 function withB(s, fn){ const [dx,dy] = bOff(s); X.save(); X.translate(dx,dy); fn(); X.restore(); }
-const B_BACK = ['bwindow','bart','bsign','blights','ev_mona','ev_dombra','ev_tuskiiz'];
+const B_BACK = ['bwindow','bart','bsign','blights','ev_jersey','ev_mona','ev_dombra','ev_tuskiiz'];
 const B_SORT = Object.assign({ bcounter:123, bcocktail:123.5, bpiano:113, bcellar:113.5, bstools:139, blounge:152, bpets:155, bplants:153 }, EV_BSORT);
 function bHas(s){ if (isEv(s)) return s!=='ev_baguette' && s!=='ev_pigeon' && s!=='ev_berkut' && evWhere(s)==='bar'; return s==='bcounter' ? bDone(1) : (s==='bcocktail' ? !!bPick(s) && BR().unwrapped : !!bPick(s)); }
 function bFront(){ return (BR().front || []).filter(bHas); }
@@ -4733,7 +4774,7 @@ function paintTools(){
 const NO_STORE = ['walls','floor','character'];
 function ownedObjects(){ return ALL_SLOTS.filter(s=>!NO_STORE.includes(s) && pickOf(s)); }
 function itemName(slot){
-  const sp = SPECIALS.find(q=>q.slot===slot) || EVENT.find(q=>q.slot===slot) || KZEV.find(q=>q.slot===slot) || SUEV.find(q=>q.slot===slot); if (sp) return sp.name;
+  const sp = SPECIALS.find(q=>q.slot===slot) || EVENT.find(q=>q.slot===slot) || KZEV.find(q=>q.slot===slot) || SUEV.find(q=>q.slot===slot) || QZEV.find(q=>q.slot===slot); if (sp) return sp.name;
   for (const d of DAYS) for (const pk of d.picks) if (pk.slot===slot){ const o = pk.opts.find(q=>q.id===pickOf(slot)); if (o) return o.name; }
   return slot;
 }
@@ -5995,6 +6036,7 @@ function paintEventBtns(){
   const b = $('kzBtn'); b.hidden = !kzOpen(); b.classList.toggle('fresh', !KS().seen);
   const sb = $('suBtn'); sb.hidden = !suOpen(); sb.classList.toggle('fresh', !SU().seen);
   $('letterBtn').hidden = !SU().letter;
+  const qb = $('qzBtn'); qb.hidden = !qzOpen(); qb.classList.toggle('fresh', !QS().seen);
 }
 $('kzBtn').addEventListener('click', openKz);
 $('kzClose').addEventListener('click', closeKz);
@@ -6143,6 +6185,84 @@ $('letterClose').addEventListener('click', closeLetter);
 $('letterBtn').addEventListener('click', openLetter);
 document.addEventListener('keydown', e=>{ if (!$('letter').hidden && e.key==='Escape') closeLetter(); });
 
+
+/* =====================================================================
+   ÉVÉNEMENT — QUIZ CR7 (13 novembre) : 10/10 = le maillot encadré
+   ===================================================================== */
+const QZ_DAY = 7;
+const QZ = [
+  { q:'In which city was Cristiano Ronaldo born?', a:['Lisbon','Porto','Funchal','Braga'], c:2, f:'Funchal, on the island of Madeira.' },
+  { q:'In what year was he born?', a:['1983','1985','1987','1984'], c:1, f:'5 February 1985.' },
+  { q:'Which club did he start his professional career with?', a:['Benfica','FC Porto','Sporting CP','Nacional'], c:2, f:'Sporting CP, in Lisbon.' },
+  { q:'In which year did he first join Manchester United?', a:['2001','2003','2005','2006'], c:1, f:'Summer 2003, at 18.' },
+  { q:'Which shirt number did he wear in his first season at Real Madrid?', a:['7','11','9','17'], c:2, f:'Number 9 — the 7 came a season later.' },
+  { q:'How many Ballon d\'Or awards has he won?', a:['3','4','5','6'], c:2, f:'Five: 2008, 2013, 2014, 2016 and 2017.' },
+  { q:'Which major tournament did he win with Portugal in 2016?', a:['World Cup','Euro','Nations League','Copa América'], c:1, f:'Euro 2016, beating France in the final.' },
+  { q:'Which Italian club did he play for?', a:['AC Milan','Inter','Juventus','AS Roma'], c:2, f:'Juventus, from 2018 to 2021.' },
+  { q:'Which Saudi club did he join in 2023?', a:['Al Hilal','Al Ittihad','Al Nassr','Al Ahli'], c:2, f:'Al Nassr, in Riyadh.' },
+  { q:'What does he shout in his famous celebration?', a:['Vamos!','Siuuu!','Olé!','Allez!'], c:1, f:'Siuuu! (Sí, in Spanish.)' }
+];
+const QZEV = [ { slot:'ev_jersey', name:'Framed shirt · RONALDO 7', ds:'For a perfect 10/10' } ];
+function qzOpen(){ return DEV || dayNumber() === QZ_DAY; }
+function QS(){ if (!state.quiz) state.quiz = { best:0, tries:0 }; return state.quiz; }
+let qz = null;
+function qzNew(){ const order = QZ.map((_,i)=>i).sort(()=>Math.random()-.5); return { order, i:0, score:0, picked:-1 }; }
+function paintQuiz(){
+  const box = $('qzBody'); box.innerHTML = '';
+  if (!qz) qz = qzNew();
+  if (qz.i >= QZ.length){
+    const perfect = qz.score === QZ.length;
+    box.innerHTML = `<div class="qz-end"><span class="qz-score">${qz.score}<small>/10</small></span><p>${perfect ? 'Perfect score! Siuuu! The shirt is yours.' : (qz.score >= 8 ? 'So close! Only a perfect 10/10 wins the shirt.' : 'Not bad! Only a perfect 10/10 wins the shirt.')}</p></div>`;
+    if (!perfect){ const b = document.createElement('button'); b.type = 'button'; b.className = 'qz-next'; b.textContent = 'Try again'; b.addEventListener('click', ()=>{ qz = qzNew(); SFX.select(); paintQuiz(); }); box.appendChild(b); }
+    $('qzReward').hidden = !pickOf('ev_jersey'); if (pickOf('ev_jersey')) paintEvRewards(QZEV, $('qzRewards'), 1);
+    return;
+  }
+  const Q = QZ[qz.order[qz.i]];
+  box.insertAdjacentHTML('beforeend', `<div class="qz-top"><span>Question ${qz.i+1} / 10</span><span>${qz.score} ✓</span></div><i class="qz-bar" style="--p:${qz.i/10}"></i><p class="qz-q">${Q.q}</p>`);
+  const opts = document.createElement('div'); opts.className = 'qz-opts';
+  Q.a.forEach((txt,k)=>{
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'qz-o'; b.textContent = txt;
+    if (qz.picked >= 0){ b.disabled = true; if (k===Q.c) b.classList.add('ok'); else if (k===qz.picked) b.classList.add('no'); }
+    b.addEventListener('click', ()=>{ if (qz.picked >= 0) return; qz.picked = k; const good = k===Q.c; if (good){ qz.score++; [784,1046].forEach((f,i)=>blip(f,.08,i*.07,'sine',.04)); } else blip(200,.18,0,'sawtooth',.03); paintQuiz(); });
+    opts.appendChild(b);
+  });
+  box.appendChild(opts);
+  if (qz.picked >= 0){
+    box.insertAdjacentHTML('beforeend', `<p class="qz-fb ${qz.picked===Q.c ? 'good' : 'bad'}">${qz.picked===Q.c ? 'Correct! ' : 'Not quite. '}${Q.f}</p>`);
+    const n = document.createElement('button'); n.type = 'button'; n.className = 'qz-next'; n.textContent = qz.i === QZ.length-1 ? 'See my score' : 'Next question';
+    n.addEventListener('click', ()=>{ qz.i++; qz.picked = -1;
+      if (qz.i >= QZ.length){ const Sq = QS(); Sq.tries++; Sq.best = Math.max(Sq.best, qz.score); save();
+        if (qz.score === QZ.length && !pickOf('ev_jersey')){ QZEV.forEach(ev=>grantEv(ev.slot)); SFX.final(); toast('10/10! The RONALDO 7 shirt is yours'); buildGrid(); paintTools(); } }
+      SFX.tick(); paintQuiz(); });
+    box.appendChild(n);
+  }
+  $('qzReward').hidden = !pickOf('ev_jersey'); if (pickOf('ev_jersey')) paintEvRewards(QZEV, $('qzRewards'), 1);
+}
+function openQz(){
+  if (!qzOpen() && !pickOf('ev_jersey')){ toast('The quiz was on November 13.'); SFX.nope(); return; }
+  if (editing) setEditing(false);
+  if (photoMode) exitPhoto();
+  qz = qzNew(); $('qz').hidden = false; document.body.style.overflow = 'hidden'; SFX.open(); paintQuiz();
+}
+function closeQz(){ $('qz').hidden = true; document.body.style.overflow = ''; QS().seen = true; save(); paintEventBtns(); paintTools(); }
+$('qzBtn').addEventListener('click', openQz);
+$('qzClose').addEventListener('click', closeQz);
+document.addEventListener('keydown', e=>{ if (!$('qz').hidden && e.key==='Escape') closeQz(); });
+
+/* ---------- Le maillot encadré ---------- */
+function drawJersey(o,t){
+  const R0 = '#d0202c', R1 = '#a8141f', Wt = '#f4f2ee';
+  r(0,0,40,40,'#141216'); r(1,1,38,38,'#2a2630'); r(2,2,36,36,'#f2eee6');               // cadre noir, passe-partout
+  r(7,8,26,26,R0); r(3,9,5,10,R0); r(32,9,5,10,R0); r(3,18,5,1,Wt); r(32,18,5,1,Wt);       // corps et manches
+  r(14,7,12,2,R0); r(15,7,10,1,Wt); r(7,8,1,26,R1); r(32,8,1,26,R1); r(7,33,26,1,R1);      // col, ombres
+  pxText('RONALDO', 7, 12, Wt);
+  r(15,20,11,2,Wt); for (let k=0;k<10;k++) r(24 - Math.round(k*.6), 22+k, 2, 1, Wt);      // grand 7
+  r(3,3,1,9,'rgba(255,255,255,.55)'); r(4,3,1,5,'rgba(255,255,255,.35)');                 // reflet de la vitre
+  r(17,36,6,1,'#c9a24a');                                                                    // petite plaque
+}
+ITEMS.ev_jersey = { draw:drawJersey, back:true, off:[156,38], bbox:()=>({x:0,y:0,w:40,h:40}) };
+EV_SLOTS.push('ev_jersey'); ALL_SLOTS.push('ev_jersey'); BACK_SPECIALS.push('ev_jersey');
+
 /* =====================================================================
    CODES SECRETS
    ===================================================================== */
@@ -6194,6 +6314,8 @@ const CHEATS = {
   ALGA(){ if (!kzOpen()) return 'Алға, Қазақстан! was on November 11'; openKz(); return 'Алға, Қазақстан!'; },
   KZTEST(){ if (!DEV) return 'Nice try'; KZEV.forEach(ev=>grantEv(ev.slot)); refresh(); paintTools(); return 'All Kazakhstan gifts unlocked'; },
   BERKUT(){ return callFlyer(EAGLE); },
+  QUIZ(){ if (!qzOpen()) return 'The quiz was on November 13'; openQz(); return 'CR7 Quiz'; },
+  CR7(){ if (!qzOpen()) return 'The quiz was on November 13'; openQz(); return 'Siuuu!'; },
   SUDOKU(){ if (!suOpen() && !SU().solved) return 'The sudoku was on November 12–13'; openSu(); return 'Sudoku'; },
   SUTEST(){ if (!DEV) return 'Nice try'; SU().g = SU_S.split('').map(Number); SU().g[80] = 0; save(); openSu(); suSel = 80; paintSudoku(); return 'One square left'; },
   TOUREIFFEL(){ if (!DEV) return 'Nice try'; EVENT.forEach(ev=>grantEv(ev.slot)); refresh(); paintTools(); return 'All Paris gifts unlocked'; },
