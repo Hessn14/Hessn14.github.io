@@ -253,7 +253,7 @@
   .sugrid{width:13px;height:13px;flex:none;border:1px solid var(--muted);background:linear-gradient(90deg,transparent 4px,var(--muted) 4px 5px,transparent 5px 8px,var(--muted) 8px 9px,transparent 9px),linear-gradient(transparent 4px,var(--muted) 4px 5px,transparent 5px 8px,var(--muted) 8px 9px,transparent 9px)}
   .su-box{grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto;width:min(480px,100%);overflow:auto}
   .su-main{display:flex;flex-direction:column;align-items:center;gap:12px}
-  .su-grid{display:grid;grid-template-columns:repeat(9,1fr);width:min(420px,100%);aspect-ratio:1;border:2px solid #c9c4d8;border-radius:10px;overflow:hidden;background:#c9c4d8;gap:1px}
+  .su-grid{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));grid-template-rows:repeat(9,minmax(0,1fr));width:min(420px,100%);aspect-ratio:1;border:2px solid #c9c4d8;border-radius:10px;overflow:hidden;background:#c9c4d8;gap:1px}
   .su-grid.win{animation:suwin .9s ease}
   @keyframes suwin{0%{box-shadow:0 0 0 0 rgba(242,184,200,.8)}100%{box-shadow:0 0 0 18px rgba(242,184,200,0)}}
   .suc{background:#17171f;border:0;color:var(--accent);font:600 clamp(16px,4.6vw,22px)/1 var(--sans);cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;transition:background .12s}
@@ -264,6 +264,14 @@
   .suc.bad{color:#ff6a6a;background:#3a1a22}
   .suc:disabled{cursor:default}
   .su-info{font-size:13px;color:var(--muted);min-height:18px;text-align:center}
+  .suc .nt{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);width:100%;height:100%;padding:1px}
+  .suc .nt i{font:600 clamp(8px,2.3vw,10px)/1 var(--sans);font-style:normal;color:#a9a4bd;display:flex;align-items:center;justify-content:center}
+  .suc .nt i.hl{color:var(--accent);font-weight:700}
+  .su-tools{display:flex;align-items:center;gap:10px;width:min(420px,100%);flex-wrap:wrap}
+  #suDraft{background:none;border:1px solid var(--border2);color:var(--muted);border-radius:999px;padding:7px 14px;font:500 13px var(--sans);cursor:pointer}
+  #suDraft.on{border-color:#c09aff;color:#c09aff;background:rgba(192,154,255,.1)}
+  .su-tip{font-size:11.5px;color:var(--muted)}
+  .su-pad.draft button:not(.erase){color:#c09aff;font-size:15px}
   .su-pad{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;width:min(420px,100%)}
   .su-pad button{background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:10px;font:600 18px/1 var(--sans);padding:12px 0;cursor:pointer}
   .su-pad button:hover{border-color:var(--accent);color:var(--accent)}
@@ -6108,7 +6116,9 @@ let SUC = SUDOKUS.s1;
 function suOpenFor(d){ return DEV || d.days.includes(dayNumber()); }
 function suOpen(){ return suOpenFor(SUDOKUS.s1); }
 function SU(){ const k = SUC.key; if (!state[k]) state[k] = { g: SUC.P.split('').map(Number) }; return state[k]; }
-let suSel = -1;
+let suSel = -1, suDraft = false;
+function suNotes(){ const S0 = SU(); if (!S0.n || S0.n.length !== 81) S0.n = new Array(81).fill(0); return S0.n; }
+const suPeers = (i,j)=>{ const r0 = Math.floor(i/9), c0 = i%9, r1 = Math.floor(j/9), c1 = j%9; return r0===r1 || c0===c1 || (Math.floor(r0/3)===Math.floor(r1/3) && Math.floor(c0/3)===Math.floor(c1/3)); };
 const suGiven = i => SUC.P[i] !== '0';
 function suConflicts(g){
   const bad = new Set();
@@ -6126,7 +6136,10 @@ function paintSudoku(){
   }
   [...box.children].forEach((b,i)=>{
     const r0 = Math.floor(i/9), c0 = i%9, sr = Math.floor(sel/9), sc = sel%9;
-    b.textContent = g[i] || '';
+    const nm = suNotes()[i];
+    if (g[i]) b.textContent = g[i];
+    else if (nm){ let h = '<span class="nt">'; for (let d=1; d<=9; d++) h += `<i${sv===d ? ' class="hl"' : ''}>${nm & (1<<d) ? d : ''}</i>`; b.innerHTML = h + '</span>'; }
+    else b.textContent = '';
     b.classList.toggle('given', suGiven(i));
     b.classList.toggle('sel', i===sel);
     b.classList.toggle('peer', sel>=0 && i!==sel && (r0===sr || c0===sc || (Math.floor(r0/3)===Math.floor(sr/3) && Math.floor(c0/3)===Math.floor(sc/3))));
@@ -6137,10 +6150,17 @@ function paintSudoku(){
   const left = g.filter(v=>!v).length;
   $('suInfo').textContent = SU().solved ? 'Solved. Well done, my love.' : (left ? `${left} empty square${left>1?'s':''} left` : (bad.size ? 'Almost… something doesn’t fit' : ''));
   $('suPad').hidden = !!SU().solved;
+  $('suTools').hidden = !!SU().solved;
+  $('suDraft').classList.toggle('on', suDraft); $('suDraft').setAttribute('aria-pressed', suDraft); $('suDraft').innerHTML = suDraft ? '✎ Draft mode · ON' : '✎ Draft mode';
+  $('suPad').classList.toggle('draft', suDraft);
   $('suReward').hidden = !SU().solved;
 }
 function suInput(n){
   if (SU().solved || suSel < 0 || suGiven(suSel)) return;
+  const N = suNotes();
+  if (suDraft && n > 0){ if (SU().g[suSel]) return; N[suSel] ^= (1<<n); save(); blip(900 + n*30,.025,0,'sine',.025); paintSudoku(); return; }
+  if (n === 0 && !SU().g[suSel]){ if (N[suSel]){ N[suSel] = 0; save(); blip(300,.04,0,'triangle',.03); paintSudoku(); } return; }
+  if (n > 0){ N[suSel] = 0; for (let j=0;j<81;j++) if (j!==suSel && suPeers(suSel,j)) N[j] &= ~(1<<n); }
   SU().g[suSel] = n; save(); blip(n ? 520 + n*40 : 300, .04, 0, 'triangle', .035);
   if (SU().g.join('') === SUC.S){ SU().solved = true; if (SUC.letter) SU().letter = true; save(); suWin(); }
   paintSudoku();
@@ -6166,12 +6186,16 @@ function closeSu(){ $('su').hidden = true; document.body.style.overflow = ''; SU
 $('suBtn').addEventListener('click', ()=>openSu(SUDOKUS.s1));
 $('su2Btn').addEventListener('click', ()=>openSu(SUDOKUS.s2));
 $('suClose').addEventListener('click', closeSu);
+{ const tb = document.createElement('div'); tb.className = 'su-tools'; tb.id = 'suTools';
+  tb.innerHTML = '<button type="button" id="suDraft" aria-pressed="false">✎ Draft mode</button><span class="su-tip">Draft mode: tap numbers to jot possibilities in a square</span>';
+  $('suPad').before(tb); $('suDraft').addEventListener('click', ()=>{ suDraft = !suDraft; SFX.tick(); paintSudoku(); }); }
 for (let n=1;n<=9;n++){ const b = document.createElement('button'); b.type = 'button'; b.textContent = n; b.addEventListener('click', ()=>suInput(n)); $('suPad').appendChild(b); }
 { const b = document.createElement('button'); b.type = 'button'; b.className = 'erase'; b.innerHTML = '⌫'; b.setAttribute('aria-label','Erase'); b.addEventListener('click', ()=>suInput(0)); $('suPad').appendChild(b); }
 $('suLetterBtn').addEventListener('click', openLetter);
 document.addEventListener('keydown', e=>{
   if ($('su').hidden || !$('letter').hidden) return;
   if (e.key==='Escape'){ closeSu(); return; }
+  if (e.key==='n' || e.key==='N'){ suDraft = !suDraft; paintSudoku(); e.preventDefault(); return; }
   if (/^[1-9]$/.test(e.key)){ suInput(+e.key); e.preventDefault(); }
   else if (e.key==='Backspace' || e.key==='Delete' || e.key==='0'){ suInput(0); e.preventDefault(); }
   else if (e.key.startsWith('Arrow')){ if (suSel < 0) suSel = 0; else { const d = { ArrowLeft:-1, ArrowRight:1, ArrowUp:-9, ArrowDown:9 }[e.key]; suSel = Math.max(0, Math.min(80, suSel + d)); } paintSudoku(); e.preventDefault(); }
