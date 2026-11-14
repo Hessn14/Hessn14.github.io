@@ -249,6 +249,7 @@
   }
   /* ---------- Événement Sudoku + lettre ---------- */
   .su-t{font-family:var(--serif);font-style:italic;font-size:clamp(30px,4vw,40px);line-height:1;color:#f4efe6}
+  .su-hard{font-family:var(--sans);font-style:normal;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#c09aff;margin-left:10px;vertical-align:middle;border:1px solid rgba(192,154,255,.5);border-radius:999px;padding:2px 8px}
   .sugrid{width:13px;height:13px;flex:none;border:1px solid var(--muted);background:linear-gradient(90deg,transparent 4px,var(--muted) 4px 5px,transparent 5px 8px,var(--muted) 8px 9px,transparent 9px),linear-gradient(transparent 4px,var(--muted) 4px 5px,transparent 5px 8px,var(--muted) 8px 9px,transparent 9px)}
   .su-box{grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto;width:min(480px,100%);overflow:auto}
   .su-main{display:flex;flex-direction:column;align-items:center;gap:12px}
@@ -350,6 +351,10 @@
           <span class="su-t">Sudoku</span>
           <span class="pe-d"><span class="sugrid"></span>12–13 November<span class="pe-play">Play ▸</span></span>
         </button>
+        <button class="paris-ev" id="su2Btn" type="button" hidden aria-label="Hard sudoku, 14 November. Play">
+          <span class="su-t">Sudoku<small class="su-hard">hard</small></span>
+          <span class="pe-d"><span class="sugrid"></span>14 November<span class="pe-play">Play ▸</span></span>
+        </button>
         <button class="paris-ev" id="qzBtn" type="button" hidden aria-label="CR7 quiz, 13 November. Play">
           <span class="qz-t">CR7 Quiz</span>
           <span class="pe-d"><span class="qz7">7</span>13 November<span class="pe-play">Play ▸</span></span>
@@ -449,7 +454,7 @@
 <div class="paris su" id="su" hidden>
   <div class="paris-box su-box" role="dialog" aria-modal="true" aria-label="Sudoku">
     <div class="paris-head">
-      <div><span class="su-t">Sudoku</span><span class="pe-d"><span class="sugrid"></span>12–13 November · medium</span></div>
+      <div><span class="su-t">Sudoku</span><span class="pe-d"><span class="sugrid"></span><span id="suLabel">12–13 November · medium</span></span></div>
       <button class="x" id="suClose" aria-label="Close">✕</button>
     </div>
     <div class="su-main">
@@ -2149,7 +2154,7 @@ Object.assign(ITEMS, {
   if (s==='ev_berkut') return;
   (ITEMS[s].back ? BACK_SPECIALS : FLOOR_SPECIALS).push(s);
 });
-Object.assign(EV_G, { ev_jersey:[204,52], ev_baursak:[24,119], ev_dombra:[220,4], ev_tuskiiz:[171,71], ev_yurt:[64,123], ev_kzflag:[6,96], ev_berkut:[123,140] });
+Object.assign(EV_G, { ev_knife:[158,76], ev_jersey:[204,52], ev_baursak:[24,119], ev_dombra:[220,4], ev_tuskiiz:[171,71], ev_yurt:[64,123], ev_kzflag:[6,96], ev_berkut:[123,140] });
 Object.assign(EV_GSORT, { ev_baursak:158.6, ev_yurt:152, ev_kzflag:140 });
 // où sont dessinés les objets « posés » d'un événement (traduction du dessin local) et leur profondeur
 function evAt(s, room){
@@ -2198,6 +2203,39 @@ function glowWizard(o,t,env){
 ITEMS.ev_candles = { draw:drawWizard, glow:glowWizard, light:1, off:[152,106], sortY:151, bbox:()=>({x:0,y:0,w:40,h:47}) };
 EV_SLOTS.push('ev_candles'); ALL_SLOTS.push('ev_candles'); FLOOR_SPECIALS.push('ev_candles'); GLOW_SLOTS.push('ev_candles');
 EV_G.ev_candles = [140,112]; EV_GSORT.ev_candles = 158.4;
+
+/* ---------- Couteau papillon violet (récompense du Sudoku difficile) ---------- */
+function knifeBar(x0,y0,ang,len,ws,col){ // trace une barre épaisse le long d'un angle
+  const dx = Math.cos(ang), dy = Math.sin(ang), px = -dy, py = dx;
+  for (let k=0;k<=len*2;k++){ const s = k/2; for (const w of ws){ const c = col(s,w); if (c) p(Math.round(x0 + dx*s + px*w), Math.round(y0 + dy*s + py*w), c); } }
+}
+function drawBalisong(px, py, aHandle1, aHandle2, aBlade, L, t){
+  // manches squelette : cadre sombre, insert violet, ajours
+  const handle = (a)=> knifeBar(px, py, a, L, [-1,0,1], (s,w)=> w===0 ? (s > 2 && s < L-1 && Math.floor(s) % 4 >= 2 ? null : '#8a4ad8') : (w < 0 ? '#3a2456' : '#24163a'));
+  handle(aHandle2); handle(aHandle1);
+  const le = [px + Math.round(Math.cos(aHandle2)*L), py + Math.round(Math.sin(aHandle2)*L)];
+  p(le[0], le[1], '#e2b85a'); p(le[0]+1, le[1], '#c9a24a');                                       // loquet doré
+  // lame violette en dégradé, pointe effilée
+  const B = L + 3;
+  knifeBar(px, py, aBlade, B, [-2,-1,0,1], (s,w0)=>{ const w = (Math.cos(aBlade) < 0 ? -w0 : w0), t0 = B - 6, top = s > t0 ? -1 + (s - t0)*.62 : -1, bot = s > t0 ? 2 - (s - t0)*.25 : (s < 2 ? 1 : 2);
+    if (w < top || w > bot || s > B) return null;
+    if (w===-1) return '#3a1e6a'; if (w===2) return s < 3 ? null : '#f2eaff';
+    return w===0 ? (s > t0 ? '#e0c8ff' : '#c9a2ff') : '#8a4ee8'; });
+  if (t !== undefined && (t>>2)%9===0){ const s = B*.6; p(Math.round(px + Math.cos(aBlade)*s), Math.round(py + Math.sin(aBlade)*s), '#ffffff'); }
+  p(px,py,'#e2b85a'); p(px,py+1,'#a8802e');                                                         // vis de pivot
+}
+function drawKnifePlaque(o,t){
+  r(0,0,30,14,'#2a1c14'); r(1,1,28,12,'#160f1c'); r(1,1,28,1,'#2e2238');
+  p(1,1,'#c9a24a'); p(28,1,'#c9a24a'); p(1,12,'#c9a24a'); p(28,12,'#c9a24a');
+  drawBalisong(15, 7, -0.36, 0.36, Math.PI + 0.05, 11, t);
+}
+function drawBalisongFlip(px, py, k){
+  const a = k*.42, spread = Math.PI*(.12 + .8*(.5 + .5*Math.sin(k*.17)));
+  drawBalisong(px, py, a - spread/2, a + spread/2, a + Math.PI, 7, k);
+  for (let s=1;s<4;s++){ const ang = a + Math.PI - s*.42; p(px + Math.round(Math.cos(ang)*9), py + Math.round(Math.sin(ang)*9), `rgba(200,160,255,${(.55 - s*.15).toFixed(2)})`); }
+}
+ITEMS.ev_knife = { draw:drawKnifePlaque, back:true, off:[60,76], bbox:()=>({x:0,y:0,w:30,h:14}) };
+EV_SLOTS.push('ev_knife'); ALL_SLOTS.push('ev_knife'); BACK_SPECIALS.push('ev_knife');
 
 function gEvOn(s){ return !(G().off && G().off[s]); }
 function evTap(s, b){
@@ -2435,6 +2473,7 @@ function decideHumanRoom(h){
   h.state='idle'; h.timer = rand(60,160)|0;
 }
 function updateHuman(h){
+  if (h.trick > 0){ h.trick--; if (h.trick % 9 === 0) blip(2200 + (h.trick%3)*300,.02,0,'square',.018); if (!h.trick){ h.state='idle'; h.timer=30; } return; }
   if (h.dance > 0){ h.dance--; if (h.dance===0){ h.state='idle'; h.timer=30; } return; }
   switch (h.state){
     case 'toMeet': stepTo(h, ()=>{ h.state='waitMeet'; }); break;
@@ -2517,10 +2556,12 @@ function humanGeom(h){
   if (h.state==='kiss' && (h.timer%24) < 12) y0 -= 1;
   return { pose, x0, y0, w:16, h:n, seated:!!seat };
 }
+const KNIFE_HAND = 16;
 function drawHuman(h,t){
   const g = humanGeom(h);
   const hand = g.pose==='crouch' ? h.dir : (h.state==='hug' ? (h===HER ? 1 : -1) : (h.state==='placing' ? h.dir : 0));
   drawPerson(h.kind, g.x0, g.y0, t, g.pose, false, hand, flowersFor(h));
+  if (h.trick > 0) drawBalisongFlip(g.x0 + 14, g.y0 + KNIFE_HAND, 220 - h.trick);
   if (h.kind==='me' && !g.seated){
     for (let k=0;k<3;k++){
       const ph = (t + k*13) % 40, a = Math.max(0, 1 - ph/40);
@@ -3099,7 +3140,7 @@ function gOff(s){ return (G().pos && G().pos[s]) || [0,0]; }
 function withG(s, fn){ const [dx,dy] = gOff(s); X.save(); X.translate(dx,dy); fn(); X.restore(); }
 const G_BACK = ['gdoor','gposter','gplate','gshelf','gtools','gneon','glights'];
 const G_SORT = { gdisplay:139, car:147, glounge:156, gpets:157.9, gtires:158 };
-Object.assign(G_SORT, EV_GSORT); G_BACK.push('ev_mona','ev_dombra','ev_tuskiiz','ev_jersey');
+Object.assign(G_SORT, EV_GSORT); G_BACK.push('ev_mona','ev_dombra','ev_tuskiiz','ev_jersey','ev_knife');
 function gHas(s){ if (isEv(s)) return s!=='ev_baguette' && s!=='ev_pigeon' && evWhere(s)==='garage'; return s==='car' ? gDone(1) : !!gPick(s); }
 function gFront(){ return (G().front || []).filter(gHas); }
 function gIsFront(s){ return gFront().includes(s); }
@@ -3630,13 +3671,13 @@ function renderMItemTo(cv, slot, opt, t){
 }
 
 /* ---------- Moteur de la gaming room (positions, profondeur, toucher) ---------- */
-const EV_M = { ev_jersey:[38,58], ev_candles:[160,108], ev_croissant:[96,85], ev_eiffel:[196,58], ev_baguette:[120,150], ev_flag:[230,104], ev_mona:[206,62], ev_pigeon:[123,140],
+const EV_M = { ev_knife:[60,40], ev_jersey:[38,58], ev_candles:[160,108], ev_croissant:[96,85], ev_eiffel:[196,58], ev_baguette:[120,150], ev_flag:[230,104], ev_mona:[206,62], ev_pigeon:[123,140],
   ev_baursak:[150,86], ev_dombra:[214,60], ev_tuskiiz:[200,64], ev_yurt:[90,124], ev_kzflag:[4,104], ev_berkut:[123,140] };
 const EV_MSORT = { ev_candles:155, ev_croissant:110.5, ev_eiffel:101, ev_flag:148, ev_baursak:110.6, ev_yurt:150, ev_kzflag:148 };
 const M_WALLFURN = { mdesk:109, mconsole:113, marcade:120 };   // base de ces meubles : ils restent contre le mur
 function mOff(s){ const o = (M().pos && M().pos[s]) || [0,0]; return M_WALLFURN[s] !== undefined ? [o[0], Math.min(o[1], 122 - M_WALLFURN[s])] : o; }
 function withM(s, fn){ const [dx,dy] = mOff(s); X.save(); X.translate(dx,dy); fn(); X.restore(); }
-const M_BACK = ['mrug','mwindow','mscore','mposter','mrifle','mneon','mshelf','mlights','ev_jersey','ev_mona','ev_dombra','ev_tuskiiz'];
+const M_BACK = ['mrug','mwindow','mscore','mposter','mrifle','mneon','mshelf','mlights','ev_jersey','ev_knife','ev_mona','ev_dombra','ev_tuskiiz'];
 const M_SORT = Object.assign({ mdesk:110, mconsole:114, marcade:121, mchair:130, mpets:152, msnack:153 }, EV_MSORT);
 function mHas(s){ if (isEv(s)) return s!=='ev_baguette' && s!=='ev_pigeon' && s!=='ev_berkut' && evWhere(s)==='gaming'; return s==='mdesk' ? mDone(1) : !!mPick(s); }
 function mFront(){ return (M().front || []).filter(mHas); }
@@ -4125,13 +4166,13 @@ function renderBItemTo(cv, slot, opt, t){
 }
 
 /* ---------- Moteur de la bar (positions, profondeur, toucher) ---------- */
-const EV_B = { ev_jersey:[80,48], ev_candles:[176,104], ev_croissant:[188,80], ev_eiffel:[4,98], ev_baguette:[128,152], ev_flag:[6,104], ev_mona:[84,64], ev_pigeon:[123,140],
+const EV_B = { ev_knife:[84,64], ev_jersey:[80,48], ev_candles:[176,104], ev_croissant:[188,80], ev_eiffel:[4,98], ev_baguette:[128,152], ev_flag:[6,104], ev_mona:[84,64], ev_pigeon:[123,140],
   ev_baursak:[150,80], ev_dombra:[82,22], ev_tuskiiz:[84,64], ev_yurt:[104,118], ev_kzflag:[226,104], ev_berkut:[123,140] };
 const EV_BSORT = { ev_candles:152, ev_croissant:125.6, ev_eiffel:141, ev_flag:148, ev_baursak:125.7, ev_yurt:142, ev_kzflag:148 };
 const B_WALLFURN = { bcounter:122, bpiano:112, bcellar:112 };   // ces meubles restent contre le mur
 function bOff(s){ const o = (BR().pos && BR().pos[s]) || [0,0]; return B_WALLFURN[s] !== undefined ? [o[0], Math.min(o[1], 122 - B_WALLFURN[s])] : o; }
 function withB(s, fn){ const [dx,dy] = bOff(s); X.save(); X.translate(dx,dy); fn(); X.restore(); }
-const B_BACK = ['bwindow','bart','bsign','blights','ev_jersey','ev_mona','ev_dombra','ev_tuskiiz'];
+const B_BACK = ['bwindow','bart','bsign','blights','ev_jersey','ev_knife','ev_mona','ev_dombra','ev_tuskiiz'];
 const B_SORT = Object.assign({ bcounter:123, bcocktail:123.5, bpiano:113, bcellar:113.5, bstools:139, blounge:152, bpets:155, bplants:153 }, EV_BSORT);
 function bHas(s){ if (isEv(s)) return s!=='ev_baguette' && s!=='ev_pigeon' && s!=='ev_berkut' && evWhere(s)==='bar'; return s==='bcounter' ? bDone(1) : (s==='bcocktail' ? !!bPick(s) && BR().unwrapped : !!bPick(s)); }
 function bFront(){ return (BR().front || []).filter(bHas); }
@@ -4774,7 +4815,7 @@ function paintTools(){
 const NO_STORE = ['walls','floor','character'];
 function ownedObjects(){ return ALL_SLOTS.filter(s=>!NO_STORE.includes(s) && pickOf(s)); }
 function itemName(slot){
-  const sp = SPECIALS.find(q=>q.slot===slot) || EVENT.find(q=>q.slot===slot) || KZEV.find(q=>q.slot===slot) || SUEV.find(q=>q.slot===slot) || QZEV.find(q=>q.slot===slot); if (sp) return sp.name;
+  const sp = SPECIALS.find(q=>q.slot===slot) || EVENT.find(q=>q.slot===slot) || KZEV.find(q=>q.slot===slot) || SUEV.find(q=>q.slot===slot) || QZEV.find(q=>q.slot===slot) || KNEV.find(q=>q.slot===slot); if (sp) return sp.name;
   for (const d of DAYS) for (const pk of d.picks) if (pk.slot===slot){ const o = pk.opts.find(q=>q.id===pickOf(slot)); if (o) return o.name; }
   return slot;
 }
@@ -6034,8 +6075,9 @@ function closeKz(){
 function paintEventBtns(){
   $('parisBtn').hidden = true;
   const b = $('kzBtn'); b.hidden = !kzOpen(); b.classList.toggle('fresh', !KS().seen);
-  const sb = $('suBtn'); sb.hidden = !suOpen(); sb.classList.toggle('fresh', !SU().seen);
-  $('letterBtn').hidden = !SU().letter;
+  const sb = $('suBtn'); sb.hidden = !suOpenFor(SUDOKUS.s1); sb.classList.toggle('fresh', !(state.sudoku && state.sudoku.seen));
+  const sb2 = $('su2Btn'); sb2.hidden = !suOpenFor(SUDOKUS.s2); sb2.classList.toggle('fresh', !(state.sudoku2 && state.sudoku2.seen));
+  $('letterBtn').hidden = !(state.sudoku && state.sudoku.letter);
   const qb = $('qzBtn'); qb.hidden = !qzOpen(); qb.classList.toggle('fresh', !QS().seen);
 }
 $('kzBtn').addEventListener('click', openKz);
@@ -6057,10 +6099,17 @@ const SU_DAY = 6;
 const SU_P = '000000010009250004038001607206000300010060070007000208803500140900073500050000000';
 const SU_S = '724386915169257834538941627286794351315862479497135268873529146941673582652418793';
 const SUEV = [ { slot:'ev_candles', name:"Wizard's corner", ds:'A grimoire that reads itself, a quill that writes alone' } ];
-function suOpen(){ return DEV || dayNumber() === SU_DAY || dayNumber() === SU_DAY + 1; }   // prolongé jusqu'au 13 novembre
-function SU(){ if (!state.sudoku) state.sudoku = { g: SU_P.split('').map(Number) }; return state.sudoku; }
+const KNEV = [ { slot:'ev_knife', name:'Purple butterfly knife', ds:'For solving the hard one. Psst: try the code BUTTERFLY' } ];
+const SUDOKUS = {
+  s1:{ key:'sudoku',  days:[6,7], P:SU_P, S:SU_S, ev:SUEV, letter:true,  label:'12–13 November · medium', over:'The sudoku was on November 12–13.', win:'Sudoku solved! Two gifts for you' },
+  s2:{ key:'sudoku2', days:[8], P:'000892003006000589000000000700081490000000000094360008000000000317000900500276000', S:'475892613126743589938615274763581492851924367294367158682139745317458926549276831', ev:KNEV, letter:false, label:'14 November · hard', over:'The hard sudoku was on November 14.', win:'Hard sudoku solved! The butterfly knife is yours' }
+};
+let SUC = SUDOKUS.s1;
+function suOpenFor(d){ return DEV || d.days.includes(dayNumber()); }
+function suOpen(){ return suOpenFor(SUDOKUS.s1); }
+function SU(){ const k = SUC.key; if (!state[k]) state[k] = { g: SUC.P.split('').map(Number) }; return state[k]; }
 let suSel = -1;
-const suGiven = i => SU_P[i] !== '0';
+const suGiven = i => SUC.P[i] !== '0';
 function suConflicts(g){
   const bad = new Set();
   for (let i=0;i<81;i++){ if (!g[i]) continue; const r0 = Math.floor(i/9), c0 = i%9;
@@ -6093,26 +6142,29 @@ function paintSudoku(){
 function suInput(n){
   if (SU().solved || suSel < 0 || suGiven(suSel)) return;
   SU().g[suSel] = n; save(); blip(n ? 520 + n*40 : 300, .04, 0, 'triangle', .035);
-  if (SU().g.join('') === SU_S){ SU().solved = true; SU().letter = true; save(); suWin(); }
+  if (SU().g.join('') === SUC.S){ SU().solved = true; if (SUC.letter) SU().letter = true; save(); suWin(); }
   paintSudoku();
 }
 function suWin(){
-  SUEV.forEach(ev=>grantEv(ev.slot));
+  SUC.ev.forEach(ev=>grantEv(ev.slot));
   SFX.final();
   for (let k=0;k<5;k++) setTimeout(()=>{ const el = $('suGrid'); el.classList.remove('win'); void el.offsetWidth; el.classList.add('win'); }, k*10);
-  toast('Sudoku solved! Two gifts for you');
+  toast(SUC.win);
   paintSuReward(); paintTools(); buildGrid();
 }
-function paintSuReward(){ paintEvRewards(SUEV, $('suRewards'), 1); }
-function openSu(){
-  if (!suOpen() && !SU().solved){ toast('The sudoku was on November 12–13.'); SFX.nope(); return; }
+function paintSuReward(){ paintEvRewards(SUC.ev, $('suRewards'), 1); }
+function openSu(d){
+  SUC = (d && d.key) ? d : SUDOKUS.s1;
+  if (!suOpenFor(SUC) && !SU().solved){ toast(SUC.over); SFX.nope(); return; }
+  $('suLabel').textContent = SUC.label; $('suLetterBtn').hidden = !SUC.letter;
   if (editing) setEditing(false);
   if (photoMode) exitPhoto();
   $('su').hidden = false; document.body.style.overflow = 'hidden'; SFX.open();
   suSel = -1; paintSudoku(); if (SU().solved) paintSuReward();
 }
 function closeSu(){ $('su').hidden = true; document.body.style.overflow = ''; SU().seen = true; save(); paintEventBtns(); paintTools(); }
-$('suBtn').addEventListener('click', openSu);
+$('suBtn').addEventListener('click', ()=>openSu(SUDOKUS.s1));
+$('su2Btn').addEventListener('click', ()=>openSu(SUDOKUS.s2));
 $('suClose').addEventListener('click', closeSu);
 for (let n=1;n<=9;n++){ const b = document.createElement('button'); b.type = 'button'; b.textContent = n; b.addEventListener('click', ()=>suInput(n)); $('suPad').appendChild(b); }
 { const b = document.createElement('button'); b.type = 'button'; b.className = 'erase'; b.innerHTML = '⌫'; b.setAttribute('aria-label','Erase'); b.addEventListener('click', ()=>suInput(0)); $('suPad').appendChild(b); }
@@ -6316,8 +6368,10 @@ const CHEATS = {
   BERKUT(){ return callFlyer(EAGLE); },
   QUIZ(){ if (!qzOpen()) return 'The quiz was on November 13'; openQz(); return 'CR7 Quiz'; },
   CR7(){ if (!qzOpen()) return 'The quiz was on November 13'; openQz(); return 'Siuuu!'; },
-  SUDOKU(){ if (!suOpen() && !SU().solved) return 'The sudoku was on November 12–13'; openSu(); return 'Sudoku'; },
-  SUTEST(){ if (!DEV) return 'Nice try'; SU().g = SU_S.split('').map(Number); SU().g[80] = 0; save(); openSu(); suSel = 80; paintSudoku(); return 'One square left'; },
+  SUDOKU(){ const d = suOpenFor(SUDOKUS.s2) ? SUDOKUS.s2 : SUDOKUS.s1; openSu(d); return 'Sudoku'; },
+  SUTEST(){ if (!DEV) return 'Nice try'; SUC = SUDOKUS.s1; SU().g = SUC.S.split('').map(Number); SU().g[80] = 0; save(); openSu(SUC); suSel = 80; paintSudoku(); return 'One square left'; },
+  SUTEST2(){ if (!DEV) return 'Nice try'; SUC = SUDOKUS.s2; SU().g = SUC.S.split('').map(Number); SU().g[80] = 0; save(); openSu(SUC); suSel = 80; paintSudoku(); return 'One square left (1)'; },
+  BUTTERFLY(){ if (!residents()) return nobody(); summon(HER); if (HER.state==='sitting') standUp(HER); if (HER.pet){ HER.pet.heldBy = null; HER.pet = null; } HER.dance = 0; HER.state = 'idle'; HER.trick = 220; if (LEO.room===HER.room && Math.abs(HER.x-LEO.x) < 18 && Math.abs(HER.y-LEO.y) < 10) HER.x = clampX(LEO.x + (LEO.x > 128 ? -22 : 22), HER.y); HER.dir = 1; return 'Butterfly tricks!'; },
   TOUREIFFEL(){ if (!DEV) return 'Nice try'; EVENT.forEach(ev=>grantEv(ev.slot)); refresh(); paintTools(); return 'All Paris gifts unlocked'; },
   PIGEON(){ return callFlyer(BIRD); },
   INVENTORY(){ openInventory(); return 'Inventory'; },
@@ -6367,7 +6421,7 @@ function runCheat(){
   const inp = $('cheatInput'), code = inp.value.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/gi,'').toUpperCase();
   inp.value = '';
   if (!code) return;
-  const fn = ((code==='PIGEON' || code==='ROUCOU') && !pickOf('ev_pigeon')) || (['BERKUT','AIGLE','EAGLE'].includes(code) && !pickOf('ev_berkut')) ? null : CHEATS[code];
+  const fn = (code==='BUTTERFLY' && !pickOf('ev_knife')) || ((code==='PIGEON' || code==='ROUCOU') && !pickOf('ev_pigeon')) || (['BERKUT','AIGLE','EAGLE'].includes(code) && !pickOf('ev_berkut')) ? null : CHEATS[code];
   if (fn){ SFX.place(); toast(fn()); inp.blur(); }
   else { SFX.nope(); const f = $('cheatForm'); f.classList.remove('shake'); void f.offsetWidth; f.classList.add('shake'); toast('Unknown code'); }
 }
