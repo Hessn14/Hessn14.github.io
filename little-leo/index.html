@@ -1,0 +1,1928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffd3e0">
+<title>Little Léo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#3a2347; --cream:#fff8ee; --pink:#ff7fa8; --pink2:#ffd3e0; --teal:#3fbfb6;
+  --gold:#ffcf4a; --sky:#bfe6ff; --mint:#c9f2d9;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{
+  font-family:'VT323',ui-monospace,Menlo,monospace; color:var(--ink);
+  background-color:#ffd3e0;
+  background-image:
+    linear-gradient(45deg,#ffc6d7 25%,transparent 25%,transparent 75%,#ffc6d7 75%),
+    linear-gradient(45deg,#ffc6d7 25%,transparent 25%,transparent 75%,#ffc6d7 75%);
+  background-size:24px 24px; background-position:0 0,12px 12px;
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  -webkit-user-select:none; user-select:none; touch-action:manipulation;
+}
+.app{max-width:460px;margin:0 auto;padding:10px 10px 22px}
+.px{border:3px solid var(--ink);box-shadow:4px 4px 0 rgba(58,35,71,.28);background:var(--cream)}
+header{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;margin-bottom:8px}
+.title{font-family:'Press Start 2P',monospace;font-size:15px;line-height:1.2;color:var(--pink);text-shadow:2px 2px 0 var(--ink);letter-spacing:1px}
+.sub{font-size:17px;line-height:1;margin-top:4px;color:#7a5a86}
+.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.day{font-family:'Press Start 2P',monospace;font-size:8px;background:var(--gold);border:2px solid var(--ink);padding:3px 5px}
+.snd{font-family:'VT323',monospace;font-size:17px;background:#fff;border:2px solid var(--ink);padding:0 6px;cursor:pointer;color:var(--ink)}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;padding:8px 10px;margin-bottom:8px}
+.stat .lab{display:flex;align-items:center;gap:5px;font-size:18px;line-height:1}
+.stat .lab canvas{width:14px;height:14px;image-rendering:pixelated}
+.stat .lab b{font-weight:normal;margin-left:auto;font-size:16px;color:#7a5a86}
+.bar{display:flex;gap:2px;margin-top:3px;border:2px solid var(--ink);padding:2px;background:#fff}
+.bar i{flex:1;height:8px;background:#eee3f0}
+.bar i.on{background:var(--c)}
+.stat.low .bar{animation:blink .8s steps(2) infinite}
+@keyframes blink{50%{border-color:#ff3b5c;background:#ffe0e6}}
+.nav{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.arrow{font-family:'Press Start 2P',monospace;font-size:14px;width:44px;height:40px;background:var(--gold);border:3px solid var(--ink);box-shadow:0 3px 0 var(--ink);cursor:pointer;color:var(--ink);padding:0}
+.arrow:active,.btn:active,.tab:active{transform:translateY(3px);box-shadow:none}
+.roomname{flex:1;text-align:center;font-family:'Press Start 2P',monospace;font-size:12px;padding:12px 4px;background:#fff;border:3px solid var(--ink)}
+.tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;margin-bottom:8px}
+.tab{background:#fff;border:3px solid var(--ink);box-shadow:0 3px 0 var(--ink);padding:5px 0 3px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;font-family:'VT323',monospace;font-size:15px;color:var(--ink);line-height:1}
+.tab canvas{width:18px;height:18px;image-rendering:pixelated}
+.tab.on{background:var(--pink2);outline:2px dashed var(--pink);outline-offset:-6px}
+.stage{position:relative;padding:0;overflow:hidden;background:#222}
+#scene{display:block;width:100%;height:auto;aspect-ratio:128/112;image-rendering:pixelated;image-rendering:crisp-edges;cursor:pointer;touch-action:pan-y}
+.bubble{position:absolute;left:50%;top:6px;transform:translate(-50%,-6px);max-width:88%;background:#fff;border:3px solid var(--ink);padding:5px 9px 6px;font-size:20px;line-height:1.05;text-align:center;opacity:0;pointer-events:none;transition:opacity .15s,transform .15s;box-shadow:3px 3px 0 rgba(0,0,0,.25)}
+.bubble.show{opacity:1;transform:translate(-50%,0)}
+.toast{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:17px;padding:4px 10px;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap;max-width:94%;overflow:hidden;text-overflow:ellipsis}
+.toast.show{opacity:1}
+.banner{display:none;align-items:center;gap:8px;margin-top:8px;padding:6px 8px;background:#fff3b0;font-size:18px;line-height:1.05}
+.banner.show{display:flex}
+.banner span{flex:1}
+.banner .btn{font-size:16px;padding:5px 8px;white-space:nowrap}
+.panel{margin-top:8px;padding:10px}
+.panel h3{font-family:'Press Start 2P',monospace;font-size:9px;margin:0 0 8px;color:#7a5a86;font-weight:normal;letter-spacing:.5px}
+.grid{display:grid;gap:7px}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.btn{font-family:'VT323',monospace;font-size:20px;line-height:1;color:var(--ink);background:#fff;border:3px solid var(--ink);box-shadow:0 3px 0 var(--ink);padding:9px 6px;cursor:pointer;touch-action:manipulation}
+.btn.big{font-size:22px;padding:12px 6px}
+.btn.pink{background:var(--pink2)}
+.btn.gold{background:var(--gold)}
+.btn.teal{background:var(--mint)}
+.btn.sky{background:var(--sky)}
+.btn.sel{background:var(--pink2);outline:2px dashed var(--pink);outline-offset:-7px}
+.btn[disabled]{opacity:.5}
+.food{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 1px 5px;font-size:16px;min-width:0}
+.food span,.opt span{max-width:100%;overflow-wrap:break-word;line-height:.95}
+@media (max-width:389px){.g4{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.food canvas{width:40px;height:40px;image-rendering:pixelated}
+.opt{display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 2px 6px;font-size:16px}
+.opt canvas{width:72px;height:88px;image-rendering:pixelated;background:#f6ecff;border:2px solid #e6d6f2}
+.cats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin-bottom:9px}
+.cats .btn{font-size:17px;padding:7px 2px}
+.hint{font-size:17px;color:#7a5a86;margin:8px 0 0;line-height:1.1}
+footer{text-align:center;font-size:17px;color:#7a5a86;margin-top:12px}
+.modal{position:fixed;inset:0;background:rgba(58,35,71,.55);display:none;align-items:center;justify-content:center;padding:18px;z-index:10}
+.modal.show{display:flex}
+.modal .card{max-width:380px;padding:16px;text-align:center}
+.modal h2{font-family:'Press Start 2P',monospace;font-size:13px;color:var(--pink);text-shadow:2px 2px 0 var(--ink);margin:4px 0 12px;line-height:1.4}
+.modal p{font-size:21px;line-height:1.1;margin:0 0 10px}
+.modal img{display:block;width:180px;height:243px;image-rendering:pixelated;margin:0 auto 10px;border:6px solid #b07a4e;outline:3px solid var(--ink);background:#fff6e8}
+.modal canvas{width:144px;height:176px;image-rendering:pixelated;margin:0 auto 8px;display:block;background:#f6ecff;border:3px solid var(--ink)}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="px">
+    <div>
+      <div class="title">LITTLE LÉO</div>
+      <div class="sub">a pocket boyfriend for Aidana</div>
+    </div>
+    <div class="hdr-right">
+      <div class="day" id="day">DAY 1</div>
+      <button class="snd" id="snd" aria-label="Toggle sound">SOUND: ON</button>
+    </div>
+  </header>
+
+  <section class="stats px" id="stats"></section>
+
+  <div class="nav">
+    <button class="arrow" id="prev" aria-label="Previous room">&lt;</button>
+    <div class="roomname" id="roomname">LIVING ROOM</div>
+    <button class="arrow" id="next" aria-label="Next room">&gt;</button>
+  </div>
+  <div class="tabs" id="tabs"></div>
+
+  <div class="stage px">
+    <canvas id="scene" width="128" height="112" aria-label="Little Léo"></canvas>
+    <div class="bubble" id="bubble"></div>
+    <div class="toast" id="toast"></div>
+  </div>
+  <div class="banner px" id="banner"><span id="bannerText"></span><button class="btn gold" id="bannerBtn"></button></div>
+
+  <section class="panel px" id="panel"></section>
+
+</div>
+
+<div class="modal" id="intro">
+  <div class="card px">
+    <h2>HI AIDANA!</h2>
+    <canvas id="introPic" width="36" height="44"></canvas>
+    <p>I'm Little Léo, a pocket-sized version of your boyfriend.</p>
+    <p>Feed me, put me to bed, hug me, wash me and dress me however you like.</p>
+    <p>My bars go down even when the page is closed. If one hits zero... my moustache falls off. Only a hug can grow it back.</p>
+    <button class="btn pink big" id="introGo" style="width:100%">TAKE CARE OF LÉO</button>
+  </div>
+</div>
+
+<div class="modal" id="photo">
+  <div class="card px">
+    <h2>MY FAVORITE PERSON</h2>
+    <img id="photoImg" alt="Pixel portrait of Aidana">
+    <p id="photoCap"></p>
+    <button class="btn pink big" id="photoClose" style="width:100%">CLOSE</button>
+  </div>
+</div>
+
+<script>
+(() => {
+'use strict';
+
+/* =========================================================
+   STORAGE
+   This game reads and writes ONE key only: "little-leo-v1".
+   It never lists, clears or touches any other key
+   (in particular "aidana-salon-v3" is left completely alone).
+   ========================================================= */
+const KEY = 'little-leo-v1';
+function loadSave(){
+  try { const raw = window.localStorage.getItem(KEY); return raw ? JSON.parse(raw) : null; }
+  catch(e){ return null; }
+}
+function persist(){
+  try { window.localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){}
+}
+
+/* ---------- utils ---------- */
+const now = () => Date.now();
+const clamp = (v,a=0,b=100) => Math.max(a, Math.min(b, v));
+const rnd = (a,b) => a + Math.random()*(b-a);
+const pick = a => a[Math.floor(Math.random()*a.length)];
+const hash = (x,y) => { let h = (x*374761393 + y*668265263) | 0; h = Math.imul(h ^ (h>>>13), 1274126177); return ((h ^ (h>>>16))>>>0)/4294967296; };
+const isNight = () => { const h = new Date().getHours(); return h >= 23 || h < 5; };
+const isDay = () => { const h = new Date().getHours(); return h >= 7 && h < 19; };
+
+/* ---------- state ---------- */
+const STAT_KEYS = ['hunger','energy','mood','hygiene'];
+function fresh(){
+  const n = now();
+  return {
+    v:1, created:n, last:n,
+    stats:{hunger:75, energy:80, mood:85, hygiene:80},
+    asleep:false, stache:true, zeroed:{},
+    look:{hat:'none', outfit:'blazer', acc:{sunglasses:false, scarf:false, bowtie:false, chain:false, airpods:false, rose:false}, stache:'classic'},
+    room:'living', ev:{type:null, n:0, need:0},
+    sound:true, intro:false, song:0
+  };
+}
+function merge(d, s){
+  if (!s || typeof s !== 'object') return d;
+  for (const k in d){
+    if (!(k in s)) continue;
+    if (d[k] && typeof d[k] === 'object' && !Array.isArray(d[k])) d[k] = merge(d[k], s[k]);
+    else if (typeof s[k] === typeof d[k] || d[k] === null) d[k] = s[k];
+  }
+  return d;
+}
+let S = merge(fresh(), loadSave());
+if (!S.zeroed || typeof S.zeroed !== 'object') S.zeroed = {};
+
+/* ---------- canvas ---------- */
+const W = 128, H = 112, FY = 102;
+const cv = document.getElementById('scene');
+const sctx = cv.getContext('2d');
+let g = sctx;
+
+function R(x,y,w,h,c){ g.fillStyle = c; g.fillRect(Math.round(x), Math.round(y), w, h); }
+function P(x,y,c){ g.fillStyle = c; g.fillRect(Math.round(x), Math.round(y), 1, 1); }
+function ell(cx,cy,rx,ry,c){
+  for (let y=Math.floor(cy-ry); y<=Math.ceil(cy+ry); y++)
+    for (let x=Math.floor(cx-rx); x<=Math.ceil(cx+rx); x++){
+      const dx=(x+.5-cx)/rx, dy=(y+.5-cy)/ry; if (dx*dx+dy*dy<=1) P(x,y,c);
+    }
+}
+function shape(ox,oy,w,h,inside,fill,outline,flip){
+  const ins = (x,y) => x>=0 && y>=0 && x<w && y<h && inside(x,y);
+  for (let y=0; y<h; y++) for (let x=0; x<w; x++){
+    if (!inside(x,y)) continue;
+    let c;
+    if (outline && (!ins(x-1,y) || !ins(x+1,y) || !ins(x,y-1) || !ins(x,y+1))) c = outline;
+    else c = fill(x,y);
+    if (c) P(ox + (flip ? w-1-x : x), oy + y, c);
+  }
+}
+function spr(map,x,y,cols){
+  for (let j=0;j<map.length;j++) for (let i=0;i<map[j].length;i++){
+    const ch = map[j][i]; if (ch !== '.' && cols[ch]) P(x+i, y+j, cols[ch]);
+  }
+}
+const inEll = (x,y,cx,cy,rx,ry) => { const dx=(x+.5-cx)/rx, dy=(y+.5-cy)/ry; return dx*dx+dy*dy<=1; };
+
+/* ---------- Aidana photos (pixelated) ---------- */
+const AIDANA_SRC = {"portrait": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAATCAIAAAAvYqvDAAACTklEQVR42mWSwUsbQRTGv52sK2uyibAJy0aCm5BGUmlQGoTWQw89VQmCtL3laumh5NqL/R9Kb1LsQeihh0IJ1l48aS6SakixQbvqpqJLmgRMxnWbjTE9TLoU+k7v8f3me/PeDNf/SfE37JZ5XMzXjUqV0vSdmVg6IwZUV+VcdH9zpfht58vW7vaRaV11ALzM3Hvx6q1LD9D9zZXXa2sAKLWmNVVvtstGDcDi3VvzcwuTD5cGqN0yc7mnjHs29yCkJQGsf/708esPAFHZt7q6LgZUAuDDu2XGnTQvWa+6UVEialT2sfK4mAfA2y2zUDpgXEpTGLfz/dCdZlpT60bFbpn8cTEfl/171IrKvlw2y+QZAMCeYbKySmmomCcA9GZ7+8h0WwMIackqpSfNy6jsUyKDDfB1o0KpBeCkeck2CqMCoFA6ODxvpDRlXJLebxUBEPdOeqNdpXRckljHjZLuHRlmLgBqpyapUrp9ZI6NSiLPFUoHTGDJ2KgkSV4As1MTSkTlXUuR5zZKetmopTTFNYvLfraNmdsJflyS7Ov+jeNYDrwjw3qjfXjeAEAE4eyC6s02OxDSkiSkJUWeY5p93WcJEQQA1lWnbNTisl+JqLF0hsTSmUdTcfwXN44DgD1K7dQEQMSAmstmE+Eg0xgUD/oT4eDj+5OzUxMA5ucWBn8gls7860cEgW00LvuZHwvPk1Rw8fkSG4XzeACIPNft9q57/WRYfrO5KxDQ+tkob3m69FdBN/u9nosOEa7HeWzHkQNe+3f3wnaGhod40vkDShkgVe+mUVsAAAAASUVORK5CYII=", "body": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAXCAIAAAC08+nVAAACMUlEQVR42m2SzWsTURTFzwxJhicdCLSEBGnTGggqImKEEdFI/gBpF6Wr2oUguHDhrjvpqgsRF0XspjuzCNWFXbkKUoV8QBJlCCUkJGMSwoQhqQMTMiSFjIs7vozo27w77/0478y5V3CavwAAcJyZEGAAWmoWwJVr9+GXnKktCCIBPi/XUrPfTt5l8g21q+9vJXd200KAcdrncoLoTG3inmw+HvcKrz5/B7Z3dtNc1d3gl7RaLpNvrIVkOlgJLhSbfa2Wg19ynJkHBcqlSsccpZIbAC5dvgtAiYXLpQoH5ui4VzAta9wrUN0xR1TgYkIe5igA254cV88BZPINfkivzxMAUGz2Afw4q744qwIIynKx2U8lN3gIc1VySdq2PTEtC0Dizu3/eN3cfq7EV217wpgUCS2tJ+JKLLx29d5fqCCIuJh8TL9Vuzqp0t1x9Vyr5VwAEB1nBr/04f3B3tEhSTIm6cbgtK4DeP3mZUvNUrQi9fPL109eowB0YxBlUwCPnj1tqVkhwEQKH/8sxqTTuq7Ewg/jEQLmYdEvezOmQomFqS++lprdOzrkSkHZnQHdGKwn4jzyB2rWVy5VdGMQCS3dun4DQJRN23aACM2wlFgYwEm5nipVfHyOfnbbq8vRth2YWUO1q99cjpCeZlhk5s8syosrwYWZNaRP4mggKWwXZUwiWpQXeUE1gP2tJAGuAYqQu+RLMyzqhYsGZdkLzawhl+yYI9PyePUmyjnumzv8DZWlH4jXMAYMAAAAAElFTkSuQmCC", "small": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAQCAIAAACtAwlQAAAB1UlEQVR42k1Rv28ScRT/3PcoJSHSxKbBK9xBDKY56XDBBFInUzUKiyYmujng0MnBSadKXDs69T+wWycKCemiqYU0egOCF1GO++EFY2kKuQQKBw6vIX6n9/183nufz3uPm3bOAAA42iuUq/WK2jB6g0058u71dkzJEcW/ffUGwIedF8ffzYraSIRD3hSq+VfXvoY9S1y/A4Cbds6O9gq7+yUA2VRy4/4TW6vt7pda3T6Ana2nt58VWEctlqt1AITSiwtRCgzDBMBsraY7VqvbT4RDkiTaWo1qACTCIQAdtcjm1VuPH0bW0gAeZNZlYWmO21qNGYbZ6vaN3oD+RDSdc6M3yKaSpOgj1B1elKt1aiBJYkVtzDsdfPnGms45gGDArzuWJImSJJardaM3kK5eISouRH26Y5HWYdMGSnEhqjvW3DUAWVjiH6WVT832eOLNONb60z/W2r9OXW8Gbobr11ZOfvy8m7l1OV0w4AewyHO+hYVL779PdcfKppKRtTTLP8/Lq8vu8ALAyJtRxmQ8Dgb8cSFKtlhMyb3MbhBBGTdWQvLqcn4zQzuLKTlGWwHwv9A95SYA3bHoLPzUPHlf/AiA8TzZGk+8geuy2eiwaXuT4aj9+R82WNuoNKsSiAAAAABJRU5ErkJggg==", "big": "data:image/png;base64,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"};
+const AIDANA = {};
+for (const k in AIDANA_SRC){ const im = new Image(); im.src = AIDANA_SRC[k]; AIDANA[k] = im; }
+function photo(k,x,y){ const im = AIDANA[k]; if (im && im.complete && im.naturalWidth) g.drawImage(im, x, y); }
+const FRAMES = {
+  living:[{x:28,y:22,w:18,h:15,art:'heart'},{x:82,y:20,w:20,h:16,art:'mountains'}],
+  bedroom:[{x:44,y:12,w:16,h:20,k:'small'}]
+};
+function drawFrame(f){
+  R(f.x,f.y+f.h,f.w,1,'rgba(0,0,0,0.12)');
+  if (f.art){
+    box(f.x,f.y,f.w,f.h,'#c9925a','#8a5a32');
+    const ix = f.x+2, iy = f.y+2, iw = f.w-4, ih = f.h-4;
+    if (f.art === 'heart'){
+      R(ix,iy,iw,ih,'#fff6e8');
+      spr(['.11.11.','1111111','1111111','.11111.','..111..','...1...'], ix+Math.floor((iw-7)/2), iy+Math.floor((ih-6)/2), {'1':'#ff4f7a'});
+    } else {
+      R(ix,iy,iw,ih,'#bfe6ff');
+      ell(ix+iw-4,iy+3,1.8,1.8,'#ffe066');
+      shape(ix,iy,iw,ih,(a,b)=> b >= ih-1-Math.max(0, 6-Math.abs(a-5)) || b >= ih-1-Math.max(0, 5-Math.abs(a-12)),
+        (a,b)=> (b <= ih-1-Math.max(0,6-Math.abs(a-5))+1 && Math.abs(a-5)<2) || (b <= ih-1-Math.max(0,5-Math.abs(a-12))+1 && Math.abs(a-12)<2) ? '#ffffff' : '#6a8fb8', null);
+      R(ix,iy+ih-2,iw,2,'#7cc46a');
+    }
+    return;
+  }
+  box(f.x,f.y,f.w,f.h,'#fff6e8','#b07a4e');
+  photo(f.k, f.x+2, f.y+2);
+}
+
+/* ---------- palette ---------- */
+const PAL = {
+  skin:'#f6caa2', skinSh:'#e0a57c', skinG:'#b8de8e', skinGSh:'#8ebd68',
+  hair:'#5e3b21', hairHi:'#86592f', hairDk:'#3d2515',
+  stache:'#3a2213', beard:'#55351e', eye:'#24160e', mouth:'#7a2b2e', tongue:'#ef6f78',
+  blush:'#f79a9a', white:'#ffffff', tear:'#6ab8ff'
+};
+
+/* =========================================================
+   LITTLE LÉO
+   ========================================================= */
+const EXPR = {
+  neutral:{eyes:'dot',brows:'normal',mouth:'smile'},
+  happy:{eyes:'happy',brows:'normal',mouth:'open',blush:1},
+  love:{eyes:'heart',brows:'normal',mouth:'smile',blush:1},
+  sulk:{eyes:'side',brows:'angry',mouth:'pout',blush:1,puff:1},
+  sleepy:{eyes:'half',brows:'normal',mouth:'o'},
+  sleep:{eyes:'closed',brows:'normal',mouth:'flat'},
+  disgust:{eyes:'squint',brows:'angry',mouth:'wavy'},
+  pucker:{eyes:'squint',brows:'angry',mouth:'pucker',lines:1},
+  green:{eyes:'spiral',brows:'worried',mouth:'wavy'},
+  sad:{eyes:'dot',brows:'worried',mouth:'frown',tear:1},
+  shock:{eyes:'wide',brows:'raised',mouth:'bigO'},
+  sing:{eyes:'closed',brows:'raised',mouth:'bigO',blush:1},
+  chew:{eyes:'happy',brows:'normal',mouth:'chew',blush:1},
+  laugh:{eyes:'squint',brows:'raised',mouth:'open',blush:1,tear:2},
+  plead:{eyes:'sparkle',brows:'worried',mouth:'o'},
+  resigned:{eyes:'half',brows:'worried',mouth:'flat'},
+  proud:{eyes:'closed',brows:'raised',mouth:'smile',blush:1}
+};
+
+function drawFace(hx,hy,expr,v){
+  const e = EXPR[expr] || EXPR.neutral;
+  const green = expr === 'green';
+  const sk = green ? PAL.skinG : PAL.skin, sh = green ? PAL.skinGSh : PAL.skinSh;
+  const p = (x,y,c) => P(hx+x, hy+y, c);
+  const r = (x,y,w,h,c) => R(hx+x, hy+y, w, h, c);
+  // ears
+  r(-2,9,3,5,sk); p(-1,10,sh); p(-1,11,sh); p(-2,9,sh);
+  r(23,9,3,5,sk); p(24,10,sh); p(24,11,sh); p(25,9,sh);
+  // head
+  for (let y=2; y<=22; y++){
+    const ins = y<=2?3 : y===3?1 : y<=17?0 : y<=19?1 : y===20?2 : y===21?3 : 5;
+    r(ins, y, 24-ins*2, 1, sk);
+    p(23-ins, y, sh);
+  }
+  if (e.puff){ p(-1,13,sk); p(-1,14,sk); p(-1,15,sk); }
+  // eyes
+  let eyes = e.eyes; if (eyes === 'dot' && v.blink) eyes = 'closed';
+  const E = PAL.eye, Wt = PAL.white;
+  switch(eyes){
+    case 'dot': r(6,9,2,3,E); r(16,9,2,3,E); p(6,9,Wt); p(16,9,Wt); break;
+    case 'happy': [[5,11],[6,10],[7,10],[8,11]].forEach(([x,y])=>{p(x,y,E); p(x+10,y,E);}); break;
+    case 'closed': [[5,10],[6,11],[7,11],[8,10]].forEach(([x,y])=>{p(x,y,E); p(x+10,y,E);}); break;
+    case 'half': r(5,10,4,1,E); r(6,11,2,1,E); r(15,10,4,1,E); r(16,11,2,1,E); break;
+    case 'heart': {
+      const hm = ['11.11','11111','.111.','..1..'];
+      spr(hm, hx+4, hy+8, {'1':'#e8334a'}); spr(hm, hx+15, hy+8, {'1':'#e8334a'});
+      p(4,8,'#ff9aa8'); p(15,8,'#ff9aa8'); break;
+    }
+    case 'squint': [[5,9],[6,9],[7,10],[5,11],[6,11]].forEach(([x,y])=>{p(x,y,E); p(23-x,y,E);}); break;
+    case 'side': r(5,9,4,1,E); r(15,9,4,1,E); r(7,10,2,2,E); r(17,10,2,2,E); break;
+    case 'wide': r(4,8,5,5,E); r(5,9,3,3,Wt); p(6,10,E); r(15,8,5,5,E); r(16,9,3,3,Wt); p(17,10,E); break;
+    case 'spiral': r(5,9,3,3,E); p(6,10,sk); r(16,9,3,3,E); p(17,10,sk); break;
+    case 'sparkle': r(5,8,3,4,E); p(5,8,Wt); p(7,10,Wt); r(16,8,3,4,E); p(16,8,Wt); p(18,10,Wt); break;
+  }
+  // brows
+  const B = PAL.hairDk;
+  switch(e.brows){
+    case 'normal': r(5,7,4,1,B); r(15,7,4,1,B); break;
+    case 'angry': p(5,6,B); p(6,6,B); p(7,7,B); p(8,7,B); p(15,7,B); p(16,7,B); p(17,6,B); p(18,6,B); break;
+    case 'worried': p(5,7,B); p(6,7,B); p(7,6,B); p(8,6,B); p(15,6,B); p(16,6,B); p(17,7,B); p(18,7,B); break;
+    case 'raised': r(5,6,4,1,B); r(15,6,4,1,B); break;
+  }
+  // nose
+  p(12,11,sh); r(11,12,2,1,sh);
+  // blush
+  if (e.blush || v.blush){ r(3,13,2,1,PAL.blush); r(19,13,2,1,PAL.blush); }
+  if (e.lines){ p(2,12,sh); p(3,13,sh); p(2,14,sh); p(21,12,sh); p(20,13,sh); p(21,14,sh); }
+  if (e.tear){ p(5,12,PAL.tear); p(5,13,PAL.tear); if (e.tear===2){ p(18,12,PAL.tear); p(18,13,PAL.tear);} }
+  // mouth
+  let m = e.mouth;
+  if (m === 'chew') m = (Math.floor(v.t/170)%2) ? 'flat' : 'o';
+  const M = PAL.mouth;
+  const bigMouth = m === 'bigO';
+  // goatee
+  if (!bigMouth) r(11,19,2,1,PAL.beard);
+  r(9,20,6,2,PAL.beard); r(10,22,4,1,PAL.beard);
+  switch(m){
+    case 'smile': p(9,17,M); p(14,17,M); r(10,18,4,1,M); break;
+    case 'open': r(9,17,6,1,M); r(10,18,4,1,M); r(11,18,2,1,PAL.tongue); break;
+    case 'pout': r(11,17,2,1,M); p(10,18,M); p(13,18,M); break;
+    case 'frown': r(10,17,4,1,M); p(9,18,M); p(14,18,M); break;
+    case 'o': r(11,17,2,2,M); break;
+    case 'bigO': r(10,17,4,3,M); r(11,18,2,2,PAL.tongue); break;
+    case 'flat': r(10,18,4,1,M); break;
+    case 'wavy': p(9,18,M); p(10,17,M); p(11,18,M); p(12,17,M); p(13,18,M); p(14,17,M); break;
+    case 'pucker': r(10,17,4,2,'#e8868a'); r(11,17,2,1,M); break;
+  }
+}
+
+const STACHE_SHAPES = {
+  classic:  [[14,9,14],[15,7,16],[16,6,7],[16,16,17]],
+  curly:    [[14,9,14],[15,6,17],[15,5,5],[15,18,18],[14,4,4],[14,19,19],[13,4,4],[13,19,19],[12,5,6],[12,17,18],[13,6,6],[13,17,17]],
+  handlebar:[[14,9,14],[15,5,18],[16,7,16],[15,4,4],[15,19,19],[14,3,3],[14,20,20],[13,3,3],[13,20,20],[12,2,2],[12,21,21]],
+  tiny:     [[14,10,13],[15,11,12]]
+};
+function drawStache(hx,hy,style,k=1){
+  const rows = STACHE_SHAPES[style] || STACHE_SHAPES.classic;
+  for (const [y,x0,x1] of rows) for (let x=x0; x<=x1; x++){
+    if (Math.abs(x+.5-12) <= k*13) P(hx+x, hy+y, PAL.stache);
+  }
+  if (style !== 'tiny' && k>=1){ P(hx+10,hy+14,'#5a3a24'); P(hx+13,hy+14,'#5a3a24'); }
+}
+
+function drawHair(hx,hy){
+  const H = PAL.hair, Hi = PAL.hairHi, D = PAL.hairDk;
+  const rows = [[-4,12,16],[-3,8,18],[-2,5,20],[-1,3,21],[0,1,22],[1,0,23],[2,0,23],[3,0,23],[4,0,23]];
+  for (const [y,a,b] of rows) R(hx+a, hy+y, b-a+1, 1, H);
+  R(hx,hy+5,5,1,H); R(hx+12,hy+5,12,1,H);
+  R(hx,hy+6,2,1,H); R(hx+17,hy+6,7,1,H);
+  R(hx+20,hy+7,4,1,H);
+  for (let y=6; y<=11; y++){ P(hx,hy+y,D); P(hx+1,hy+y,D); P(hx+22,hy+y,D); P(hx+23,hy+y,D); }
+  for (let y=2; y<=5; y++){ P(hx,hy+y,D); P(hx+23,hy+y,D); }
+  // swept highlights
+  [[-3,10,14],[-2,8,10],[-2,15,17],[-1,6,8],[0,4,6],[0,16,19],[1,12,15],[2,8,11],[3,17,20]].forEach(([y,a,b])=>R(hx+a,hy+y,b-a+1,1,Hi));
+  P(hx+5,hy+1,D); P(hx+5,hy+2,D); P(hx+4,hy+3,D); P(hx+4,hy+4,D);
+}
+
+function drawShades(hx,hy){
+  R(hx+3,hy+8,7,4,'#121212'); R(hx+14,hy+8,7,4,'#121212');
+  R(hx+10,hy+9,4,1,'#121212'); R(hx-1,hy+9,4,1,'#121212'); R(hx+21,hy+9,4,1,'#121212');
+  P(hx+4,hy+9,'#fff'); P(hx+5,hy+9,'#9a9a9a'); P(hx+15,hy+9,'#fff'); P(hx+16,hy+9,'#9a9a9a');
+}
+
+function drawHat(hx,hy,hat){
+  const r = (x,y,w,h,c) => R(hx+x, hy+y, w, h, c);
+  const p = (x,y,c) => P(hx+x, hy+y, c);
+  if (hat === 'ushanka'){
+    const F='#7a4e2e', L='#a87a4e', D='#5a361c';
+    shape(hx-3,hy-7,30,23,(x,y)=>{
+      const top = inEll(x,y,15,8,13.5,8.5) && y<=11;
+      const flapL = x>=0 && x<=4 && y>=10 && y<=22;
+      const flapR = x>=25 && x<=29 && y>=10 && y<=22;
+      return top || flapL || flapR;
+    },(x,y)=>{
+      if (y>=7 && y<=11 && x>=2 && x<=27) return hash(x,y)>.6 ? '#c0946a' : L;
+      return hash(x,y)>.72 ? D : F;
+    }, '#3e2412');
+    p(1,15,'#c0946a'); p(25,15,'#c0946a');
+  }
+  else if (hat === 'cowboy'){
+    const C='#b0743a', D='#7d4c22', B='#3a2414';
+    r(6,-9,12,10,C); r(6,-9,4,1,D); r(14,-9,4,1,D); r(10,-8,4,1,D);
+    r(5,-8,1,9,D); r(18,-8,1,9,D);
+    r(6,-1,12,2,B); p(11,-1,'#e8c35a');
+    r(-3,1,30,2,C); r(-3,3,30,1,D); r(-5,0,3,2,C); r(26,0,3,2,C); p(-5,-1,C); p(28,-1,C);
+    r(8,-7,2,5,'#c88a4a');
+  }
+  else if (hat === 'beret'){
+    shape(hx-1,hy-6,28,10,(x,y)=>inEll(x,y,15,5,13.5,5),(x,y)=> y<=2 && x>8 && x<20 ? '#3c3946' : '#26232c','#111014');
+    r(13,-8,2,2,'#26232c'); r(0,3,24,1,'#111014');
+  }
+  else if (hat === 'crown'){
+    const G='#f5c542', D='#c9961c';
+    r(4,-2,16,4,G); r(4,1,16,1,D);
+    [[4,-7],[8,-6],[11,-8],[15,-6],[19,-7]].forEach(([x,y])=>{ for(let yy=y; yy<-1; yy++) P(hx+x,hy+yy,G); P(hx+x,hy+y-1,'#fff3a8'); });
+    r(5,-4,3,2,G); r(9,-4,2,2,G); r(12,-5,3,3,G); r(16,-4,3,2,G);
+    p(7,0,'#e23b4a'); p(11,0,'#3b7be2'); p(12,0,'#3b7be2'); p(16,0,'#e23b4a');
+    p(11,-8,'#e23b4a');
+  }
+  else if (hat === 'party'){
+    for (let y=-14; y<=1; y++){
+      const hw = Math.round((y+14)/15*6.5);
+      for (let x=12-hw; x<=11+hw; x++){
+        P(hx+x, hy+y, ((x - y*0.6)%6+6)%6 < 3 ? '#ff6fa8' : '#3fd0c9');
+      }
+    }
+    for (let x=5; x<=18; x++) if (x%3===0) P(hx+x,hy+1,'#ffe066');
+    ell(hx+12,hy-15.5,2.2,2.2,'#ffd23f'); P(hx+11,hy-17,'#fff3a8');
+  }
+  else if (hat === 'kalpak'){
+    shape(hx+4,hy-13,16,14,(a,b)=> Math.abs(a+.5-8) <= 4 + b*0.3 && !(b===0 && Math.abs(a+.5-8)>2.5),(a,b)=> a===8 ? '#ddd6c4' : '#f6f2e6','#a89a7a');
+    r(2,0,20,3,'#1d1d24'); r(0,-1,3,2,'#1d1d24'); r(21,-1,3,2,'#1d1d24');
+    for (let x=3;x<=20;x+=3) p(x,1,'#f2c14e');
+    r(11,-15,2,2,'#e23b4a'); p(12,-16,'#e23b4a');
+  }
+  else if (hat === 'chef'){
+    shape(hx-1,hy-16,26,19,(a,b)=> inEll(a,b,13,7,11,6.5) || inEll(a,b,6,8,5.5,4.5) || inEll(a,b,20,8,5.5,4.5) || (b>=10 && a>=4 && a<=21),(a,b)=> b>=14 ? '#f0f0f6' : '#ffffff','#b8bccb');
+    r(4,-3,17,1,'#d8dbe6');
+  }
+  else if (hat === 'beanie'){
+    shape(hx-1,hy-7,26,11,(a,b)=> inEll(a,b,13,10,13,10),(a,b)=> (a%2) ? '#e23b4a' : '#c81f30','#8a1020');
+    r(-1,1,26,3,'#c81f30'); for (let x=-1;x<25;x+=2) p(x,2,'#a8182a');
+    ell(hx+12.5,hy-8,3,3,'#fff1d6'); P(hx+11,hy-10,'#ffffff');
+  }
+  else if (hat === 'cap'){
+    shape(hx-1,hy-6,26,9,(a,b)=> inEll(a,b,13,9,13,9),(a,b)=> (b<3 && a>8 && a<16) ? '#ff9fbf' : '#ff6f9a','#c8547a');
+    r(-8,1,13,2,'#e8547a'); r(-8,3,13,1,'#c8547a'); p(12,-6,'#c8547a');
+    spr(['11.11','11111','.111.','..1..'], hx+10, hy-3, {'1':'#ffffff'});
+  }
+  else if (hat === 'flowers'){
+    const cols = ['#ff6f9a','#ffd23f','#ffffff','#b48cf0','#ff8a5a'];
+    for (let x=-1; x<=24; x++){ const y = Math.round(((x-11.5)/12.5)**2*4); P(hx+x, hy+y+1, '#4caf50'); }
+    for (let i=0;i<9;i++){
+      const x = -1 + i*3 + 1, y = Math.round(((x-11.5)/12.5)**2*4), c = cols[i%cols.length];
+      P(hx+x-1,hy+y,c); P(hx+x+1,hy+y,c); P(hx+x,hy+y-1,c); P(hx+x,hy+y+1,c); P(hx+x,hy+y,'#ffe066');
+    }
+  }
+}
+
+function drawFoam(hx,hy,t){
+  ell(hx+12,hy-1,12,5,'#ffffff');
+  ell(hx+6,hy-4,4,3,'#ffffff'); ell(hx+17,hy-5,5,3.5,'#ffffff'); ell(hx+12,hy-7,3,3,'#ffffff');
+  [[4,-3],[10,-6],[16,-3],[20,0],[7,1]].forEach(([x,y])=>P(hx+x,hy+y,'#bfe3ff'));
+}
+
+/* ---- body & outfits ---- */
+function torso(tx,ty,c){ R(tx+2,ty,16,1,c); R(tx+1,ty+1,18,14,c); }
+function legs(tx,ty,c,shoe,shine){
+  R(tx+4,ty+15,12,1,c); R(tx+4,ty+16,5,5,c); R(tx+11,ty+16,5,5,c);
+  R(tx+3,ty+21,6,2,shoe); R(tx+11,ty+21,6,2,shoe);
+  if (shine){ P(tx+4,ty+21,shine); P(tx+12,ty+21,shine); }
+}
+function arms(tx,ty,mode,col,sh,cuff,hand){
+  const seg = (x,y,w,h) => R(tx+x,ty+y,w,h,col);
+  const hnd = (x,y,w,h) => R(tx+x,ty+y,w,h,hand);
+  const cf = (x,y,w,h) => { if (cuff) R(tx+x,ty+y,w,h,cuff); };
+  const L = mode==='up'||mode==='dance1' ? mode : 'down';
+  const Rm = mode==='up'||mode==='dance2'||mode==='hold' ? mode : 'down';
+  if (L==='down'){ seg(-2,1,3,10); cf(-2,10,3,1); hnd(-2,11,3,2); }
+  else if (L==='up'){ seg(-7,1,8,3); cf(-7,1,1,3); hnd(-9,1,2,3); }
+  else if (L==='dance1'){ seg(-2,-8,3,10); cf(-2,-8,3,1); hnd(-2,-10,3,2); }
+  if (Rm==='down'){ seg(19,1,3,10); cf(19,10,3,1); hnd(19,11,3,2); }
+  else if (Rm==='up'){ seg(19,1,8,3); cf(26,1,1,3); hnd(27,1,2,3); }
+  else if (Rm==='dance2'){ seg(19,-8,3,10); cf(19,-8,3,1); hnd(19,-10,3,2); }
+  else if (Rm==='hold'){ seg(19,-1,3,8); hnd(17,-3,4,3); }
+  if (sh){ R(tx,ty+2,1,8,sh); R(tx+19,ty+2,1,8,sh); }
+}
+
+function drawCapeBack(tx,ty,t){
+  const wave = Math.floor(t/220)%2;
+  for (let y=0; y<=22; y++){
+    const spread = Math.min(5, Math.floor(y/4) + 2);
+    const x0 = 1 - spread + (y>16 ? wave : 0), x1 = 18 + spread - (y>16 ? 1-wave : 0);
+    R(tx+x0, ty+y, x1-x0+1, 1, y%5===4 ? '#b5222e' : '#d72f3c');
+  }
+}
+
+function drawBody(tx,ty,look,armMode,green){
+  const o = look.outfit;
+  const hand = green ? PAL.skinG : PAL.skin;
+  const r = (x,y,w,h,c) => R(tx+x,ty+y,w,h,c);
+  const p = (x,y,c) => P(tx+x,ty+y,c);
+  if (o === 'blazer'){
+    const N='#22305a', D='#18213f', L='#34477a';
+    legs(tx,ty,'#2c2e3c','#17171b','#4a4a55');
+    torso(tx,ty,N); r(16,1,3,14,D);
+    r(8,0,4,15,'#f6f6f1'); r(11,2,1,13,'#dedbd2');
+    r(6,0,2,1,'#f6f6f1'); r(12,0,2,1,'#f6f6f1'); p(7,1,'#f6f6f1'); p(12,1,'#f6f6f1');
+    for (let y=2;y<=7;y++){ p(7,y,L); p(12,y,L); }
+    p(6,5,L); p(13,5,L);
+    p(9,5,'#c8c6bc'); p(9,9,'#c8c6bc'); p(9,13,'#c8c6bc');
+    r(2,11,4,1,L); r(14,11,3,1,L);
+    arms(tx,ty,armMode,N,D,'#f6f6f1',hand);
+  }
+  else if (o === 'pyjamas'){
+    const B='#a6d4ff', S2='#e8f4ff', D='#7fb6ea';
+    r(4,15,12,1,B); r(4,16,5,5,B); r(11,16,5,5,B);
+    for (let y=15;y<=20;y++){ p(5,y,S2); p(7,y,S2); p(12,y,S2); p(14,y,S2); }
+    r(2,21,7,2,'#ff9fc4'); r(11,21,7,2,'#ff9fc4'); p(3,21,'#ffd1e3'); p(12,21,'#ffd1e3');
+    torso(tx,ty,B);
+    for (let x=2;x<=17;x+=3) r(x,1,1,14,S2);
+    r(16,1,3,14,D);
+    r(7,0,6,2,'#ffc6d9'); p(9,2,'#ffc6d9'); p(10,2,'#ffc6d9');
+    p(10,5,'#ff7fa8'); p(10,9,'#ff7fa8'); p(10,13,'#ff7fa8');
+    r(3,4,4,3,'#ffffff'); p(4,5,'#ff7fa8'); p(5,5,'#ff7fa8');
+    arms(tx,ty,armMode,B,D,'#ffc6d9',hand);
+  }
+  else if (o === 'tuxedo'){
+    const K='#17171d', D='#0c0c10', L='#3c3c4c';
+    legs(tx,ty,K,'#0a0a0d','#ffffff'); r(6,16,1,5,'#2c2c38'); r(13,16,1,5,'#2c2c38');
+    torso(tx,ty,K); r(16,1,3,14,D);
+    r(7,0,6,15,'#ffffff'); p(8,3,'#e2e2ea'); p(8,6,'#e2e2ea'); p(11,3,'#e2e2ea'); p(11,6,'#e2e2ea');
+    for (let y=1;y<=9;y++){ p(6,y,L); p(13,y,L); }
+    p(5,7,L); p(14,7,L);
+    r(9,4,2,1,K); r(9,8,2,1,K); r(9,12,2,1,K);
+    // built-in black bow tie
+    r(6,0,2,3,K); r(12,0,2,3,K); r(8,1,4,1,K); r(9,0,2,3,'#2a2a34');
+    p(3,4,'#ffffff'); p(4,4,'#ffffff');
+    arms(tx,ty,armMode,K,D,'#ffffff',hand);
+  }
+  else if (o === 'chapan'){
+    const M='#8e1d3b', D='#6a1229', G='#f2c14e';
+    r(9,15,2,6,'#2a2433');
+    r(3,21,6,2,'#4a2c18'); r(11,21,6,2,'#4a2c18');
+    torso(tx,ty,M); r(1,15,8,6,M); r(11,15,8,6,M); r(16,1,3,20,D);
+    r(9,0,2,15,'#f4efe6');
+    for (let y=0;y<=20;y++){ p(8,y,G); p(11,y,G); }
+    r(1,20,8,1,G); r(11,20,8,1,G);
+    r(5,0,4,1,G); r(11,0,4,1,G);
+    [[3,4],[4,5],[3,6],[2,5],[4,11],[3,12],[5,12],[4,13]].forEach(([x,y])=>{ p(x,y,G); p(19-x,y,G); });
+    p(3,5,'#ffe9a8'); p(16,5,'#ffe9a8');
+    const am = armMode;
+    arms(tx,ty,am,M,D,G,hand);
+    if (am==='down'){ r(-3,6,1,5,M); r(22,6,1,5,M); r(-3,10,1,1,G); r(22,10,1,1,G); }
+  }
+  else if (o === 'hoodie'){
+    const Gy='#a9afb9', D='#8a909b', DD='#737985';
+    legs(tx,ty,'#4a74c0','#f4f4f4','#e23b4a'); r(4,16,1,5,'#3a5ea0'); r(11,16,1,5,'#3a5ea0');
+    r(3,22,6,1,'#b8b8b8'); r(11,22,6,1,'#b8b8b8');
+    r(3,-2,14,3,DD);
+    torso(tx,ty,Gy); r(16,1,3,14,D); r(1,14,18,1,D);
+    r(8,1,1,6,'#ffffff'); r(11,1,1,6,'#ffffff'); p(8,7,'#d0d0d0'); p(11,7,'#d0d0d0');
+    r(5,9,10,4,D); r(6,10,8,2,Gy);
+    arms(tx,ty,armMode,Gy,D,D,hand);
+  }
+  else if (o === 'cape'){
+    const B='#2f5bd3', D='#2348a8', Y='#ffd23f', Rd='#d72f3c';
+    r(4,15,12,1,B); r(4,16,5,2,B); r(11,16,5,2,B);
+    r(4,18,5,3,Rd); r(11,18,5,3,Rd); r(3,21,6,2,Rd); r(11,21,6,2,Rd); p(4,21,'#ff7a84'); p(12,21,'#ff7a84');
+    torso(tx,ty,B); r(16,1,3,14,D);
+    r(7,3,6,6,Y); p(7,3,B); p(12,3,B); p(7,8,B); p(12,8,B);
+    r(9,4,1,4,Rd); r(10,7,2,1,Rd);
+    r(1,12,18,2,Y); r(9,12,2,2,'#f0a800');
+    r(1,0,3,2,Rd); r(16,0,3,2,Rd);
+    arms(tx,ty,armMode,B,D,Rd,hand);
+  }
+  else drawBody2(tx,ty,o,armMode,hand);
+}
+function drawBody2(tx,ty,o,armMode,hand){
+  const r = (x,y,w,h,c) => R(tx+x,ty+y,w,h,c);
+  const p = (x,y,c) => P(tx+x,ty+y,c);
+  if (o === 'breton'){
+    const N='#22305a';
+    legs(tx,ty,'#2c2e3c','#17171b','#4a4a55');
+    torso(tx,ty,'#ffffff'); for (let y=2;y<=14;y+=2) r(1,y,18,1,N); r(7,0,6,1,'#f2f2f6');
+    arms(tx,ty,armMode,'#ffffff','#d8d8e0',null,hand);
+    if (armMode==='down') for (let y=2;y<=10;y+=2){ R(tx-2,ty+y,3,1,N); R(tx+19,ty+y,3,1,N); }
+  }
+  else if (o === 'tracksuit'){
+    const K='#1d1d24', D='#121218', Wt='#f4f4f4';
+    legs(tx,ty,K,'#f4f4f4','#e23b4a'); r(5,16,1,5,Wt); r(14,16,1,5,Wt);
+    torso(tx,ty,K); r(16,1,3,14,D); r(9,0,1,15,'#9a9aa6'); r(6,0,8,1,'#34343f'); r(1,13,18,2,'#34343f');
+    arms(tx,ty,armMode,K,D,'#34343f',hand);
+    if (armMode==='down'){ R(tx-2,ty+1,1,9,Wt); R(tx+21,ty+1,1,9,Wt); }
+  }
+  else if (o === 'puffer'){
+    const C='#ff9a3c', D='#e07a1a';
+    legs(tx,ty,'#4a74c0','#3a2a1a','#6a4a2a');
+    R(tx,ty-1,20,16,C); R(tx-1,ty+1,22,13,C);
+    for (const y of [3,7,11]) R(tx-1,ty+y,22,1,D);
+    R(tx+9,ty-1,2,16,D); R(tx+4,ty-2,12,2,C); R(tx+4,ty-2,12,1,D);
+    arms(tx,ty,armMode,C,D,D,hand);
+  }
+  else if (o === 'hawaiian'){
+    const T='#2fb5a8';
+    r(4,15,12,3,'#e8d2a6'); r(4,15,12,1,'#d4b98a'); r(9,16,2,2,'#d4b98a');
+    r(5,18,3,3,hand); r(12,18,3,3,hand); r(4,21,5,2,'#8a5a3a'); r(11,21,5,2,'#8a5a3a');
+    torso(tx,ty,T);
+    for (let y=1;y<=14;y++) for (let x=1;x<=18;x++){ const h=hash(x*7,y*3); if (h>.86) p(x,y,'#ff6f9a'); else if (h>.79) p(x,y,'#ffd23f'); else if (h<.06) p(x,y,'#ffffff'); }
+    r(8,0,4,3,hand); p(9,3,hand); p(10,3,hand); r(6,0,2,2,'#5fd6c9'); r(12,0,2,2,'#5fd6c9');
+    arms(tx,ty,armMode,T,'#22948a',null,hand);
+  }
+  else if (o === 'chefcoat'){
+    const Wt='#ffffff', D='#dcdce6';
+    legs(tx,ty,'#ffffff','#17171b','#4a4a55');
+    for (let y=15;y<=20;y++) for (let x=4;x<=15;x++) if ((x+y)%2===0 && !(x>=9 && x<=10 && y>15)) p(x,y,'#2a2a34');
+    torso(tx,ty,Wt); r(16,1,3,14,D); r(10,1,1,14,D); r(6,0,8,2,D); r(8,0,4,2,'#e23b4a');
+    for (const y of [4,7,10,13]){ p(6,y,'#3a3a48'); p(13,y,'#3a3a48'); }
+    arms(tx,ty,armMode,Wt,D,D,hand);
+  }
+  else if (o === 'astronaut'){
+    const Wt='#f2f2f4', D='#c4c8d4';
+    legs(tx,ty,Wt,'#8a929c','#b8c0c8'); r(4,18,12,1,D);
+    torso(tx,ty,Wt); r(16,1,3,14,D);
+    r(6,4,8,6,'#9aa3ad'); p(7,5,'#e23b4a'); p(9,5,'#ffd23f'); p(11,5,'#3fd0c9'); r(7,7,6,2,'#2a3a6a'); p(8,8,'#7fd0ff');
+    r(2,3,3,2,'#3b7be2'); p(3,3,'#ffffff');
+    r(1,12,18,1,'#ff8a1a'); r(6,0,8,1,D);
+    arms(tx,ty,armMode,Wt,D,'#ff8a1a',hand);
+  }
+}
+function drawChain(tx,ty){
+  [[7,1],[7,2],[8,3],[8,4],[9,5],[10,5],[11,4],[11,3],[12,2],[12,1]].forEach(([x,y])=>P(tx+x,ty+y,'#f2c14e'));
+  R(tx+9,ty+6,2,2,'#ffd86a'); P(tx+9,ty+6,'#fff3b0');
+}
+function drawRose(tx,ty){
+  R(tx+22,ty+4,1,10,'#3f9a43'); P(tx+23,ty+8,'#4caf50'); P(tx+21,ty+10,'#4caf50');
+  ell(tx+22.5,ty+3,2.4,2.2,'#e23b4a'); P(tx+21,ty+2,'#ff7a8c'); P(tx+22,ty+3,'#a81f2b');
+}
+function drawAirpods(hx,hy){
+  R(hx-3,hy+11,2,2,'#ffffff'); R(hx-3,hy+13,1,2,'#ffffff'); P(hx-2,hy+12,'#d8d8e0');
+  R(hx+25,hy+11,2,2,'#ffffff'); R(hx+26,hy+13,1,2,'#ffffff'); P(hx+25,hy+12,'#d8d8e0');
+}
+function drawScarf(tx,ty){
+  for (let x=3;x<=16;x++) for (let y=-1;y<=1;y++) P(tx+x,ty+y, ((x+y)%4<2) ? '#e23b4a' : '#fff1d6');
+  for (let y=2;y<=9;y++) for (let x=13;x<=15;x++) P(tx+x,ty+y, (y%3===0) ? '#fff1d6' : '#e23b4a');
+  P(tx+13,ty+10,'#e23b4a'); P(tx+15,ty+10,'#e23b4a');
+}
+function drawBowtie(tx,ty){
+  const C='#d6304a', D='#9a1c30';
+  R(tx+6,ty,2,3,C); R(tx+12,ty,2,3,C); R(tx+8,ty+1,4,1,C); R(tx+9,ty,2,3,D);
+  P(tx+6,ty,'#ff7a8c'); P(tx+12,ty,'#ff7a8c');
+}
+
+/* ---- pets ---- */
+function drawCat(x,y,flip){
+  // Cerise: calico loaf (white, black & orange patches, green eyes)
+  const Wc='#fffaf3', K='#2b2326', O='#e8893a', Pk='#f4a3b0';
+  const earL = [[5,0],[5,1],[6,1],[5,2],[6,2],[7,2],[5,3],[6,3],[7,3],[8,3]];
+  const earR = earL.map(([a,b])=>[19-a,b]);
+  const isEar = (a,b,list) => list.some(([c,d])=>c===a&&d===b);
+  // tail first (hangs down the side)
+  for (let ty=8; ty<=19; ty++){
+    const c = (Math.floor(ty/2)%2) ? O : K;
+    const tx = flip ? 0 : 19;
+    P(x+tx,y+ty,c); P(x+tx+(flip?-1:1),y+ty,'#3a2a2e');
+    P(x+tx+(flip?1:-1),y+ty, ty>9 ? '#3a2a2e' : c);
+  }
+  shape(x,y,20,15,(a,b)=>{
+    return inEll(a,b,10,10.5,9.5,4) || inEll(a,b,10,6,5.6,4.6) || isEar(a,b,earL) || isEar(a,b,earR);
+  },(a,b)=>{
+    if (isEar(a,b,earL)) return (a===6&&b===2) ? Pk : O;
+    if (isEar(a,b,earR)) return (a===13&&b===2) ? Pk : K;
+    const head = inEll(a,b,10,6,5.6,4.6);
+    if (head){
+      if ((a===6||a===7) && b===6) return '#9ad16a';
+      if ((a===12||a===13) && b===6) return '#9ad16a';
+      if ((a===9||a===10) && b===8) return Pk;
+      if ((a-7.5)**2+(b-3.5)**2<=2.6) return O;
+      if ((a-6.5)**2+(b-5.8)**2<=3.6) return K;
+      if ((a-13)**2+(b-5.5)**2<=4.2) return K;
+      return Wc;
+    }
+    if (b>=13 && (a===6||a===7||a===12||a===13)) return Wc;
+    if (a<=4 && b<=11) return K;
+    if (a>=15 && b<=10) return O;
+    if (a>=14 && b>=11) return K;
+    if (a>=2 && a<=3 && b>=11) return O;
+    return Wc;
+  },'#3a2a2e',flip);
+  P(x+(flip?18:1),y+8,'#c8c0c0'); P(x+(flip?17:2),y+8,'#c8c0c0'); P(x+(flip?1:18),y+8,'#c8c0c0'); P(x+(flip?2:17),y+8,'#c8c0c0');
+}
+
+function drawDog(x,y,t,flip,food){
+  // Bushinka: apricot poodle puppy, running
+  const run = Math.floor(t/90)%2;
+  const legsA = run ? [[3,12],[10,13]] : [[4,13],[11,12]];
+  const legsB = run ? [[5,13],[12,12]] : [[6,12],[13,13]];
+  const legSet = [...legsA, ...legsB];
+  shape(x,y,22,16,(a,b)=>{
+    if (inEll(a,b,8.5,8.5,6.8,4.3)) return true;
+    if (inEll(a,b,15,5,4.2,4.2)) return true;
+    if (inEll(a,b,19,6.5,2.6,1.9)) return true;
+    if (inEll(a,b,2.5,4.5,2.2,2.2)) return true;
+    for (const [lx,len] of legSet) if (a>=lx && a<=lx+1 && b>=11 && b<=len+1) return true;
+    return false;
+  },(a,b)=>{
+    if (inEll(a,b,13.2,7.5,1.8,3.4)) return hash(a,b)>.5 ? '#c4844a' : '#b87842';
+    if (inEll(a,b,19,6.5,2.6,1.9)) return '#f6d4a6';
+    const hsh = hash(a*3,b*5);
+    return hsh>.78 ? '#d69a5c' : hsh<.18 ? '#f7d3a2' : '#eab47a';
+  },'#8a5a2e',flip);
+  const fx = a => x + (flip ? 21-a : a);
+  P(fx(16),y+4,'#1a1210'); P(fx(16),y+3,'#1a1210'); P(fx(17),y+3,'#ffffff');
+  P(fx(21),y+6,'#1a1210'); P(fx(20),y+6,'#1a1210');
+  if (!food && run) P(fx(19),y+8,'#ff7a9a');
+  if (food){ const s = flip ? x-12 : x+14; drawFood(food, s, y-2); }
+}
+
+/* ---- foods (16x16) ---- */
+const FOODS = {
+  croissant:{name:'Croissant', hunger:22, mood:4},
+  fries:{name:'Fries', hunger:28, mood:6},
+  broccoli:{name:'Broccoli'},
+  beshbarmak:{name:'Beshbarmak', hunger:40, mood:8},
+  baursaks:{name:'Baursaks', hunger:24, mood:16},
+  plov:{name:'Plov', hunger:35, mood:6},
+  manti:{name:'Manti', hunger:30, mood:6},
+  samsa:{name:'Samsa', hunger:25, mood:5},
+  chakchak:{name:'Chak-chak', hunger:18, mood:10},
+  kurt:{name:'Kurt', hunger:6, mood:-2},
+  kazy:{name:'Kazy', hunger:32, mood:5},
+  kumis:{name:'Kumis', hunger:14, mood:6}
+};
+function plate(ox,oy){
+  shape(ox,oy+8,16,8,(a,b)=>inEll(a,b,8,4,7.8,3.6),(a,b)=> b>=5 ? '#d8dbe6' : '#ffffff','#9a9fb2');
+}
+function drawFood(id,ox,oy){
+  const f = (w,h,ins,fill,ol,dx=0,dy=0) => shape(ox+dx,oy+dy,w,h,ins,fill,ol);
+  switch(id){
+    case 'croissant':
+      f(16,16,(a,b)=> inEll(a,b,8,10,7.6,5.6) && !inEll(a,b,8,14.2,4.6,3.6) && b<=14,
+        (a,b)=>{ if (b<=6) return '#f4c06a'; const band = Math.floor(Math.abs(a+.5-8)/2.4); return band%2 ? '#c97a28' : '#e5a044'; }, '#8a4a14'); break;
+    case 'fries':
+      [[3,2,'#ffd54a'],[5,0,'#ffe06a'],[7,1,'#ffd54a'],[9,0,'#ffe06a'],[11,2,'#ffd54a'],[6,3,'#f5c23a'],[10,3,'#f5c23a']].forEach(([x,y,c])=>{ R(ox+x,oy+y,2,8,c); R(ox+x+1,oy+y,1,8,'#e0a52a'); P(ox+x,oy+y,'#fff2a8'); });
+      f(16,16,(a,b)=> b>=7 && b<=15 && a >= 2+Math.floor((b-7)/3) && a <= 13-Math.floor((b-7)/3),
+        (a,b)=> (b===9||b===10) ? '#ffffff' : '#e53b3b', '#8a1a1a');
+      P(ox+7,oy+12,'#ffd23f'); P(ox+8,oy+12,'#ffd23f'); break;
+    case 'broccoli':
+      f(16,16,(a,b)=> a>=6 && a<=9 && b>=8 && b<=14, (a,b)=> a===9 ? '#86b54e' : '#a9d672', '#4f7a24');
+      f(16,16,(a,b)=> inEll(a,b,5,6.5,3.4,3.2)||inEll(a,b,11,6.5,3.4,3.2)||inEll(a,b,8,3.8,3.8,3.2)||inEll(a,b,8,8,3,2.4),
+        (a,b)=> hash(a,b)>.7 ? '#66bb6a' : hash(a+9,b)>.75 ? '#2a7a30' : '#3f9a43', '#1f5a24'); break;
+    case 'beshbarmak':
+      plate(ox,oy);
+      [[2,8,5,3],[6,7,5,3],[9,9,5,3],[4,10,5,2]].forEach(([x,y,w,h])=>f(w,h,()=>true,()=> '#f6e3a8','#d4b46a',x,y));
+      [[6,9],[10,7],[3,9]].forEach(([x,y])=>{ R(ox+x,oy+y,3,2,'#8b4a2b'); P(ox+x,oy+y,'#a8603a'); });
+      [[11,9],[5,7]].forEach(([x,y])=>{ P(ox+x,oy+y,'#fff7e6'); P(ox+x+1,oy+y,'#fff7e6'); P(ox+x,oy+y+1,'#e8d8b0'); P(ox+x+1,oy+y+1,'#e8d8b0'); });
+      [[8,8],[12,11],[4,11]].forEach(([x,y])=>P(ox+x,oy+y,'#5aa84a')); break;
+    case 'baursaks':
+      plate(ox,oy);
+      [[4.5,10.5],[8,10.8],[11.5,10.5],[6.3,7.5],[9.8,7.5],[8,4.6]].forEach(([cx,cy])=>{
+        f(16,16,(a,b)=>inEll(a,b,cx,cy,2.6,2.3),(a,b)=> (b<cy-.5 && a<cx) ? '#f8d07a' : '#e3a040','#9a5a1a');
+      }); break;
+    case 'plov':
+      plate(ox,oy);
+      f(16,16,(a,b)=> inEll(a,b,8,9,6.6,3.8),(a,b)=>{ const h=hash(a,b); return h>.8 ? '#fff2c6' : h<.12 ? '#ff7a1a' : '#eab04a'; },'#a8762a');
+      [[4,9],[11,8],[7,10]].forEach(([x,y])=>R(ox+x,oy+y,2,1,'#ff7a1a'));
+      [[9,10],[5,8]].forEach(([x,y])=>R(ox+x,oy+y,2,2,'#7a3a1a'));
+      f(16,16,(a,b)=>inEll(a,b,8,5,2.4,2.4),(a,b)=> a<8 ? '#ffffff' : '#efe5d2','#b8a888'); break;
+    case 'manti':
+      plate(ox,oy);
+      [[4.6,9.4],[11.4,9.4],[8,6.6]].forEach(([cx,cy])=>{
+        f(16,16,(a,b)=>inEll(a,b,cx,cy,3.2,3),(a,b)=> (b<cy-1) ? '#ffffff' : '#f6eedd','#b8a582');
+        P(ox+Math.floor(cx),oy+Math.floor(cy)-2,'#d8c8a8'); P(ox+Math.floor(cx)-1,oy+Math.floor(cy)-1,'#e3d6bc'); P(ox+Math.floor(cx)+1,oy+Math.floor(cy)-1,'#e3d6bc');
+      });
+      P(ox+8,oy+5,'#5aa84a'); break;
+    case 'samsa':
+      f(16,16,(a,b)=> b>=2 && b<=13 && Math.abs(a+.5-8) <= (b-2)*0.68+0.6,
+        (a,b)=> b>=11 ? '#cf8a36' : (hash(a,b)>.82 ? '#fff6d8' : '#e6a24a'),'#8a4a14');
+      P(ox+8,oy+6,'#fff6d8'); P(ox+6,oy+9,'#fff6d8'); P(ox+10,oy+10,'#fff6d8'); break;
+    case 'chakchak':
+      plate(ox,oy);
+      f(16,16,(a,b)=> inEll(a,b,8,8.5,6.4,5),(a,b)=>{ const h=hash(a*2,b*3); if (h>.93) return '#ff6fa8'; if (h>.87) return '#4fc9c0'; if (h<.15) return '#ffe08a'; return ((a+b)%3===0) ? '#c27a1a' : '#e8a63a'; },'#7a4410'); break;
+    case 'kurt':
+      [[4.5,10.5,2.8],[10,10.8,2.8],[7.2,6.6,2.8],[12.4,6,2.2]].forEach(([cx,cy,rr])=>{
+        f(16,16,(a,b)=>inEll(a,b,cx,cy,rr,rr),(a,b)=> (a>cx && b>cy) ? '#e0d6c4' : '#fbf7ee','#9c907a');
+      }); break;
+    case 'kazy':
+      f(16,4,()=>true,(a,b)=> b===0 ? '#d49a5e' : '#b8834a','#6a4626',0,11);
+      [[4,8],[8.5,6.8],[12.2,8.6]].forEach(([cx,cy])=>{
+        f(16,16,(a,b)=>inEll(a,b,cx,cy,3.1,3.1),(a,b)=> inEll(a,b,cx,cy,2,2) ? ((a+b)%3? '#a33a3a':'#7a2222') : '#f4e6d6','#7a5a4a');
+      }); break;
+    case 'kumis':
+      f(16,9,(a,b)=> inEll(a,b,8,0,7,8.6),(a,b)=> (b===2||b===3) ? ((a%3===0)?'#ffffff':'#2f6fd6') : '#ffffff','#2a3a6a',0,6);
+      f(16,4,(a,b)=> inEll(a,b,8,2,7,1.9),(a,b)=> '#f4f1e6','#9aa6c6',0,5);
+      P(ox+5,oy+6,'#ffffff'); break;
+  }
+}
+
+/* ---- particles ---- */
+let parts = [];
+const HEART = ['.11.11.','1111111','1111111','.11111.','..111..','...1...'];
+const HEART_S = ['11.11','11111','.111.','..1..'];
+const NOTE = ['..111','..1.1','..1..','..1..','111..','111..'];
+const ZS = { 3:['111','.1.','111'], 4:['1111','..1.','.1..','1111'], 5:['11111','...1.','..1..','.1...','11111'] };
+function spawn(type,x,y,o){ parts.push(Object.assign({type,x,y,vx:0,vy:-0.3,born:now(),max:1500,g:0,w:0},o||{})); }
+function drawParts(t,dt){
+  const k = Math.min(3, dt/16.7);
+  parts = parts.filter(p => t - p.born < p.max);
+  for (const p of parts){
+    p.vy += p.g*k; p.x += p.vx*k; p.y += p.vy*k;
+    const age = (t - p.born)/p.max;
+    const wx = p.w ? Math.sin((t-p.born)/180 + p.seed*6)*p.w : 0;
+    const x = Math.round(p.x + wx), y = Math.round(p.y);
+    switch(p.type){
+      case 'heart': spr(p.small?HEART_S:HEART, x, y, {'1': p.c || '#ff4f7a'}); break;
+      case 'note': spr(NOTE, x, y, {'1': p.c || '#3a2347'}); break;
+      case 'z': { const sz = age<.33?3:age<.66?4:5; spr(ZS[sz], x, y, {'1': '#ffffff'}); break; }
+      case 'bubble': { const rr = p.r||2; ell(x,y,rr+.4,rr+.4,'#bfe6ff'); ell(x,y,rr-.6,rr-.6,'#eef9ff'); P(x-1,y-1,'#ffffff'); break; }
+      case 'drop': R(x,y,1,3,'#6cc4ff'); break;
+      case 'crumb': P(x,y,p.c||'#d8a05a'); break;
+      case 'sparkle': { if (Math.floor((t-p.born)/90)%2){ P(x,y,'#fff6b0'); P(x-1,y,'#ffd23f'); P(x+1,y,'#ffd23f'); P(x,y-1,'#ffd23f'); P(x,y+1,'#ffd23f'); } break; }
+      case 'stink': { const s = Math.floor((t-p.born)/150)%2; P(x+s,y,'#8bc34a'); P(x+1-s,y+1,'#8bc34a'); P(x+s,y+2,'#8bc34a'); break; }
+      case 'poof': ell(x,y,2.5*(1-age)+1,2.5*(1-age)+1,'#ffffff'); break;
+    }
+  }
+}
+
+/* =========================================================
+   ROOMS
+   ========================================================= */
+const ROOMS = [
+  {id:'kitchen', name:'KITCHEN', short:'Kitchen', cx:64},
+  {id:'bedroom', name:'BEDROOM', short:'Bed', cx:34},
+  {id:'living', name:'LIVING ROOM', short:'Living', cx:64},
+  {id:'bathroom', name:'BATHROOM', short:'Bath', cx:64},
+  {id:'wardrobe', name:'WARDROBE', short:'Closet', cx:66}
+];
+const roomOf = id => ROOMS.find(r=>r.id===id) || ROOMS[2];
+
+function box(x,y,w,h,fill,ol){ R(x,y,w,h,ol); R(x+1,y+1,w-2,h-2,fill); }
+function windowView(x,y,w,h,curtain,curtain2){
+  const day = isDay();
+  R(x,y,w,h,'#ffffff');
+  R(x+2,y+2,w-4,h-4, day ? '#a8e0ff' : '#23285a');
+  if (day){
+    ell(x+w*0.35,y+h*0.4,4,2,'#ffffff'); ell(x+w*0.35+4,y+h*0.4-1,3,2,'#ffffff');
+    ell(x+w-7,y+6,2.5,2.5,'#ffe066');
+  } else {
+    ell(x+w-9,y+8,3.5,3.5,'#fff4c2'); ell(x+w-7.5,y+7,3,3,'#23285a');
+    [[5,5],[9,12],[14,6],[6,15],[18,14]].forEach(([a,b])=>{ if (a<w-3&&b<h-3) P(x+a,y+b,'#ffffff'); });
+  }
+  R(x+Math.floor(w/2)-1,y,2,h,'#ffffff'); R(x,y+Math.floor(h/2)-1,w,2,'#ffffff');
+  R(x-1,y+h,w+2,2,'#e6dcd0');
+  if (curtain){
+    for (let yy=y-2; yy<y+h+3; yy++){
+      for (let i=0;i<5;i++){
+        const c = ((i + Math.floor(yy/2))%2) ? curtain : curtain2;
+        P(x-3+i,yy,c); P(x+w-2+i,yy,c);
+      }
+    }
+    R(x-5,y-3,w+10,1,'#8a5a3a');
+  }
+}
+
+function drawKitchen(){
+  R(0,0,W,80,'#fff0c8');
+  for (let j=0;j<6;j++) for (let i=0;i<22;i++) R(i*6,44+j*6,6,6,(i+j)%2 ? '#fde3a7' : '#fbebc4');
+  R(0,43,W,1,'#e8c98a');
+  for (let j=0;j<4;j++) for (let i=0;i<16;i++) R(i*8,80+j*8,8,8,(i+j)%2 ? '#e9e0f7' : '#cdbfe8');
+  R(0,80,W,1,'#a994d4');
+  windowView(50,8,30,24,'#ff8a8a','#ffffff');
+  // fridge
+  box(3,26,25,58,'#e8f0f8','#8aa0b6'); R(4,48,23,1,'#8aa0b6'); R(23,32,2,10,'#8aa0b6'); R(23,52,2,12,'#8aa0b6');
+  spr(HEART_S,8,32,{'1':'#ff6f9a'}); R(10,55,7,8,'#fff59d'); R(11,57,5,1,'#c8b84a'); R(11,59,4,1,'#c8b84a');
+  R(14,36,4,4,'#4fc9c0'); P(15,37,'#ffffff');
+  // shelf + jars
+  R(86,18,40,2,'#b97a4a'); R(88,20,2,3,'#9a6234'); R(122,20,2,3,'#9a6234');
+  box(90,10,8,8,'#ffe0a0','#b98a4a'); R(90,9,8,2,'#ff7fa8');
+  box(101,8,8,10,'#d8f0c8','#7aa86a'); R(101,7,8,2,'#3fbfb6');
+  box(112,11,9,7,'#ffd0d8','#c87a8a'); R(112,10,9,2,'#ffcf4a');
+  // counter
+  R(92,56,36,3,'#b97a4a'); R(92,59,36,24,'#f0b98a'); R(92,82,36,2,'#c98a5a');
+  box(94,61,15,19,'#f5c79c','#c98a5a'); box(111,61,15,19,'#f5c79c','#c98a5a');
+  R(106,69,2,3,'#8a5a3a'); R(113,69,2,3,'#8a5a3a');
+  // teapot (tea time!)
+  ell(108,51,5.5,4.5,'#ff8fb1'); R(104,47,9,1,'#e86a94'); R(107,45,3,2,'#e86a94');
+  R(113,49,3,1,'#ff8fb1'); R(115,48,1,1,'#ff8fb1'); R(102,49,1,4,'#e86a94'); R(101,50,1,2,'#e86a94');
+  P(105,50,'#ffffff'); P(110,52,'#ffffff');
+  // bowl of apples
+  ell(122,54,4,2,'#3fbfb6'); P(120,51,'#e53b3b'); P(121,51,'#e53b3b'); P(123,50,'#8bc34a'); P(124,51,'#8bc34a');
+}
+
+function drawBedroom(t, inBed){
+  R(0,0,W,80,'#dccdf4');
+  for (let y=4;y<80;y+=8) for (let x=(y%16?4:0);x<W;x+=8) P(x,y,'#c8b6ea');
+  for (let j=0;j<5;j++){ const y=80+j*7; R(0,y,W,7,j%2?'#c08a58':'#cc9764'); R(0,y,W,1,'#a87648'); for (let x=(j*23)%40; x<W; x+=40) R(x,y,1,7,'#a87648'); }
+  windowView(8,10,28,26,'#9a7ae0','#b79cf0');
+  // Kazakh-flag-inspired frame (sun + blue)
+  FRAMES.bedroom.forEach(drawFrame); spr(HEART_S,56,10,{'1':'#ff4f7a'});
+  // nightstand + lamp
+  box(54,72,12,16,'#d8a070','#8a5a3a'); R(55,79,10,1,'#8a5a3a'); R(59,75,2,1,'#8a5a3a'); R(59,83,2,1,'#8a5a3a');
+  R(59,64,2,8,'#8a5a3a'); R(56,72,8,1,'#8a5a3a');
+  shape(53,56,14,9,(a,b)=> Math.abs(a+.5-7) <= 3+b*0.45,(a,b)=> S.asleep ? '#8a7a5a' : '#ffe58a','#b8963a');
+  // bed
+  shape(72,40,48,26,(a,b)=> inEll(a,b,24,14,24,14) || b>=12,(a,b)=> (a%8===0) ? '#9a6a44' : '#b07a4e','#5a3a22');
+  R(70,64,52,26,'#ffffff'); R(70,64,52,1,'#d8d8e8');
+  ell(96,63,13,4.5,'#ffffff'); R(83,66,26,1,'#d8d8e8');
+  if (!inBed) drawBlanket(70,70,t);
+  R(71,90,3,6,'#5a3a22'); R(118,90,3,6,'#5a3a22');
+}
+function drawBlanket(x,y){
+  shape(x,y,52,22,()=>true,(a,b)=>{
+    if (b<=1) return '#ffffff';
+    if ((a%10===4 && b%8===5) || (a%10===3 && b%8===4) || (a%10===5 && b%8===4)) return '#ffd0e0';
+    return b===2 ? '#ff6f9a' : '#ff8fb1';
+  },'#c8547a');
+}
+
+function drawLiving(){
+  R(0,0,W,80,'#ffd9c4');
+  for (let x=0;x<W;x+=8) R(x,0,3,80,'#ffcdb2');
+  // string lights
+  for (let x=2;x<W;x++){ const y = 5 + Math.round(Math.sin(x/9)*2); P(x,y,'#8a6a5a'); if (x%9===4){ const cols=['#ff6f9a','#ffd23f','#3fd0c9','#9a7ae0']; P(x,y+1,cols[(x/9|0)%4]); P(x,y+2,cols[(x/9|0)%4]); } }
+  for (let j=0;j<5;j++){ const y=80+j*7; R(0,y,W,7,j%2?'#d39c66':'#dda874'); R(0,y,W,1,'#b9844e'); for (let x=(j*29)%44; x<W; x+=44) R(x,y,1,7,'#b9844e'); }
+  // picture frames
+  FRAMES.living.forEach(drawFrame);
+  // plant
+  box(110,70,13,14,'#e8734a','#a84a2a');
+  [[116,58,4,8],[112,62,3,7],[120,61,3,8],[114,55,3,6],[119,55,3,5]].forEach(([x,y,rx,ry])=>ell(x,y+4,rx/1.4,ry/1.6,'#4caf50'));
+  P(116,58,'#7ed37f'); P(112,63,'#7ed37f'); P(120,62,'#7ed37f');
+  // sofa
+  shape(18,52,92,34,(a,b)=>{
+    if (b<20 && a>=8 && a<=83) return inEll(a,b,46,20,38,20) || b>=6;
+    if (b>=12 && (a<=9 || a>=82)) return true;
+    if (b>=18 && b<=30) return true;
+    return false;
+  },(a,b)=>{
+    if ((a<=9 || a>=82) && b<16) return '#5fc6c2';
+    if (b>=18 && b<=19) return '#76d6d2';
+    if (b>=27) return '#3a9a96';
+    return '#4fb3b0';
+  },'#2a6e6b');
+  R(22,86,3,3,'#5a3a22'); R(103,86,3,3,'#5a3a22');
+  // cushions
+  box(26,62,14,10,'#ffcf4a','#c89a1a'); box(88,62,14,10,'#ff8fb1','#c8547a');
+  // rug
+  ell(64,99,48,8,'#e7739a'); ell(64,99,45,6.6,'#ff9fbf');
+  for (let x=20;x<110;x+=6) P(x,99,'#ffffff');
+}
+
+function drawBathroom(t, curtainClosed){
+  R(0,0,W,80,'#e6f6ff');
+  for (let y=0;y<80;y+=8) R(0,y,W,1,'#c5e6f7');
+  for (let x=0;x<W;x+=8) R(x,0,1,80,'#c5e6f7');
+  for (let j=0;j<4;j++) for (let i=0;i<16;i++) R(i*8,80+j*8,8,8,(i+j)%2 ? '#a9d6e6' : '#c4e6f0');
+  R(0,80,W,1,'#7fb6cc');
+  // towel rack
+  R(4,38,20,2,'#9aa3ad'); shape(6,40,16,18,()=>true,(a,b)=> b===12||b===13 ? '#ffffff' : '#ff8fb1','#c8547a');
+  // mirror + sink
+  box(98,24,24,26,'#cfefff','#d8a83a'); R(102,28,2,8,'#ffffff'); R(105,28,1,5,'#ffffff');
+  R(96,58,28,6,'#ffffff'); R(96,58,28,1,'#c8d0dc'); R(97,63,26,1,'#c8d0dc'); R(108,64,4,20,'#ffffff'); R(108,64,1,20,'#c8d0dc');
+  R(109,54,2,4,'#9aa3ad'); R(107,54,6,1,'#9aa3ad');
+  // rubber duck
+  ell(12,95,4,3,'#ffd23f'); ell(15,91,2.5,2.5,'#ffd23f'); P(17,91,'#ff8a1a'); P(18,91,'#ff8a1a'); P(15,90,'#1a1a1a');
+  // shower
+  R(36,92,56,6,'#ffffff'); R(36,92,56,1,'#c8d0dc'); R(36,97,56,1,'#c8d0dc');
+  R(63,0,2,16,'#9aa3ad'); R(57,16,14,3,'#b8c0c8'); R(57,19,14,1,'#8a929c');
+  for (let x=58;x<70;x+=2) P(x,19,'#5a6270');
+  R(30,24,68,2,'#9aa3ad');
+  {
+    shape(30,26,10,68,()=>true,(a,b)=> (a%3===0) ? '#ffe680' : '#fff4b0','#c8a83a');
+    spr(['.11','111','.1.'],33,40,{'1':'#ff9f1a'});
+  }
+}
+function drawCurtainClosed(t, top){
+  shape(38,top,52,94-top,()=>true,(a,b)=>{
+    if ((a%14===6 && b%16===8)) return '#ffd23f';
+    if ((a%14===7 && b%16===8)||(a%14===6 && b%16===7)) return '#ffd23f';
+    return (a%4===0) ? '#c9ecff' : '#e6f7ff';
+  },'#7fb6cc');
+  for (let x=40;x<90;x+=4) P(x,top,'#ffffff');
+}
+
+function drawWardrobe(){
+  R(0,0,W,80,'#f6e2c4'); R(0,56,W,24,'#e1bf92'); R(0,56,W,1,'#c49a64');
+  for (let x=0;x<W;x+=16) R(x,57,1,23,'#c49a64');
+  R(0,80,W,32,'#c6a2d8'); for (let y=82;y<112;y+=4) for (let x=(y%8?2:0);x<W;x+=4) P(x,y,'#b48fc8');
+  R(0,80,W,1,'#9a76b0');
+  // open wardrobe
+  box(2,10,44,74,'#5a3a26','#3a2414'); R(3,11,42,1,'#8a5a3a');
+  R(4,16,40,1,'#c8c0b0');
+  const clothes = [['#d72f3c',7],['#8e1d3b',9],['#a9afb9',8],['#22305a',8],['#a6d4ff',7]];
+  let cx = 5;
+  clothes.forEach(([c,w],i)=>{ R(cx+Math.floor(w/2),16,1,3,'#c8c0b0'); shape(cx,19,w,30+(i%2)*6,()=>true,(a,b)=> (b===0) ? '#ffffff' : c,'#2a1a10'); if (i===1) for(let y=19;y<55;y+=2) P(cx+3,y,'#f2c14e'); cx += w+1; });
+  R(4,62,40,1,'#3a2414'); box(4,64,40,9,'#8a5a3a','#3a2414'); box(4,73,40,9,'#8a5a3a','#3a2414'); R(22,68,4,1,'#f2c14e'); R(22,77,4,1,'#f2c14e');
+  // hat box
+  box(6,2,14,8,'#ff8fb1','#c8547a'); R(6,5,14,1,'#ffffff');
+  // mirror
+  shape(94,16,28,70,(a,b)=> inEll(a,b,14,14,14,14) || (b>=14 && b<=66),(a,b)=>{
+    const inner = (inEll(a,b,14,14,11.5,11.5) || (b>=14 && b<=63)) && a>=3 && a<=24 && b>=3;
+    if (!inner) return '#e2b13e';
+    return ((a-b+80)%17<2) ? '#ffffff' : '#cfeaf5';
+  },'#9a7420');
+  R(98,86,4,2,'#9a7420'); R(114,86,4,2,'#9a7420');
+  // stool w/ shoes
+  spr(['.11..','11111'],34,96,{'1':'#e23b4a'}); spr(['.11..','11111'],40,96,{'1':'#e23b4a'});
+}
+
+/* =========================================================
+   ANIMATION ENGINE (timeline of phases)
+   ========================================================= */
+let A = null;
+function play(phases, dur, onEnd, soft){ A = {t0:now(), dur, ph:phases, fired:-1, onEnd, soft:!!soft}; }
+const busy = () => !!A;
+function stepAnim(t){
+  if (!A) return;
+  const el = t - A.t0;
+  for (let i=A.fired+1; i<A.ph.length; i++){
+    if (A.ph[i].at <= el){
+      A.fired = i; const p = A.ph[i];
+      if (p.say) say(p.say);
+      if (p.sfx) sfx(p.sfx);
+      if (p.fn) p.fn();
+    } else break;
+  }
+  if (el >= A.dur){ const e = A.onEnd; A = null; if (e) e(); }
+}
+function curPhase(t){
+  if (!A || A.fired < 0) return null;
+  const p = A.ph[A.fired], nx = A.ph[A.fired+1];
+  const end = nx ? nx.at : A.dur;
+  return {v: p.v || {}, k: clamp((t - A.t0 - p.at)/Math.max(1, end - p.at), 0, 1)};
+}
+
+let stacheFall = null, stacheGrow = null, lastFrame = now();
+let force = null;
+
+function idleExpr(t){
+  if (S.asleep) return 'sleep';
+  if (S.ev.type === 'sulk') return 'sulk';
+  if (S.ev.type === 'fries') return 'plead';
+  if (S.ev.type === 'cat') return 'resigned';
+  if (!S.stache) return 'sad';
+  const s = S.stats, low = Math.min(s.hunger, s.energy, s.mood, s.hygiene);
+  if (low < 20){
+    if (s.energy === low) return 'sleepy';
+    if (s.mood === low) return 'sulk';
+    if (s.hygiene === low) return 'disgust';
+    return 'sad';
+  }
+  if (low > 70 && t % 9000 < 1300) return 'happy';
+  return 'neutral';
+}
+function visual(t){
+  const v = {t, expr:null, arms:'down', bob: Math.floor(t/700)%2, blink: (t%3700) < 140, stache:S.stache, growK:1, cat:S.ev.type==='cat', dx:0, dy:0};
+  if (stacheGrow){ const k=(t-stacheGrow)/1400; if (k<1){ v.stache=true; v.growK=Math.max(.04,k); } else stacheGrow=null; }
+  const ph = curPhase(t);
+  if (ph){ Object.assign(v, ph.v); v.k = ph.k; }
+  if (v.shake) v.dx = (Math.floor(t/60)%2) ? 1 : -1;
+  if (v.jump) v.dy = -Math.round(Math.abs(Math.sin((t/1000)*Math.PI*v.jump))*4);
+  if (!v.expr) v.expr = idleExpr(t);
+  if (force) Object.assign(v, force);
+  return v;
+}
+
+function drawLeo(cx, fy, v, look){
+  look = look || S.look;
+  const hx = cx - 12, hy = fy - 46 + (v.bob||0);
+  const tx = cx - 10, ty = fy - 23;
+  if (look.outfit === 'cape') drawCapeBack(tx, ty, v.t);
+  drawBody(tx, ty, look, v.arms || 'down', v.expr === 'green');
+  if (look.acc.scarf) drawScarf(tx, ty);
+  if (look.acc.bowtie) drawBowtie(tx, ty);
+  if (look.acc.chain) drawChain(tx, ty);
+  if (look.acc.rose && (v.arms || 'down') === 'down') drawRose(tx, ty);
+  drawHeadAll(hx, hy, v, look);
+}
+function drawHeadAll(hx, hy, v, look){
+  drawFace(hx, hy, v.expr, v);
+  if (v.stache) drawStache(hx, hy, look.stache, v.growK == null ? 1 : v.growK);
+  drawHair(hx, hy);
+  if (look.acc.sunglasses) drawShades(hx, hy);
+  if (v.foam) drawFoam(hx, hy, v.t);
+  else if (!v.cat && look.hat !== 'none') drawHat(hx, hy, look.hat);
+  if (look.acc.airpods) drawAirpods(hx, hy);
+  if (v.cat) drawCat(hx+2, hy-10, false);
+}
+
+/* =========================================================
+   MAIN RENDER
+   ========================================================= */
+let emitT = {};
+function every(key, ms, t){ if (!emitT[key] || t - emitT[key] > ms){ emitT[key] = t; return true; } return false; }
+
+function frame(){
+  const t = now(); const dt = t - lastFrame; lastFrame = t;
+  stepAnim(t);
+  g = sctx;
+  const room = S.room, rm = roomOf(room);
+  const v = visual(t);
+  const cx = rm.cx + (v.dx||0), fy = FY + (v.dy||0);
+  const hy = fy - 46 + (v.bob||0);
+  const leoHere = !S.asleep;
+
+  if (room === 'kitchen') drawKitchen();
+  else if (room === 'bedroom') drawBedroom(t, S.asleep);
+  else if (room === 'living') drawLiving();
+  else if (room === 'bathroom') drawBathroom(t, !!v.curtain);
+  else drawWardrobe();
+
+  if (S.asleep && room === 'bedroom'){
+    // Léo tucked in bed
+    const bhx = 84, bhy = 46;
+    drawHeadAll(bhx, bhy, Object.assign({}, v, {expr: v.expr==='sleep'||!A ? 'sleep' : v.expr, bob:0}), S.look);
+    drawBlanket(70,70,t);
+    // night overlay
+    g.fillStyle = 'rgba(14,12,48,0.58)'; g.fillRect(0,0,W,H);
+    R(10,12,24,22,'#23285a'); ell(27,18,3.5,3.5,'#fff4c2'); ell(28.5,17,3,3,'#23285a');
+    [[13,15],[17,26],[22,14],[14,30]].forEach(([a,b])=>P(a,b,'#ffffff'));
+    if (every('z', 950, t)){
+      const zx = bhx + (S.stache ? 17 : 14), zy = bhy + 14;
+      spawn('z', zx, zy, {vx:0.18, vy:-0.22, max:2600});
+    }
+  } else if (leoHere){
+    // pets in background / cat entering
+    drawLeo(cx, fy, v);
+    // fallen moustache on the floor
+    if (!S.stache && !stacheGrow){
+      let fx = cx + 15, fyy = FY - 1 - 15;
+      if (stacheFall){
+        const k = clamp((t - stacheFall)/900, 0, 1);
+        const sx = cx, sy = hy + 15;
+        const ex = cx + 15, ey = FY - 1;
+        const bounce = k < .8 ? 0 : Math.sin((k-.8)/.2*Math.PI)*3;
+        fx = sx + (ex-sx)*k; fyy = sy + (ey-sy)*(k*k) - bounce - 15;
+        if (k >= 1) stacheFall = null;
+      }
+      drawStache(Math.round(fx) - 12, Math.round(fyy), S.look.stache, 1);
+    }
+    // held food / eating
+    if (v.food){
+      const fx = cx + 2, fy2 = hy + 15;
+      if (v.bite != null){
+        const bite = clamp(v.k||0,0,1) * v.bite;
+        g.save(); g.beginPath(); g.rect(fx + Math.floor(16*bite), fy2, 16, 16); g.clip();
+        drawFood(v.food, fx, fy2); g.restore();
+        if (Math.random() < .25) spawn('crumb', cx+3+rnd(-2,4), hy+20, {vx:rnd(-.4,.4), vy:-.4, g:.06, max:900, c: v.food==='kumis' ? '#ffffff' : '#d8a05a'});
+      } else if (v.push){
+        const k = v.k||0;
+        drawFood(v.food, Math.round(cx + 4 + k*26), Math.round(hy + 26 + (k>.6 ? (k-.6)*40 : 0)));
+      } else drawFood(v.food, fx, fy2);
+    }
+    if (v.snack){ drawFood(v.snack, cx - 8, hy + 22); }
+    // Bushinka
+    if (v.dog){
+      const dk = v.k||0, base = FY - 15;
+      let dx, flip = false, food = null, dyy = 0;
+      if (v.dog === 'in'){ dx = -24 + (cx - 30 + 24)*dk; }
+      else if (v.dog === 'grab'){ dx = cx - 30 + Math.sin(dk*Math.PI)*8; dyy = -Math.sin(dk*Math.PI)*12; food = dk > .5 ? v.dogFood : null; }
+      else { dx = cx - 30 - (cx + 10)*dk; flip = true; food = v.dogFood; }
+      drawDog(Math.round(dx), Math.round(base + dyy), t, flip, food);
+    }
+    // Cerise jumping on / off
+    if (v.catAnim){
+      const ck = v.k||0;
+      const sx = v.catAnim === 'in' ? -20 : cx - 10, sy = v.catAnim === 'in' ? FY - 14 : hy - 10;
+      const ex = v.catAnim === 'in' ? cx - 10 : W + 4,  ey = v.catAnim === 'in' ? hy - 10 : FY - 14;
+      const x = sx + (ex-sx)*ck, y = sy + (ey-sy)*ck - Math.sin(ck*Math.PI)*22;
+      drawCat(Math.round(x), Math.round(y), v.catAnim === 'out');
+    }
+    if (v.curtain && room === 'bathroom') drawCurtainClosed(t, hy + 22);
+    // flies & stink when dirty
+    if (S.stats.hygiene < 25 && !v.curtain){
+      const a = t/260;
+      P(cx + Math.round(Math.cos(a)*16), hy + 6 + Math.round(Math.sin(a*1.7)*5), '#1a1a1a');
+      P(cx + Math.round(Math.cos(a*1.3+2)*18), hy + 12 + Math.round(Math.sin(a)*6), '#1a1a1a');
+      if (every('stink', 700, t)) spawn('stink', cx + rnd(-14,12), hy + rnd(20,40), {vy:-.25, max:1600});
+    }
+    // emitters
+    const em = v.emit || [];
+    if (em.includes('hearts') && Math.random() < .55) spawn('heart', rnd(-4,124), H+2, {vy:rnd(-1.4,-.7), vx:rnd(-.2,.2), max:2600, w:1, seed:Math.random(), c:pick(['#ff4f7a','#ff7fa8','#e8334a','#ff9fbf'])});
+    if (em.includes('heartburst') && Math.random() < .5) spawn('heart', cx + rnd(-16,12), hy + rnd(0,24), {vy:rnd(-1,-.5), vx:rnd(-.6,.6), max:1500, small:true, c:pick(['#ff4f7a','#ff7fa8'])});
+    if (em.includes('notes') && Math.random() < .12) spawn('note', cx + rnd(-4,10), hy + 12, {vy:-.45, vx:rnd(-.5,.5), w:1, seed:Math.random(), max:1700, c:pick(['#3a2347','#9a7ae0','#ff4f7a'])});
+    if (em.includes('drops') && room === 'bathroom') for (let i=0;i<2;i++) if (Math.random()<.9) spawn('drop', rnd(57,71), 20, {vy:2.4, max:420});
+    if (em.includes('bubbles') && Math.random() < .2) spawn('bubble', cx + rnd(-18,18), hy + rnd(-4,30), {vy:rnd(-.5,-.2), w:1, seed:Math.random(), r:pick([1,2,2,3]), max:2400});
+    if (em.includes('sparkle') && Math.random() < .3) spawn('sparkle', cx + rnd(-8,8), hy + rnd(13,17), {vy:-.1, max:600});
+    if (em.includes('laughs') && Math.random() < .06) spawn('note', cx + rnd(-12,12), hy, {vy:-.5, max:900, c:'#ffd23f'});
+  }
+  drawParts(t, dt);
+  requestAnimationFrame(frame);
+}
+
+/* =========================================================
+   SOUND (tiny WebAudio synth, no files)
+   ========================================================= */
+let AC = null, gestured = false;
+['pointerdown','keydown','touchstart'].forEach(ev=>window.addEventListener(ev,()=>{ gestured = true; },{capture:true, passive:true}));
+function ac(){
+  if (!S.sound || !gestured) return null;
+  try {
+    if (!AC) AC = new (window.AudioContext || window.webkitAudioContext)();
+    if (AC.state === 'suspended') AC.resume();
+    return AC;
+  } catch(e){ return null; }
+}
+function tone(a,f,d,type,vol,t,slideTo){
+  try {
+    const o = a.createOscillator(), gn = a.createGain();
+    o.type = type; o.frequency.setValueAtTime(f, t);
+    if (slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, t+d);
+    gn.gain.setValueAtTime(0.0001, t); gn.gain.exponentialRampToValueAtTime(vol, t+0.012); gn.gain.exponentialRampToValueAtTime(0.0001, t+d);
+    o.connect(gn).connect(a.destination); o.start(t); o.stop(t+d+0.03);
+    return o;
+  } catch(e){ return null; }
+}
+function singBadly(a,t){
+  const scale = [262,294,330,349,392,440,494,523];
+  let tt = t;
+  for (let i=0;i<9;i++){
+    let f = pick(scale) * Math.pow(2, rnd(-1.1,1.1)/12);
+    if (Math.random() < .15) f *= 2; // voice crack
+    const d = rnd(.18,.42);
+    const o = tone(a, f, d, 'square', .045, tt, f*rnd(.94,1.06));
+    if (o){ try { const l = a.createOscillator(), lg = a.createGain(); l.frequency.value = rnd(5,9); lg.gain.value = f*0.03; l.connect(lg).connect(o.frequency); l.start(tt); l.stop(tt+d); } catch(e){} }
+    tt += d + .03;
+  }
+}
+function sfx(name){
+  const a = ac(); if (!a) return; const t = a.currentTime;
+  switch(name){
+    case 'chomp': for (let i=0;i<3;i++){ tone(a,190,.06,'square',.05,t+i*.42); tone(a,120,.05,'square',.04,t+i*.42+.07); } break;
+    case 'yum': [523,659,784,1046].forEach((f,i)=>tone(a,f,.1,'square',.045,t+i*.08)); break;
+    case 'yuck': tone(a,150,.4,'sawtooth',.05,t,80); break;
+    case 'hug': [392,523,659,784,1046].forEach((f,i)=>tone(a,f,.14,'triangle',.08,t+i*.08)); break;
+    case 'kiss': tone(a,700,.12,'sine',.09,t,1800); break;
+    case 'laugh': for (let i=0;i<7;i++) tone(a,520+(i%2)*140,.07,'square',.04,t+i*.1,480); break;
+    case 'fall': tone(a,1000,.7,'triangle',.07,t,160); tone(a,90,.08,'square',.06,t+.72); break;
+    case 'grow': tone(a,220,.7,'triangle',.08,t,1100); tone(a,1320,.15,'square',.03,t+.72); break;
+    case 'pop': tone(a,500,.06,'sine',.06,t,1100); break;
+    case 'event': [660,880,660,990].forEach((f,i)=>tone(a,f,.08,'square',.04,t+i*.09)); break;
+    case 'bark': tone(a,620,.07,'square',.05,t,330); tone(a,660,.07,'square',.05,t+.13,350); break;
+    case 'meow': tone(a,560,.18,'triangle',.06,t,900); tone(a,900,.25,'triangle',.05,t+.18,520); break;
+    case 'snore': tone(a,72,1.0,'sawtooth',.04,t,52); tone(a,140,.45,'sawtooth',.02,t+1.1,190); break;
+    case 'sing': singBadly(a,t); break;
+    case 'pucker': tone(a,1300,.3,'square',.035,t,260); break;
+    case 'gulp': tone(a,330,.09,'sine',.08,t,160); tone(a,300,.09,'sine',.08,t+.22,140); break;
+    case 'blergh': tone(a,110,.6,'sawtooth',.05,t,70); break;
+    case 'dance': [523,659,784,659,880,784,659,523].forEach((f,i)=>tone(a,f,.14,'square',.04,t+i*.18)); break;
+    case 'tap': tone(a,440,.04,'square',.03,t); break;
+    case 'shower': for (let i=0;i<10;i++) tone(a,rnd(1800,3200),.03,'sine',.012,t+i*.06); break;
+  }
+}
+
+/* =========================================================
+   DOM
+   ========================================================= */
+const $ = id => document.getElementById(id);
+const bubbleEl = $('bubble'), toastEl = $('toast');
+let sayTimer = 0, toastTimer = 0, lastSayAt = 0;
+function say(text, ms){
+  bubbleEl.textContent = text; bubbleEl.classList.add('show');
+  clearTimeout(sayTimer); lastSayAt = now();
+  sayTimer = setTimeout(()=>bubbleEl.classList.remove('show'), ms || Math.max(2600, text.length*62));
+}
+function toast(text){
+  toastEl.textContent = text; toastEl.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(()=>toastEl.classList.remove('show'), 2600);
+}
+
+const ICONS = {
+  hunger:{map:['1.1.1....','1.1.1..1.','1.1.1.11.','11111.11.','.111..11.','..1...11.','..1....1.','..1....1.','..1....1.'], c:'#e8893a'},
+  energy:{map:['.....11..','....11...','...11....','..11111..','....11...','...11....','..11.....','.11......','.1.......'], c:'#e8b400'},
+  mood:{map:['.11...11.','1111.1111','111111111','111111111','.1111111.','..11111..','...111...','....1....'], c:'#ff4f7a'},
+  hygiene:{map:['....1....','...111...','...111...','..11111..','.1111111.','.1111111.','.1111111.','..11111..','...111...'], c:'#3fa8ef'},
+  kitchen:{map:['1.1.1....','1.1.1..1.','1.1.1.11.','11111.11.','.111..11.','..1...11.','..1....1.','..1....1.','..1....1.'], c:'#e8893a'},
+  bedroom:{map:['..1111...','.111.....','111......','111......','111......','111......','.111.....','..1111...'], c:'#7a5ae0'},
+  living:{map:['.11...11.','1111.1111','111111111','111111111','.1111111.','..11111..','...111...','....1....'], c:'#ff4f7a'},
+  bathroom:{map:['....1....','...111...','...111...','..11111..','.1111111.','.1111111.','.1111111.','..11111..','...111...'], c:'#3fa8ef'},
+  wardrobe:{map:['....11...','...1..1..','......1..','.....1...','....1....','..11111..','.1.....1.','111111111'], c:'#3a2347'}
+};
+function iconCanvas(key){
+  const c = document.createElement('canvas'); c.width = 9; c.height = 9;
+  const old = g; g = c.getContext('2d'); spr(ICONS[key].map, 0, 0, {'1': ICONS[key].c}); g = old;
+  return c;
+}
+
+// stats
+const STAT_INFO = {hunger:{name:'Hunger',c:'#ff9d4a'}, energy:{name:'Energy',c:'#ffd23f'}, mood:{name:'Mood',c:'#ff6f9a'}, hygiene:{name:'Hygiene',c:'#5ab8ff'}};
+const statEls = {};
+(function buildStats(){
+  const box = $('stats');
+  STAT_KEYS.forEach(k=>{
+    const d = document.createElement('div'); d.className = 'stat';
+    const lab = document.createElement('div'); lab.className = 'lab';
+    lab.appendChild(iconCanvas(k));
+    const nm = document.createElement('span'); nm.textContent = STAT_INFO[k].name; lab.appendChild(nm);
+    const val = document.createElement('b'); lab.appendChild(val);
+    const bar = document.createElement('div'); bar.className = 'bar'; bar.style.setProperty('--c', STAT_INFO[k].c);
+    const cells = [];
+    for (let i=0;i<10;i++){ const c = document.createElement('i'); bar.appendChild(c); cells.push(c); }
+    d.appendChild(lab); d.appendChild(bar); box.appendChild(d);
+    statEls[k] = {d, val, cells};
+  });
+})();
+function renderStats(){
+  STAT_KEYS.forEach(k=>{
+    const v = S.stats[k], e = statEls[k];
+    const on = Math.ceil(v/10);
+    e.cells.forEach((c,i)=>c.classList.toggle('on', i < on));
+    e.val.textContent = Math.round(v);
+    e.d.classList.toggle('low', v < 20);
+  });
+  $('day').textContent = 'DAY ' + (Math.floor((now() - S.created)/864e5) + 1);
+  $('snd').textContent = 'SOUND: ' + (S.sound ? 'ON' : 'OFF');
+}
+
+// tabs
+(function buildTabs(){
+  const box = $('tabs');
+  ROOMS.forEach(r=>{
+    const b = document.createElement('button'); b.className = 'tab'; b.dataset.room = r.id; b.setAttribute('aria-label', r.name);
+    b.appendChild(iconCanvas(r.id));
+    const s = document.createElement('span'); s.textContent = r.short; b.appendChild(s);
+    b.addEventListener('click', ()=>{ ac(); setRoom(r.id); });
+    box.appendChild(b);
+  });
+})();
+function setRoom(id){
+  if (!ROOMS.some(r=>r.id===id)) id = 'living';
+  S.room = id; persist();
+  $('roomname').textContent = roomOf(id).name;
+  document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on', b.dataset.room === id));
+  parts = parts.filter(p => p.type === 'heart');
+  renderPanel(); renderBanner();
+  sfx('tap');
+}
+function shiftRoom(d){
+  const i = ROOMS.findIndex(r=>r.id===S.room);
+  setRoom(ROOMS[(i + d + ROOMS.length) % ROOMS.length].id);
+}
+$('prev').addEventListener('click', ()=>{ ac(); shiftRoom(-1); });
+$('next').addEventListener('click', ()=>{ ac(); shiftRoom(1); });
+document.addEventListener('keydown', e=>{ if (e.key==='ArrowLeft') shiftRoom(-1); if (e.key==='ArrowRight') shiftRoom(1); });
+$('snd').addEventListener('click', ()=>{ S.sound = !S.sound; persist(); renderStats(); if (S.sound) sfx('pop'); });
+
+function btn(label, cls, onClick){
+  const b = document.createElement('button'); b.className = 'btn ' + (cls||''); b.textContent = label;
+  b.addEventListener('click', ()=>{ ac(); onClick(b); });
+  return b;
+}
+function h3(t){ const h = document.createElement('h3'); h.textContent = t; return h; }
+function hint(t){ const p = document.createElement('p'); p.className = 'hint'; p.textContent = t; return p; }
+
+/* ---------- panel per room ---------- */
+let wardCat = 'hats';
+function renderPanel(){
+  const P_ = $('panel'); P_.innerHTML = '';
+  const room = S.room;
+  if (room === 'kitchen'){
+    P_.appendChild(h3('WHAT SHOULD LÉO EAT?'));
+    const gr = document.createElement('div'); gr.className = 'grid g4';
+    Object.keys(FOODS).forEach(id=>{
+      const b = document.createElement('button'); b.className = 'btn food'; b.setAttribute('aria-label', 'Feed ' + FOODS[id].name);
+      const c = document.createElement('canvas'); c.width = 16; c.height = 16;
+      const old = g; g = c.getContext('2d'); drawFood(id,0,0); g = old;
+      const s = document.createElement('span'); s.textContent = FOODS[id].name;
+      b.appendChild(c); b.appendChild(s);
+      b.addEventListener('click', ()=>{ ac(); feed(id); });
+      gr.appendChild(b);
+    });
+    P_.appendChild(gr);
+  }
+  else if (room === 'bedroom'){
+    P_.appendChild(h3('BEDTIME'));
+    const gr = document.createElement('div'); gr.className = 'grid g2';
+    gr.appendChild(btn(S.asleep ? 'WAKE UP' : 'LIGHTS OFF', 'big ' + (S.asleep ? 'gold' : 'sky'), ()=> S.asleep ? wake(true) : sleep()));
+    gr.appendChild(btn('TUCK IN', 'big pink', tuck));
+    P_.appendChild(gr);
+    P_.appendChild(hint(S.asleep ? 'Shhh... Léo is snoring. His energy refills while he sleeps, and he wakes up by himself when he is fully charged.' : 'Turn off the lights to put Léo to sleep. Energy refills while he sleeps, even if you close the page.'));
+  }
+  else if (room === 'living'){
+    P_.appendChild(h3('LOVE & PLAY'));
+    const gr = document.createElement('div'); gr.className = 'grid g2';
+    gr.appendChild(btn('HUG', 'big pink', hug));
+    gr.appendChild(btn('KISS', 'big pink', kiss));
+    gr.appendChild(btn('TICKLE', 'big gold', tickle));
+    gr.appendChild(btn('DANCE', 'big teal', dance));
+    P_.appendChild(gr);
+    P_.appendChild(hint('Hugs fix everything: a sulky Léo, and even a fallen moustache.'));
+  }
+  else if (room === 'bathroom'){
+    P_.appendChild(h3('BATH TIME'));
+    const gr = document.createElement('div'); gr.className = 'grid g2';
+    gr.appendChild(btn('SHOWER', 'big sky', shower));
+    gr.appendChild(btn('COMB MOUSTACHE', 'big gold', comb));
+    P_.appendChild(gr);
+    P_.appendChild(hint('Warning: Léo sings his own song in the shower, "Aidana, My Baursak Queen". Very badly.'));
+  }
+  else {
+    const cats = document.createElement('div'); cats.className = 'cats';
+    [['hats','HATS'],['outfits','OUTFITS'],['extras','EXTRAS'],['stache','STACHE']].forEach(([id,l])=>{
+      cats.appendChild(btn(l, wardCat===id ? 'sel' : '', ()=>{ wardCat = id; renderPanel(); }));
+    });
+    P_.appendChild(cats);
+    const gr = document.createElement('div'); gr.className = 'grid g3';
+    const L = S.look;
+    const list = wardCat==='hats' ? HATS : wardCat==='outfits' ? OUTFITS : wardCat==='extras' ? ACCS : STACHES;
+    list.forEach(([id,label])=>{
+      const preview = JSON.parse(JSON.stringify(L));
+      let selected;
+      if (wardCat==='hats'){ preview.hat = id; selected = L.hat===id; }
+      else if (wardCat==='outfits'){ preview.outfit = id; selected = L.outfit===id; }
+      else if (wardCat==='extras'){ preview.acc[id] = true; selected = !!L.acc[id]; }
+      else { preview.stache = id; selected = L.stache===id; }
+      const b = document.createElement('button'); b.className = 'btn opt' + (selected ? ' sel' : '');
+      b.setAttribute('aria-pressed', selected ? 'true' : 'false');
+      const c = document.createElement('canvas'); c.width = 36; c.height = 44;
+      renderPreview(c, preview, wardCat==='stache', wardCat==='outfits' ? 52 : 62);
+      const s = document.createElement('span'); s.textContent = (wardCat==='extras' ? (selected ? 'ON: ' : 'OFF: ') : '') + label;
+      b.appendChild(c); b.appendChild(s);
+      b.addEventListener('click', ()=>{ ac(); wear(wardCat, id); });
+      gr.appendChild(b);
+    });
+    P_.appendChild(gr);
+    const row = document.createElement('div'); row.className = 'grid g2'; row.style.marginTop = '8px';
+    row.appendChild(btn('SURPRISE ME', 'gold', surprise));
+    row.appendChild(btn('BACK TO CLASSIC', '', classic));
+    P_.appendChild(row);
+    P_.appendChild(hint('Everything you pick is saved automatically.'));
+  }
+}
+function renderPreview(c, look, forceStache, pfy){
+  const old = g; g = c.getContext('2d');
+  g.clearRect(0,0,c.width,c.height);
+  drawLeo(18, pfy || 62, {t:now(), expr:'neutral', arms:'down', bob:0, blink:false, stache: forceStache ? true : S.stache, growK:1, cat:false}, look);
+  g = old;
+}
+
+/* ---------- banner (events / status) ---------- */
+let bannerAction = null;
+function renderBanner(){
+  const el = $('banner'), tx = $('bannerText'), b = $('bannerBtn');
+  let text = '', label = '', act = null;
+  const ev = S.ev.type;
+  if (ev === 'cat'){ text = 'Cerise is sitting on Léo\'s head and refuses to move.'; label = 'ASK HER TO MOVE'; act = shooCat; }
+  else if (ev === 'sulk'){ text = 'Léo is sulking for no reason. Hugs: ' + S.ev.n + '/3'; if (S.room !== 'living'){ label = 'GO HUG HIM'; act = ()=>setRoom('living'); } }
+  else if (ev === 'fries'){ text = 'Léo wants fries. Right now. In the middle of the night.'; if (S.room !== 'kitchen'){ label = 'TO THE KITCHEN'; act = ()=>setRoom('kitchen'); } }
+  else if (!S.stache){ text = 'Léo\'s moustache fell off! Only a hug can grow it back.'; if (S.room !== 'living'){ label = 'GO HUG HIM'; act = ()=>setRoom('living'); } }
+  else if (S.asleep && S.room !== 'bedroom'){ text = 'Léo is asleep in the bedroom. Shhh...'; label = 'PEEK'; act = ()=>setRoom('bedroom'); }
+  el.classList.toggle('show', !!text);
+  tx.textContent = text;
+  b.style.display = label ? '' : 'none'; b.textContent = label;
+  bannerAction = act;
+}
+$('bannerBtn').addEventListener('click', ()=>{ ac(); if (bannerAction) bannerAction(); });
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+function addStat(k, d){ S.stats[k] = clamp(S.stats[k] + d); }
+function asleepGuard(){
+  if (S.asleep){ toast('Léo is asleep. Wake him up in the bedroom first.'); return true; }
+  return false;
+}
+function busyGuard(){ if (A && A.soft){ A = null; return false; } if (busy()){ toast('One thing at a time! Léo is busy.'); return true; } return false; }
+function done(){ persist(); renderStats(); renderBanner(); }
+
+const FOOD_LINES = {
+  croissant:['Un croissant! Ooh la la.','Flaky. Buttery. Perfect. Like me.'],
+  fries:['FRIES!!!','Fries are a vegetable. Don\'t fact-check me.'],
+  beshbarmak:['Beshbarmak! Five fingers, zero forks.','I am full of meat and joy.'],
+  baursaks:['BAURSAKS!!! MY FAVORITE!!!','I would fight a bear for one more baursak.'],
+  plov:['Plov! The king of rice.','Rice to meet you. Get it? ...Rice?'],
+  manti:['Manti! Tiny steamy pillows!','Each one is a little hug for my tummy.'],
+  samsa:['Samsa! Hot hot hot!','Burnt my tongue. Totally worth it.'],
+  chakchak:['Chak-chak! Honey everywhere!','My moustache is sticky now. No regrets.'],
+  kazy:['Kazy! Fancy horse sausage!','Delicious. Please don\'t tell the horses.']
+};
+
+function feed(id){
+  if (asleepGuard() || busyGuard()) return;
+  const F = FOODS[id];
+  if (id === 'broccoli'){
+    play([
+      {at:0, v:{expr:'disgust', food:'broccoli'}, say:'Broccoli? ...Absolutely not.', sfx:'yuck'},
+      {at:1000, v:{expr:'sulk', food:'broccoli', push:true}, say:'I am a man, not a rabbit. Hmph!'},
+      {at:2300, v:{expr:'sulk'}}
+    ], 3400, ()=>{ addStat('mood',-4); done(); });
+    return;
+  }
+  const friesEvent = S.ev.type === 'fries' && id === 'fries';
+  if (S.stats.hunger >= 96 && id !== 'baursaks' && !friesEvent){
+    say("I'm stuffed! Maybe later... unless it's baursaks."); return;
+  }
+  // Bushinka sometimes steals the food
+  if (!friesEvent && Math.random() < 0.12){
+    stealSequence(id, 'Ooh, ' + F.name.toLowerCase() + '! Nom nom n—');
+    return;
+  }
+  if (friesEvent){
+    play([
+      {at:0, v:{expr:'love', arms:'hold', food:'fries'}, say:'MIDNIGHT FRIES!!!', sfx:'yum'},
+      {at:700, v:{expr:'chew', arms:'hold', food:'fries', bite:1}, sfx:'chomp'},
+      {at:2000, v:{expr:'love', emit:['heartburst']}, say:'You are the best girlfriend in the whole universe.'}
+    ], 3600, ()=>{ addStat('hunger', 28); addStat('mood', 18); S.ev = {type:null,n:0,need:0}; done(); });
+    return;
+  }
+  if (id === 'kurt'){
+    play([
+      {at:0, v:{expr:'neutral', arms:'hold', food:'kurt'}, say:'Kurt? Okay, let\'s try...'},
+      {at:800, v:{expr:'chew', arms:'hold', food:'kurt', bite:.5}, sfx:'chomp'},
+      {at:1700, v:{expr:'pucker', shake:true}, say:'SO. SALTY. My face is folding in on itself!!', sfx:'pucker'},
+      {at:3900, v:{expr:'pucker'}}
+    ], 4600, ()=>{ addStat('hunger', F.hunger); addStat('mood', F.mood); done(); });
+    return;
+  }
+  if (id === 'kumis'){
+    play([
+      {at:0, v:{expr:'neutral', arms:'hold', food:'kumis'}, say:'Kumis. Fermented mare\'s milk. Here goes...'},
+      {at:1100, v:{expr:'chew', arms:'hold', food:'kumis', bite:1}, sfx:'gulp'},
+      {at:2200, v:{expr:'green', shake:true}, say:'*turns green* ...blerghh...', sfx:'blergh'},
+      {at:4100, v:{expr:'green'}, say:'...'},
+      {at:4800, v:{expr:'plead'}, say:'...Can I have another one?', sfx:'pop'}
+    ], 6400, ()=>{ addStat('hunger', F.hunger); addStat('mood', F.mood); done(); });
+    return;
+  }
+  const lines = FOOD_LINES[id];
+  const love = id === 'baursaks';
+  play([
+    {at:0, v:{expr: love ? 'love' : 'happy', arms:'hold', food:id, emit: love ? ['heartburst'] : []}, say:lines[0], sfx:'yum'},
+    {at:900, v:{expr:'chew', arms:'hold', food:id, bite:1, emit: love ? ['heartburst'] : []}, sfx:'chomp'},
+    {at:2300, v:{expr: love ? 'love' : 'happy', emit: love ? ['heartburst'] : []}, say:lines[1]}
+  ], 3600, ()=>{ addStat('hunger', F.hunger); addStat('mood', F.mood); done(); });
+}
+
+function stealSequence(food, openLine){
+  play([
+    {at:0, v:{expr:'happy', arms:'hold', food}, say:openLine},
+    {at:900, v:{expr:'happy', arms:'hold', food, dog:'in', dogFood:food}, sfx:'bark'},
+    {at:1700, v:{expr:'shock', dog:'grab', dogFood:food, food: null}, say:'BUSHINKA!!!'},
+    {at:2300, v:{expr:'shock', dog:'out', dogFood:food}, sfx:'bark'},
+    {at:3400, v:{expr:'sulk'}, say:'She stole my ' + FOODS[food].name.toLowerCase() + '! AGAIN!'}
+  ], 4800, ()=>{ addStat('mood', -3); done(); });
+}
+
+function sleep(){
+  if (busyGuard()) return;
+  if (S.ev.type === 'fries'){ say('I can\'t sleep! Not without fries!'); return; }
+  const tired = S.stats.energy < 85;
+  play([
+    {at:0, v:{expr:'sleepy'}, say: tired ? 'Goodnight, Aidana... *yawn*' : 'I\'m not even tired... *yawn* okay, maybe a little.'},
+  ], 1300, ()=>{ S.asleep = true; S.asleepAt = now(); done(); renderPanel(); sfx('snore'); });
+}
+function wake(manual){
+  if (A && manual) A = null;
+  S.asleep = false;
+  if (manual && S.stats.energy < 60){
+    addStat('mood', -3);
+    play([{at:0, v:{expr:'sulk'}, say:'Five more minutes...'}], 2000, null, true);
+  } else {
+    play([{at:0, v:{expr:'happy', jump:1}, say: manual ? 'Good morning! I dreamed about baursaks.' : 'Good morning, Aidana! Fully recharged!'}], 2000, null, true);
+  }
+  done(); renderPanel();
+}
+function tuck(){
+  if (!S.asleep){ say('Tuck me in? I need to be IN bed first. Lights off!'); return; }
+  say('*snuggles into the blanket* ...mmh... Aidana...'); addStat('mood', 3);
+  spawn('heart', 96, 52, {vy:-.4, max:1600, small:true}); done();
+}
+
+function hug(){
+  if (asleepGuard() || busyGuard()) return;
+  const wasGone = !S.stache;
+  let line;
+  if (S.ev.type === 'sulk'){
+    S.ev.n++;
+    if (S.ev.n >= 3){ line = '...Fine. I\'m not mad anymore. I never was, actually.'; S.ev = {type:null,n:0,need:0}; addStat('mood', 20); }
+    else line = S.ev.n === 1 ? 'Hmph. ...that was okay. (' + S.ev.n + '/3)' : 'Hmph... keep going... (' + S.ev.n + '/3)';
+  }
+  if (wasGone) line = 'MY MOUSTACHE IS BACK!!! Your hugs are magic!';
+  if (!line) line = S.ev.type === 'cat' ? 'Cerise gets squished too. She still won\'t move.' : pick(['Best hug ever. Again tomorrow?','*melts*','I love you, Aidana!','10 out of 10. Would hug again.','Warm. Soft. Perfect.']);
+  const sulking = S.ev.type === 'sulk';
+  play([
+    {at:0, v:{expr: sulking ? 'sulk' : 'love', arms:'up', emit:['hearts','heartburst']}, say:line, sfx:'hug', fn:()=>{
+      if (wasGone){ S.stache = true; S.zeroed = Object.fromEntries(STAT_KEYS.map(k=>[k, S.stats[k] <= 0])); stacheGrow = now(); stacheFall = null; setTimeout(()=>sfx('grow'), 250); }
+    }},
+    {at:2000, v:{expr: sulking ? 'sulk' : 'love', emit:['hearts']}}
+  ], 3200, ()=>{ addStat('mood', 15); done(); });
+}
+function sulkBlock(){ if (S.ev.type === 'sulk'){ say('Hmph. I\'m sulking. Only hugs work. (' + S.ev.n + '/3)'); return true; } return false; }
+function kiss(){
+  if (asleepGuard() || busyGuard() || sulkBlock()) return;
+  play([
+    {at:0, v:{expr:'love', blush:true, emit:['heartburst']}, say:'Mwah! ...I\'m blushing. You can\'t see it under the moustache.', sfx:'kiss', fn:()=>spawn('heart', roomOf(S.room).cx - 3, FY - 62, {vy:-.35, max:1800})}
+  ], 2600, ()=>{ addStat('mood', 10); done(); });
+}
+function tickle(){
+  if (asleepGuard() || busyGuard() || sulkBlock()) return;
+  play([
+    {at:0, v:{expr:'laugh', shake:true, emit:['laughs']}, say:'HAHAHA stop! No wait, don\'t stop!', sfx:'laugh'}
+  ], 2200, ()=>{ addStat('mood', 8); addStat('energy', -2); done(); });
+}
+function dance(){
+  if (asleepGuard() || busyGuard() || sulkBlock()) return;
+  const ph = [];
+  for (let i=0;i<8;i++) ph.push({at:i*380, v:{expr: i%3===2 ? 'proud' : 'happy', arms: i%2 ? 'dance1' : 'dance2', jump:1.3, emit:['notes']}});
+  ph[0].say = pick(['Look at these moves!','Kara Zhorga time!','I call this one: The Moustache Shuffle.']);
+  ph[0].sfx = 'dance';
+  play(ph, 3200, ()=>{ addStat('mood', 10); addStat('energy', -5); addStat('hunger', -3); addStat('hygiene', -2); done(); });
+}
+
+// "Aidana, My Baursak Queen", an original song by Little Léo
+const SONG_CHORUS = [
+  '♪ Aidana, my baursak queen, prettiest girl I\'ve ever seen! ♪',
+  '♪ When I\'m home we\'ll take a walk, my moustache is yours, no need to talk! ♪'
+];
+const SONG_VERSES = [
+  ['♪ Cerise is sleeping on my head, Bushinka ate my morning bread... ♪',
+   '♪ But I don\'t mind, I\'m feeling fine, \'cause Aidana, you are miiiine! ♪'],
+  ['♪ I\'d walk from Paris to Almaty, just to tell you that you\'re pretty... ♪',
+   '♪ A hundred baursaks in a bag... and kumis? Okay, maybe not THAT. ♪'],
+  ['♪ Every day I miss your smile, I count the hours, I count each mile... ♪',
+   '♪ Ohhh Aidanaaaa— *voice cracks* —even my moustache sings for youuu! ♪']
+];
+function shower(){
+  if (asleepGuard() || busyGuard()) return;
+  if (S.room !== 'bathroom') return;
+  const verse = SONG_VERSES[(S.song || 0) % SONG_VERSES.length];
+  S.song = ((S.song || 0) + 1) % SONG_VERSES.length;
+  const hadCat = S.ev.type === 'cat';
+  const sing = (foam) => ({expr:'sing', curtain:true, foam, emit:['drops','bubbles','notes']});
+  const ph = [
+    {at:0, v:{expr:'happy', curtain:true, foam:true, emit:['drops','bubbles']}, say: hadCat ? 'Cerise HATES water. She\'s out! Problem solved!' : 'Shower concert! This one is called "Aidana, My Baursak Queen".', sfx:'shower', fn:()=>{ if (hadCat){ S.ev = {type:null,n:0,need:0}; sfx('meow'); renderBanner(); } }},
+    {at:1800, v:sing(true), say:verse[0], sfx:'sing', fn:()=>addStat('hygiene',20)},
+    {at:4300, v:sing(true), say:verse[1], sfx:'sing', fn:()=>addStat('hygiene',20)},
+    {at:6800, v:sing(true), say:SONG_CHORUS[0], sfx:'sing', fn:()=>addStat('hygiene',20)},
+    {at:9300, v:sing(false), say:SONG_CHORUS[1], sfx:'sing', fn:()=>addStat('hygiene',20)},
+    {at:11800, v:{expr:'proud', emit:['sparkle']}, say:'Squeaky clean! Did you enjoy the concert?'}
+  ];
+  play(ph, 13200, ()=>{ addStat('hygiene', 20); addStat('mood', 6); done(); });
+}
+function comb(){
+  if (asleepGuard() || busyGuard()) return;
+  if (!S.stache){ say('There\'s nothing to comb... my moustache is gone. I need a hug.'); return; }
+  play([
+    {at:0, v:{expr:'proud', emit:['sparkle']}, say:pick(['Combing my moustache... 47 strokes exactly.','A gentleman maintains his moustache.','Looking sharp. Looking dangerous.']), sfx:'shower'}
+  ], 2300, ()=>{ addStat('hygiene', 8); addStat('mood', 4); done(); });
+}
+
+/* ---------- wardrobe ---------- */
+const HATS = [['none','No hat'],['ushanka','Fur ushanka'],['cowboy','Cowboy hat'],['beret','Beret'],['crown','Crown'],['party','Party hat'],['kalpak','Kazakh kalpak'],['chef','Chef hat'],['beanie','Beanie'],['cap','Pink cap'],['flowers','Flower crown']];
+const OUTFITS = [['blazer','Navy blazer'],['pyjamas','Pyjamas'],['tuxedo','Tuxedo'],['chapan','Kazakh chapan'],['hoodie','Hoodie'],['cape','Superhero cape'],['breton','Breton stripes'],['tracksuit','Tracksuit'],['puffer','Puffer jacket'],['hawaiian','Hawaiian shirt'],['chefcoat','Chef whites'],['astronaut','Astronaut suit']];
+const ACCS = [['sunglasses','Sunglasses'],['scarf','Scarf'],['bowtie','Bow tie'],['chain','Gold chain'],['airpods','AirPods'],['rose','A rose']];
+const STACHES = [['classic','Classic'],['curly','Curly'],['handlebar','Handlebar'],['tiny','Tiny']];
+const WEAR_LINES = {
+  none:'Ahh, free hair. Look at this volume.', ushanka:'Ready for an Astana winter!', cowboy:'Yeehaw, partner.', beret:'Hon hon hon. Baguette?', crown:'Finally, the respect I deserve.', party:'Is it my birthday?! Is it YOUR birthday?!',
+  blazer:'Classic me. Very professional.', pyjamas:'Pyjamas already? I\'m not complaining.', tuxedo:'The name\'s Léo. Little Léo.', chapan:'I feel like a Kazakh prince.', hoodie:'Comfy mode: activated.', cape:'Captain Moustache to the rescue!',
+  sunglasses:'Too cool for this room.', scarf:'Cozy and dramatic.', bowtie:'Dapper. Extremely dapper.',
+  kalpak:'A real Kazakh kalpak! I feel very wise.', chef:'Chef Léo is in the kitchen!', beanie:'Cozy head, warm heart.', cap:'Pink cap. Sideways. Obviously.', flowers:'Do I look like a forest fairy? Be honest.',
+  breton:'Very French. I want a baguette now.', tracksuit:'Tracksuit on. Ready for the bus stop.', puffer:'I am a marshmallow. A stylish marshmallow.', hawaiian:'Aloha! Vacation mode.', chefcoat:'Yes, chef! Today we cook baursaks.', astronaut:'One small step for Léo...',
+  chain:'Bling bling.', airpods:'Sorry, what? I had my AirPods in.', rose:'This rose is for you, Aidana.',
+  classic:'The original. The legend.', curly:'Very fancy. Very French.', handlebar:'I could ride a bike with this thing.', tiny:'Hm. Concise.'
+};
+function wear(cat, id){
+  if (S.asleep){ toast('Léo is asleep. Let him rest first!'); return; }
+  const L = S.look;
+  let line = WEAR_LINES[id];
+  if (cat === 'hats') L.hat = id;
+  else if (cat === 'outfits') L.outfit = id;
+  else if (cat === 'extras'){ L.acc[id] = !L.acc[id]; if (!L.acc[id]) line = pick(['Okay, it\'s off.','Fine, fine.','Less is more.']); }
+  else { L.stache = id; if (!S.stache) line = 'I... don\'t have a moustache right now. Hug first?'; }
+  if (S.ev.type === 'cat' && cat === 'hats') line = 'Cerise is in the way. The hat will have to wait.';
+  addStat('mood', 1);
+  say(line); sfx('pop'); persist(); renderPanel(); renderStats();
+}
+function surprise(){
+  if (S.asleep){ toast('Léo is asleep. Let him rest first!'); return; }
+  const L = S.look;
+  L.hat = pick(HATS)[0]; L.outfit = pick(OUTFITS)[0]; L.stache = pick(STACHES)[0];
+  ACCS.forEach(([k])=>L.acc[k] = Math.random() < .35);
+  say(pick(['Whoa. Bold choice.','I look... unique.','Fashion week, here I come!','Is this... a look?'])); sfx('event'); persist(); renderPanel();
+}
+function classic(){
+  if (S.asleep){ toast('Léo is asleep. Let him rest first!'); return; }
+  S.look = {hat:'none', outfit:'blazer', acc:{sunglasses:false, scarf:false, bowtie:false, chain:false, airpods:false, rose:false}, stache:'classic'};
+  say('Back to the classic Léo.'); sfx('pop'); persist(); renderPanel();
+}
+
+/* =========================================================
+   RANDOM FUNNY EVENTS
+   ========================================================= */
+let nextEventAt = now() + 30000;
+const CAT_NOPE = ['Cerise: *stares into your soul*','Cerise: *loafs harder*','Cerise: Mrrp. No.','Cerise: *pretends to be asleep*','Cerise: *flicks tail in Léo\'s face*','Cerise: *purrs louder, does not move*'];
+function shooCat(){
+  if (S.ev.type !== 'cat' || busy()) return;
+  S.ev.n++;
+  if (S.ev.n >= S.ev.need){
+    S.ev = {type:null,n:0,need:0};
+    play([
+      {at:0, v:{expr:'shock', catAnim:'out'}, say:'*Cerise jumps off, deeply offended*', sfx:'meow'},
+      {at:1100, v:{expr:'happy'}, say:'I\'m free! My neck says thank you.'}
+    ], 2400, ()=>{ addStat('mood', 5); done(); });
+    renderBanner();
+  } else {
+    say(CAT_NOPE[(S.ev.n-1) % CAT_NOPE.length]); sfx('meow');
+    persist();
+  }
+}
+function triggerEvent(type){
+  if (type === 'cat'){
+    play([
+      {at:0, v:{expr:'neutral', catAnim:'in'}, sfx:'meow'},
+      {at:1100, v:{expr:'shock', cat:true}, say:'Cerise?! Why are you on my head?', fn:()=>{ S.ev = {type:'cat', n:0, need: 4 + Math.floor(Math.random()*3)}; done(); }},
+      {at:2600, v:{expr:'resigned', cat:true}, say:'She\'s not moving. I live here now, apparently.'}
+    ], 4200);
+  }
+  else if (type === 'dog'){
+    const snack = pick(['croissant','baursaks','samsa','kazy']);
+    stealSequence(snack, 'Ooh, a secret ' + FOODS[snack].name.toLowerCase() + ' in my pocket...');
+  }
+  else if (type === 'sulk'){
+    S.ev = {type:'sulk', n:0, need:3};
+    play([{at:0, v:{expr:'sulk'}, say:pick(['Hmph.','I\'m not talking to you. (I need 3 hugs.)','Nothing\'s wrong. I\'m FINE. Hmph.']), sfx:'yuck'}], 2200, null, true);
+    done();
+  }
+  else if (type === 'fries'){
+    if (S.asleep){ S.asleep = false; renderPanel(); }
+    S.ev = {type:'fries', n:0, need:0};
+    play([{at:0, v:{expr:'plead'}, say:'Psst... Aidana... are you awake? I need fries. Right now.', sfx:'event'}], 2600, null, true);
+    done();
+  }
+}
+function maybeEvent(){
+  const t = now();
+  if (t < nextEventAt || busy() || !S.intro || document.hidden) return;
+  nextEventAt = t + rnd(60000, 120000);
+  if (S.ev.type) return;
+  const night = isNight() || S.asleep;
+  const pool = [];
+  if (!S.asleep){ pool.push('cat','cat','cat','dog','dog','dog','sulk','sulk'); }
+  if (night){ pool.push('fries','fries','fries'); }
+  if (!pool.length) return;
+  triggerEvent(pick(pool));
+}
+
+/* =========================================================
+   TIME: stats go down even while the page is closed
+   ========================================================= */
+const RATE = {hunger:5, energy:3.5, mood:4, hygiene:3}; // points lost per hour
+const SLEEP_GAIN = 2; // energy per second while asleep
+function simulate(ms){
+  if (ms <= 0) return;
+  const h = ms/3.6e6, s = S.stats;
+  const slow = S.asleep ? .5 : 1;
+  s.hunger = clamp(s.hunger - RATE.hunger*h*slow);
+  s.mood = clamp(s.mood - RATE.mood*h*slow);
+  s.hygiene = clamp(s.hygiene - RATE.hygiene*h);
+  if (S.asleep) s.energy = clamp(s.energy + SLEEP_GAIN*ms/1000);
+  else s.energy = clamp(s.energy - RATE.energy*h);
+}
+const FALL_LINES = {
+  hunger:'I was SO hungry my moustache fell off!!',
+  energy:'Too... tired... my moustache just... fell off.',
+  mood:'I was so sad my moustache gave up on me.',
+  hygiene:'I got so stinky my moustache ran away!'
+};
+function checkZero(live){
+  let fell = null;
+  for (const k of STAT_KEYS){
+    if (S.stats[k] <= 0){
+      S.stats[k] = 0;
+      if (!S.zeroed[k]){ S.zeroed[k] = true; if (S.stache){ S.stache = false; fell = k; } }
+    } else if (S.stats[k] > 5) S.zeroed[k] = false;
+  }
+  if (fell && live){
+    stacheFall = now(); sfx('fall');
+    if (!S.asleep) play([{at:0, v:{expr:'shock'}, say:FALL_LINES[fell] + ' Only a hug can fix this.'}], 2600, null, true);
+    renderBanner();
+  }
+  return fell;
+}
+function tick(){
+  const t = now();
+  simulate(t - S.last); S.last = t;
+  checkZero(true);
+  if (S.asleep && S.stats.energy >= 100 && !busy()) wake(false);
+  if (S.asleep && S.room === 'bedroom' && every('snore', 3200, t)) sfx('snore');
+  maybeEvent();
+  // idle chatter
+  if (!busy() && !S.asleep && t - lastSayAt > 22000 && S.intro && !document.hidden){
+    say(idleLine());
+  }
+  renderStats();
+}
+function idleLine(){
+  const s = S.stats;
+  if (S.ev.type === 'sulk') return 'Hmph. (' + S.ev.n + '/3 hugs)';
+  if (S.ev.type === 'fries') return 'Fries... I can smell them in my dreams...';
+  if (S.ev.type === 'cat') return 'Still a cat on my head. Just so you know.';
+  if (!S.stache) return 'My moustache... *sniff* ...a hug would fix it.';
+  const low = Math.min(s.hunger, s.energy, s.mood, s.hygiene);
+  if (low < 30){
+    if (s.hunger === low) return 'My tummy is making whale noises...';
+    if (s.energy === low) return '*yawn* ...I could sleep for a hundred years.';
+    if (s.mood === low) return 'I feel a bit lonely... a hug would be nice.';
+    return 'Do you smell that? ...Oh no. It\'s me.';
+  }
+  return pick([
+    'Aidana, did you drink water today?',
+    'I love you more than fries. Don\'t tell the fries.',
+    'Fun fact: my moustache has a fan club. You\'re the president.',
+    'Can we go to Almaty and eat everything?',
+    'I\'m small, but my love is enormous.',
+    'Is it baursak o\'clock yet?',
+    'You look extra pretty today. I can tell. From in here.',
+    'Bushinka keeps looking at my snacks. Suspicious.',
+    'Tell me about your day! I\'m listening. With my whole moustache.'
+  ]);
+}
+
+/* ---------- tap / swipe on the scene ---------- */
+let down = null;
+cv.addEventListener('pointerdown', e=>{ down = {x:e.clientX, y:e.clientY}; });
+cv.addEventListener('pointerup', e=>{
+  ac();
+  if (!down) return;
+  const dx = e.clientX - down.x, dy = e.clientY - down.y; down = null;
+  if (Math.abs(dx) > 45 && Math.abs(dy) < 50){ shiftRoom(dx < 0 ? 1 : -1); return; }
+  const rect = cv.getBoundingClientRect();
+  const x = (e.clientX - rect.left)/rect.width*W, y = (e.clientY - rect.top)/rect.height*H;
+  const fr = (FRAMES[S.room] || []).find(f => x >= f.x-2 && x <= f.x+f.w+2 && y >= f.y-2 && y <= f.y+f.h+2);
+  if (fr){ openPhoto(); return; }
+  if (S.asleep){
+    if (S.room === 'bedroom' && x > 70 && y > 36 && y < 76) say(pick(['Zzz... more baursaks... zzz','Zzz... Aidana... zzz','*snore* ...mmh... five more minutes...']));
+    return;
+  }
+  const cx = roomOf(S.room).cx, hy = FY - 46;
+  if (S.ev.type === 'cat' && x > cx-12 && x < cx+12 && y > hy-12 && y < hy+4){ shooCat(); return; }
+  if (x > cx-15 && x < cx+15 && y > hy-6 && y < FY+1){
+    if (busy() && !A.soft) return;
+    addStat('mood', 1);
+    const line = S.ev.type === 'cat' ? 'I can\'t move. Cerise has claimed me.' : S.ev.type === 'sulk' ? 'Hmph. Pokes don\'t count. Hugs do.' : pick(['Hey!','Boop received.','I\'m busy being adorable.','Aidana! Hi!!','That tickles!','Did you just poke a gentleman?']);
+    play([{at:0, v:{expr: S.ev.type==='sulk' ? 'sulk' : 'happy', jump:2}, say:line, sfx:'tap'}], 600, null, true);
+  }
+});
+
+/* ---------- Aidana photo viewer ---------- */
+const PHOTO_CAPS = [
+  'Léo looks at this photo every morning. And every evening. And at lunch.',
+  'The most beautiful girl in Kazakhstan, France and the entire universe.',
+  'Léo framed it himself. He is very proud of the frame. And of her.',
+  'Official portrait of the boss of this house.'
+];
+function openPhoto(){
+  $('photoCap').textContent = pick(PHOTO_CAPS);
+  $('photo').classList.add('show'); sfx('kiss');
+  if (!S.asleep && !busy()) play([{at:0, v:{expr:'love', emit:['heartburst']}, say:pick(['That\'s my girlfriend. Isn\'t she gorgeous?','Aidana! My favorite person in the world.','I never get tired of this photo.'])}], 2600, null, true);
+}
+$('photoClose').addEventListener('click', ()=> $('photo').classList.remove('show'));
+$('photo').addEventListener('click', e=>{ if (e.target.id === 'photo') $('photo').classList.remove('show'); });
+$('photoImg').src = AIDANA_SRC.big;
+
+/* ---------- intro & welcome back ---------- */
+function showIntro(){
+  const c = $('introPic'); renderPreview(c, S.look, false);
+  $('intro').classList.add('show');
+}
+$('introGo').addEventListener('click', ()=>{
+  S.intro = true; persist(); $('intro').classList.remove('show'); ac(); sfx('hug');
+  nextEventAt = now() + 35000;
+  setTimeout(()=>say('Hi Aidana! I\'m so happy you\'re here!'), 300);
+});
+function fmtDur(ms){
+  const m = Math.floor(ms/60000), h = Math.floor(m/60), d = Math.floor(h/24);
+  if (d >= 1) return d + 'd ' + (h%24) + 'h';
+  if (h >= 1) return h + 'h ' + (m%60) + 'm';
+  return m + 'm';
+}
+
+/* ---------- boot ---------- */
+(function boot(){
+  const t = now();
+  const away = t - S.last;
+  const wasAsleep = S.asleep;
+  simulate(away); S.last = t;
+  const fell = checkZero(false);
+  let wokeUp = false;
+  if (S.asleep && S.stats.energy >= 100){ S.asleep = false; wokeUp = true; }
+  persist();
+  setRoom(S.room);
+  renderStats(); renderBanner();
+  if (!S.intro) showIntro();
+  else {
+    let msg = '';
+    if (away > 15*60000){
+      msg = 'You\'re back! You were gone ' + fmtDur(away) + '. I missed you!';
+      if (fell) msg = 'You were gone ' + fmtDur(away) + '... and my moustache FELL OFF. Hug please?';
+      else if (wokeUp && wasAsleep) msg = 'Good morning! I slept like a baby. You were gone ' + fmtDur(away) + '.';
+    } else msg = pick(['Hi again, Aidana!','Welcome back!','There you are!']);
+    setTimeout(()=>say(msg), 500);
+  }
+  requestAnimationFrame(frame);
+  setInterval(tick, 1000);
+  setInterval(persist, 5000);
+  document.addEventListener('visibilitychange', ()=>{ if (document.hidden) persist(); else tick(); });
+  window.addEventListener('pagehide', persist);
+})();
+
+// small hook used for testing only
+window.__leo = { get S(){ return S; }, triggerEvent, setForce:(f)=>{ force = f; }, simulate, checkZero, renderPanel, renderBanner, setRoom };
+})();
+</script>
+</body>
+</html>
