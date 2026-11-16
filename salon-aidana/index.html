@@ -359,9 +359,9 @@
           <span class="su-t">Sudoku</span>
           <span class="pe-d"><span class="sugrid"></span>12–13 November<span class="pe-play">Play ▸</span></span>
         </button>
-        <button class="paris-ev" id="su2Btn" type="button" hidden aria-label="Hard sudoku, 14 November. Play">
+        <button class="paris-ev" id="su2Btn" type="button" hidden aria-label="Hard sudoku, 16 November. Play">
           <span class="su-t">Sudoku<small class="su-hard">hard</small></span>
-          <span class="pe-d"><span class="sugrid"></span>14 November<span class="pe-play">Play ▸</span></span>
+          <span class="pe-d"><span class="sugrid"></span>16 November<span class="pe-play">Play ▸</span></span>
         </button>
         <button class="paris-ev" id="qzBtn" type="button" hidden aria-label="CR7 quiz, 13 November. Play">
           <span class="qz-t">CR7 Quiz</span>
@@ -2219,7 +2219,7 @@ function knifeBar(x0,y0,ang,len,ws,col){ // trace une barre épaisse le long d'u
 }
 function drawBalisong(px, py, aHandle1, aHandle2, aBlade, L, t){
   // manches squelette : cadre sombre, insert violet, ajours
-  const handle = (a)=> knifeBar(px, py, a, L, [-1,0,1], (s,w)=> w===0 ? (s > 2 && s < L-1 && Math.floor(s) % 4 >= 2 ? null : '#8a4ad8') : (w < 0 ? '#3a2456' : '#24163a'));
+  const handle = (a)=> knifeBar(px, py, a, L, [-1,0,1], (s,w)=> w===0 ? (s > 2 && s < L-1 && Math.floor(s) % 4 >= 2 ? null : '#2fb874') : (w < 0 ? '#14402c' : '#0b2a1c'));
   handle(aHandle2); handle(aHandle1);
   const le = [px + Math.round(Math.cos(aHandle2)*L), py + Math.round(Math.sin(aHandle2)*L)];
   p(le[0], le[1], '#e2b85a'); p(le[0]+1, le[1], '#c9a24a');                                       // loquet doré
@@ -2227,8 +2227,8 @@ function drawBalisong(px, py, aHandle1, aHandle2, aBlade, L, t){
   const B = L + 3;
   knifeBar(px, py, aBlade, B, [-2,-1,0,1], (s,w0)=>{ const w = (Math.cos(aBlade) < 0 ? -w0 : w0), t0 = B - 6, top = s > t0 ? -1 + (s - t0)*.62 : -1, bot = s > t0 ? 2 - (s - t0)*.25 : (s < 2 ? 1 : 2);
     if (w < top || w > bot || s > B) return null;
-    if (w===-1) return '#3a1e6a'; if (w===2) return s < 3 ? null : '#f2eaff';
-    return w===0 ? (s > t0 ? '#e0c8ff' : '#c9a2ff') : '#8a4ee8'; });
+    if (w===-1) return '#0c3a26'; if (w===2) return s < 3 ? null : '#e6fff2';
+    return w===0 ? (s > t0 ? '#a8f5cc' : '#5ee0a0') : '#1f9a5e'; });
   if (t !== undefined && (t>>2)%9===0){ const s = B*.6; p(Math.round(px + Math.cos(aBlade)*s), Math.round(py + Math.sin(aBlade)*s), '#ffffff'); }
   p(px,py,'#e2b85a'); p(px,py+1,'#a8802e');                                                         // vis de pivot
 }
@@ -2240,7 +2240,7 @@ function drawKnifePlaque(o,t){
 function drawBalisongFlip(px, py, k){
   const a = k*.42, spread = Math.PI*(.12 + .8*(.5 + .5*Math.sin(k*.17)));
   drawBalisong(px, py, a - spread/2, a + spread/2, a + Math.PI, 7, k);
-  for (let s=1;s<4;s++){ const ang = a + Math.PI - s*.42; p(px + Math.round(Math.cos(ang)*9), py + Math.round(Math.sin(ang)*9), `rgba(200,160,255,${(.55 - s*.15).toFixed(2)})`); }
+  for (let s=1;s<4;s++){ const ang = a + Math.PI - s*.42; p(px + Math.round(Math.cos(ang)*9), py + Math.round(Math.sin(ang)*9), `rgba(90,220,150,${(.55 - s*.15).toFixed(2)})`); }
 }
 ITEMS.ev_knife = { draw:drawKnifePlaque, back:true, off:[60,76], bbox:()=>({x:0,y:0,w:30,h:14}) };
 EV_SLOTS.push('ev_knife'); ALL_SLOTS.push('ev_knife'); BACK_SPECIALS.push('ev_knife');
@@ -6107,10 +6107,10 @@ const SU_DAY = 6;
 const SU_P = '000000010009250004038001607206000300010060070007000208803500140900073500050000000';
 const SU_S = '724386915169257834538941627286794351315862479497135268873529146941673582652418793';
 const SUEV = [ { slot:'ev_candles', name:"Wizard's corner", ds:'A grimoire that reads itself, a quill that writes alone' } ];
-const KNEV = [ { slot:'ev_knife', name:'Purple butterfly knife', ds:'For solving the hard one. Psst: try the code BUTTERFLY' } ];
+const KNEV = [ { slot:'ev_knife', name:'Emerald butterfly knife', ds:'For solving the hard one. Psst: try the code BUTTERFLY' } ];
 const SUDOKUS = {
   s1:{ key:'sudoku',  days:[6,7], P:SU_P, S:SU_S, ev:SUEV, letter:true,  label:'12–13 November · medium', over:'The sudoku was on November 12–13.', win:'Sudoku solved! Two gifts for you' },
-  s2:{ key:'sudoku2', days:[8], P:'000892003006000589000000000700081490000000000094360008000000000317000900500276000', S:'475892613126743589938615274763581492851924367294367158682139745317458926549276831', ev:KNEV, letter:false, label:'14 November · hard', over:'The hard sudoku was on November 14.', win:'Hard sudoku solved! The butterfly knife is yours' }
+  s2:{ key:'sudoku2', days:[8,10], P:'000892003006000589000000000700081490000000000094360008000000000317000900500276000', S:'475892613126743589938615274763581492851924367294367158682139745317458926549276831', ev:KNEV, letter:false, label:'14 & 16 November · hard', over:'The hard sudoku is only open on November 14 and 16.', win:'Hard sudoku solved! The emerald butterfly knife is yours' }
 };
 let SUC = SUDOKUS.s1;
 function suOpenFor(d){ return DEV || d.days.includes(dayNumber()); }
