@@ -359,9 +359,9 @@
           <span class="su-t">Sudoku</span>
           <span class="pe-d"><span class="sugrid"></span>12–13 November<span class="pe-play">Play ▸</span></span>
         </button>
-        <button class="paris-ev" id="su2Btn" type="button" hidden aria-label="Hard sudoku, 16 November. Play">
+        <button class="paris-ev" id="su2Btn" type="button" hidden aria-label="Hard sudoku, 16 to 17 November. Play">
           <span class="su-t">Sudoku<small class="su-hard">hard</small></span>
-          <span class="pe-d"><span class="sugrid"></span>16 November<span class="pe-play">Play ▸</span></span>
+          <span class="pe-d"><span class="sugrid"></span>16–17 November<span class="pe-play">Play ▸</span></span>
         </button>
         <button class="paris-ev" id="qzBtn" type="button" hidden aria-label="CR7 quiz, 13 November. Play">
           <span class="qz-t">CR7 Quiz</span>
@@ -6110,7 +6110,7 @@ const SUEV = [ { slot:'ev_candles', name:"Wizard's corner", ds:'A grimoire that 
 const KNEV = [ { slot:'ev_knife', name:'Emerald butterfly knife', ds:'For solving the hard one. Psst: try the code BUTTERFLY' } ];
 const SUDOKUS = {
   s1:{ key:'sudoku',  days:[6,7], P:SU_P, S:SU_S, ev:SUEV, letter:true,  label:'12–13 November · medium', over:'The sudoku was on November 12–13.', win:'Sudoku solved! Two gifts for you' },
-  s2:{ key:'sudoku2', days:[8,10], P:'000892003006000589000000000700081490000000000094360008000000000317000900500276000', S:'475892613126743589938615274763581492851924367294367158682139745317458926549276831', ev:KNEV, letter:false, label:'14 & 16 November · hard', over:'The hard sudoku is only open on November 14 and 16.', win:'Hard sudoku solved! The emerald butterfly knife is yours' }
+  s2:{ key:'sudoku2', days:[8,10,11], P:'000892003006000589000000000700081490000000000094360008000000000317000900500276000', S:'475892613126743589938615274763581492851924367294367158682139745317458926549276831', ev:KNEV, letter:false, label:'14, 16 & 17 November · hard', over:'The hard sudoku was open on November 14, 16 and 17.', win:'Hard sudoku solved! The emerald butterfly knife is yours' }
 };
 let SUC = SUDOKUS.s1;
 function suOpenFor(d){ return DEV || d.days.includes(dayNumber()); }
