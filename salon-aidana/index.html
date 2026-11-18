@@ -404,6 +404,26 @@
   .dico-empty{color:var(--muted);font-size:14px}
   @media (max-width:700px){ .dico-list{grid-template-columns:minmax(0,1fr)} .frp-t{font-size:26px} }
 
+  /* ---------- La petite lettre « Everything » ---------- */
+  .evy-bt{font-family:'Parisienne','Snell Roundhand','Apple Chancery',cursive;font-size:clamp(30px,4vw,38px);line-height:1;color:#f3d9de}
+  .evy-env{width:16px;height:11px;flex:none;border-radius:2px;background:#f3e8d4;position:relative;overflow:hidden}
+  .evy-env::after{content:'';position:absolute;left:0;right:0;top:-6px;height:11px;border:1.5px solid #c9a0a8;transform:rotate(45deg) translate(2px,2px);transform-origin:top left;width:9px}
+  .evy-card{position:absolute;width:min(460px,92vw);max-height:84vh;overflow:auto;background:#fbf6ec;color:#3a2a2a;border-radius:10px;padding:26px 26px 22px;box-shadow:0 24px 60px rgba(0,0,0,.5);
+    opacity:0;transform:translateY(60px) scale(.9);transition:opacity .6s ease .2s,transform .7s cubic-bezier(.2,.8,.2,1) .2s;pointer-events:none;
+    background-image:linear-gradient(transparent 0 calc(100% - 1px),rgba(122,42,58,.07) 0);background-size:100% 30px}
+  .letter.out .evy-card{opacity:1;transform:none;pointer-events:auto}
+  .evy-t{font-family:'Parisienne','Snell Roundhand','Apple Chancery',cursive;font-size:44px;line-height:1;color:#7a2a3a;text-align:center}
+  .evy-s{text-align:center;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:#a08070;margin:6px 0 14px}
+  .evy-list{list-style:none;counter-reset:e;padding:0;margin:0;display:flex;flex-direction:column;gap:2px}
+  .evy-list li{counter-increment:e;display:flex;gap:10px;align-items:baseline;opacity:0;transform:translateY(6px)}
+  .letter.out .evy-list li{animation:evyIn .5s ease forwards}
+  .evy-list li::before{content:'♥';color:#d8a0aa;font-size:11px;flex:none}
+  .evy-l{border:0;background:none;padding:4px 0;text-align:left;font:italic 400 17px/1.4 var(--serif);color:#3a2a2a;cursor:pointer}
+  .evy-l:hover,.evy-l.say{color:#9a2f45}
+  .evy-sign{margin-top:16px;text-align:right;font-family:'Parisienne','Snell Roundhand','Apple Chancery',cursive;font-size:30px;color:#7a2a3a}
+  .evy-sign span{font-family:var(--serif);font-style:italic;font-size:16px;color:#6a5040;margin-left:6px}
+  @keyframes evyIn{to{opacity:1;transform:none}}
+
   @media (prefers-reduced-motion:reduce){
 
 *{animation:none!important;transition:none!important}}
@@ -439,6 +459,10 @@
         <button class="paris-ev" id="hrBtn" type="button" hidden aria-label="Lights Out, 18 &amp; 19 November. Play">
           <span class="hr-t">Lights Out</span>
           <span class="pe-d"><span class="hreye"></span>18 &amp; 19 November<span class="pe-play">Play ▸</span></span>
+        </button>
+        <button class="paris-ev" id="evyBtn" type="button" aria-label="Everything, a little letter. Open">
+          <span class="evy-bt">Everything</span>
+          <span class="pe-d"><span class="evy-env"></span>A little letter<span class="pe-play">Open ▸</span></span>
         </button>
         <button class="paris-ev" id="nbBtn" type="button" hidden aria-label="Les nombres. Play">
           <span class="nb-t">Les nombres<small>1 · 2 · 3</small></span>
@@ -594,6 +618,26 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<div class="letter evy" id="evy" hidden>
+  <button class="x letter-x" id="evyClose" aria-label="Close">✕</button>
+  <div class="env-stage">
+    <div class="envelope" id="evyEnv" role="button" tabindex="0" aria-label="Open the envelope">
+      <div class="env-back"></div>
+      <div class="env-paper"></div>
+      <div class="env-front"><span class="env-to">Everything</span><span class="env-from">— Léo</span></div>
+      <div class="env-flap"></div>
+      <span class="env-seal">♥</span>
+    </div>
+    <p class="env-hint">Tap the envelope to open it</p>
+  </div>
+  <div class="evy-card" id="evyCard">
+    <p class="evy-t">Everything</p>
+    <p class="evy-s">Tout ce que tu es · tap a line to hear it</p>
+    <ol class="evy-list"><li><button type="button" class="evy-l">Tu es la plus belle chose qui me soit arrivée.</button></li><li><button type="button" class="evy-l">Tu es la plus belle.</button></li><li><button type="button" class="evy-l">Tu es une personne incroyable.</button></li><li><button type="button" class="evy-l">Tu es la plus sexy.</button></li><li><button type="button" class="evy-l">Tu es la plus hot.</button></li><li><button type="button" class="evy-l">Tu es la plus smart.</button></li><li><button type="button" class="evy-l">Je suis fier de toi, tous les jours.</button></li><li><button type="button" class="evy-l">Tu es ma personne préférée.</button></li><li><button type="button" class="evy-l">Tu es mon petit triangle préféré.</button></li></ol>
+    <p class="evy-sign">Je t'aime. <span>— Léo</span></p>
   </div>
 </div>
 
@@ -7437,7 +7481,8 @@ function paintEventBtns(){
   const sb2 = $('su2Btn'); sb2.hidden = !suOpenFor(SUDOKUS.s2); sb2.classList.toggle('fresh', !(state.sudoku2 && state.sudoku2.seen));
   $('letterBtn').hidden = !(state.sudoku && state.sudoku.letter);
   const qb = $('qzBtn'); qb.hidden = !qzOpen(); qb.classList.toggle('fresh', !QS().seen);
-  const hb = $('hrBtn'); hb.hidden = !hrOpen(); hb.classList.toggle('fresh', !HS().seen);
+  $('hrBtn').hidden = true;                                                                   // Lights Out est terminé
+  $('evyBtn').classList.toggle('fresh', !state.evySeen);
   const nbb = $('nbBtn'); nbb.hidden = !nbOpen(); nbb.classList.toggle('fresh', !NS().seen);
 }
 $('kzBtn').addEventListener('click', openKz);
@@ -8314,6 +8359,17 @@ $('frRulesClose').addEventListener('click', closeFrRules);
 $('frInput').addEventListener('keydown', e=>{ if (e.key==='Enter'){ e.preventDefault(); frSubmit(); } });
 document.addEventListener('keydown', e=>{ if (e.key!=='Escape') return; if (!$('frRules').hidden) closeFrRules(); else if (!$('nb').hidden) closeNb(); else if (!$('dico').hidden) closeDico(); });
 paintLang(); if (FRON()) frRefreshWorld();
+
+
+/* ---------- La petite lettre « Everything » ---------- */
+function openEvy(){ const L = $('evy'); L.hidden = false; L.className = 'letter evy'; document.body.style.overflow = 'hidden'; SFX.open();
+  $('evy').querySelectorAll('.evy-list li').forEach((li,i)=>{ li.style.animationDelay = (0.5 + i*0.12) + 's'; }); }
+function closeEvy(){ $('evy').hidden = true; $('evy').className = 'letter evy'; document.body.style.overflow = ''; try { speechSynthesis.cancel(); } catch(e){} if (!state.evySeen){ state.evySeen = true; save(); paintEventBtns(); } }
+$('evyBtn').addEventListener('click', openEvy);
+$('evyClose').addEventListener('click', closeEvy);
+$('evyEnv').addEventListener('click', ()=>{ const L = $('evy'); if (L.classList.contains('open')) return; L.classList.add('open'); [523,659,784,1046].forEach((f,i)=>blip(f,.14,i*.12,'sine',.04)); setTimeout(()=>L.classList.add('out'), 1300); });
+$('evy').querySelectorAll('.evy-l').forEach(b=>b.addEventListener('click', ()=>{ $('evy').querySelectorAll('.evy-l.say').forEach(q=>q.classList.remove('say')); b.classList.add('say'); frSay(b.textContent); }));
+document.addEventListener('keydown', e=>{ if (!$('evy').hidden && e.key==='Escape') closeEvy(); });
 
 /* =====================================================================
    CODES SECRETS
