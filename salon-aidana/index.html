@@ -440,9 +440,9 @@
           <span class="hr-t">Lights Out</span>
           <span class="pe-d"><span class="hreye"></span>18 &amp; 19 November<span class="pe-play">Play ▸</span></span>
         </button>
-        <button class="paris-ev" id="nbBtn" type="button" hidden aria-label="Les nombres, 18 to 20 November. Play">
+        <button class="paris-ev" id="nbBtn" type="button" hidden aria-label="Les nombres. Play">
           <span class="nb-t">Les nombres<small>1 · 2 · 3</small></span>
-          <span class="pe-d"><span class="tri"></span>18–20 November<span class="pe-play">Play ▸</span></span>
+          <span class="pe-d"><span class="tri"></span>En français<span class="pe-play">Play ▸</span></span>
         </button>
       </div>
     </div>
@@ -633,7 +633,7 @@
 <div class="paris qzw nbw" id="nb" hidden>
   <div class="paris-box qz-box" role="dialog" aria-modal="true" aria-label="Les nombres">
     <div class="paris-head">
-      <div><span class="nb-t">Les nombres</span><span class="pe-d"><span class="tri"></span>18–20 November · learn to count in French</span></div>
+      <div><span class="nb-t">Les nombres</span><span class="pe-d"><span class="tri"></span>Learn to count in French</span></div>
       <button class="x" id="nbClose" aria-label="Close">✕</button>
     </div>
     <div class="qz-body" id="nbBody"></div>
@@ -8213,7 +8213,7 @@ function nbFr(n){
   if (n < 1000){ const h = Math.floor(n/100), rest = n%100, hs = h===1 ? 'cent' : NB_U[h] + ' cent' + (rest===0 ? 's' : ''); return rest ? hs + ' ' + nbFr(rest) : hs; }
   const k = Math.floor(n/1000), rest = n%1000, ks = k===1 ? 'mille' : nbFr(k).replace(/quatre-vingts$/,'quatre-vingt') + ' mille'; return rest ? ks + ' ' + nbFr(rest) : ks;
 }
-function nbOpen(){ return DEV || NB_DAYS.includes(dayNumber()); }
+function nbOpen(){ return DEV || dayNumber() >= NB_DAYS[0]; }   // disponible pour toujours à partir du 18 novembre
 function NS(){ if (!state.nombres) state.nombres = { best:0, tries:0 }; return state.nombres; }
 const NB_CAN_SAY = 'speechSynthesis' in window;
 function nbRand(a, b){ return a + Math.floor(Math.random()*(b-a+1)); }
@@ -8294,7 +8294,7 @@ function nbTip(n){
   return '';
 }
 function openNb(){
-  if (!nbOpen() && !pickOf('ev_dico')){ toast('« Les nombres » was on November 18–20.'); SFX.nope(); return; }
+  if (!nbOpen() && !pickOf('ev_dico')){ toast('« Les nombres » opens on November 18.'); SFX.nope(); return; }
   if (editing) setEditing(false);
   if (photoMode) exitPhoto();
   nb = nbNewQuiz(); $('nb').hidden = false; document.body.style.overflow = 'hidden'; SFX.open(); paintNb();
@@ -8370,8 +8370,8 @@ const CHEATS = {
   HORROR(){ if (!hrOpen()) return 'Lights Out was on November 18 & 19'; openHr(); return 'Don\'t look behind you'; },
   HRTEST(){ if (!DEV) return 'Nice try'; HREV.forEach(ev=>grantEv(ev.slot)); HS().wins = Math.max(1, HS().wins); refresh(); paintTools(); return 'All Lights Out gifts unlocked'; },
   BOO(){ return callFlyer(BOO); },
-  NOMBRES(){ if (!nbOpen() && !pickOf('ev_dico')) return '« Les nombres » was on November 18–20'; openNb(); return 'Un, deux, trois…'; },
-  NUMBERS(){ if (!nbOpen() && !pickOf('ev_dico')) return '« Les nombres » was on November 18–20'; openNb(); return 'Un, deux, trois…'; },
+  NOMBRES(){ if (!nbOpen() && !pickOf('ev_dico')) return '« Les nombres » opens on November 18'; openNb(); return 'Un, deux, trois…'; },
+  NUMBERS(){ if (!nbOpen() && !pickOf('ev_dico')) return '« Les nombres » opens on November 18'; openNb(); return 'Un, deux, trois…'; },
   DICO(){ if (!pickOf('ev_dico')) return 'Win the dictionary first'; openDico(); return 'Mon dictionnaire'; },
   NBTEST(){ if (!DEV) return 'Nice try'; grantEv('ev_dico'); refresh(); paintTools(); paintLang(); return 'Dictionary unlocked'; },
   QUIZ(){ if (!qzOpen()) return 'The quiz was on November 13'; openQz(); return 'CR7 Quiz'; },
