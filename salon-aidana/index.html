@@ -358,7 +358,11 @@
   .hr .prw.own .tx span{color:#ff6a6a}
   .hr .prw .pv{background:#050405}
   .hr-rewards{grid-template-columns:repeat(4,minmax(0,1fr))}
-  @media (max-width:700px){ .hr-rewards{grid-template-columns:repeat(2,minmax(0,1fr))} .hr .p-msg .pt{font-size:26px} .hr .kz-stage{cursor:auto} }
+  .hr-touch{display:none}
+  @media (hover:none), (max-width:700px){ .hr-touch{display:block} }
+  @media (max-width:700px){ .hr-rewards{grid-template-columns:repeat(2,minmax(0,1fr))} .hr .kz-stage{cursor:auto} .hr .paris-box{padding:10px 8px} .hr .kz-stage{width:calc(100% + 16px);margin:0 -8px;border-radius:0}
+    .hr .p-msg{left:6px;right:6px;top:6px;padding:8px 10px;gap:4px} .hr .p-msg .pt{font-size:24px} .hr .p-msg .ps{font-size:11.5px;line-height:1.35} .hr-items{font-size:9px;top:5px;left:7px} .hr .p-toast{top:22px;font-size:12px;padding:5px 12px} }
+  @media (max-width:700px) and (orientation:landscape){ .hr .paris-box{grid-template-columns:minmax(0,1fr)} .hr .kz-stage{width:auto;height:calc(100dvh - 70px);margin:0 auto} }
 
   .ghost.wip{border-style:dashed;opacity:.8}
   @media (prefers-reduced-motion:reduce){
@@ -2302,33 +2306,47 @@ EV_SLOTS.push('ev_knife'); ALL_SLOTS.push('ev_knife'); BACK_SPECIALS.push('ev_kn
 
 
 /* ---------- Récompenses « Lights Out » ---------- */
-const DOLL_HEAD = ['...hhhhhhh...','..hhhhhhhhh..','.hhssssssshh.','.hseessseesh.','.hseessseesh.','.hhsssmssshh.','hh.sssssss.hh'];
-const DOLL_BODY = ['h..wwwwwww..h','h.kkwwwwwkk.h','.skkkkkkkkks.','.skkkkkkkkks.','.kkkkkkkkkkk.','kkkkkkkkkkkkk','wwwwwwwwwwwww','..ss.....ss..','..bb.....bb..'];
-function drawDoll(o,t){
-  ell(6,15,7,1,'rgba(0,0,0,.3)');
-  const tilt = (t % 420) < 50 ? 1 : 0, red = (t % 520) < 14;
-  const pal = { h:'#3a2418', s:'#efe6dc', e: red ? '#b00000' : '#14141a', m:'#b03040', w:'#f2ece2', k:'#3a0e16', b:'#0e0a0a' };
-  spr(DOLL_BODY, pal, 0, 7);
-  spr(DOLL_HEAD, pal, tilt, 0);
-  if (red){ p(3+tilt,3,'#ff4040'); p(9+tilt,3,'#ff4040'); }
-  p(4+tilt,2,'#8a8478'); p(5+tilt,2,'#8a8478'); p(5+tilt,1,'#6a6058');                                        // fissure
-  p(2,13,'#c8beb2'); p(10,13,'#c8beb2');
+var HRFX = { mirror:-9999, portrait:-9999, tv:-9999 };
+// Le portrait qui regarde : ses yeux suivent Aidana, et parfois… elle n'est plus dans le cadre
+function drawPortrait(o,t){
+  r(0,0,22,28,'#2a1e0c'); r(1,1,20,26,'#7a5e24'); r(2,2,18,24,'#4a3812'); for (let k=1;k<21;k+=3){ p(k,0,'#9a7a3a'); p(k,27,'#1a1206'); } for (let k=2;k<27;k+=3){ p(0,k,'#9a7a3a'); p(21,k,'#1a1206'); }
+  r(3,3,16,22,'#161a16'); ell(11,13,7,9,'#1e231e');
+  const k = t % 1100, lunge = T - HRFX.portrait < 50, gone = !lunge && k > 640 && k < 760, horror = lunge || (k > 900 && k < 1010);
+  if (!gone){
+    ell(11,8,5,5,'#0e0c0c'); ell(11,4,3,2,'#0e0c0c'); r(6,8,2,8,'#0e0c0c'); r(15,8,2,8,'#0e0c0c');
+    r(4,19,14,6,'#1e1218'); ell(11,19,6,2,'#1e1218'); r(9,16,4,3, horror ? '#a8aca0' : '#d8c8b6'); r(8,18,6,1,'#c8c0b0');
+    ell(11,11,3.5,4.5, horror ? '#b8bcb0' : '#e2d2c0'); p(8,12,'#c8b8a6'); p(14,12,'#c8b8a6');
+    if (horror){ const d = lunge ? 6 : Math.min(7, Math.floor((k-900)/6)); r(8,10,2,2,'#000'); r(12,10,2,2,'#000'); p(8,10,'#ff2020'); p(13,10,'#ff2020');
+      r(8,12,1,d,'#6a0606'); r(13,12,1,Math.max(0,d-1),'#6a0606'); r(10,13,2,lunge ? 3 : 2,'#000'); }
+    else { const her = (typeof HER !== 'undefined' && HER.room===scene) ? HER.x : 128, dx = her > 128 ? 1 : 0;
+      r(8,10,2,1,'#efe8dc'); r(12,10,2,1,'#efe8dc'); p(8+dx,10,'#141414'); p(12+dx,10,'#141414'); p(10,14,'#7a3030'); p(11,14,'#7a3030'); }
+  } else { X.fillStyle = 'rgba(160,150,140,.12)'; X.fillRect(7,6,8,18); p(9,22,'#3a0a0a'); p(12,23,'#3a0a0a'); }
+  line(4,4,8,10,'rgba(255,255,255,.07)'); line(15,20,18,24,'rgba(0,0,0,.4)');
 }
+// Le miroir maudit : fissuré, une main ensanglantée, et quelqu'un derrière la vitre
 function drawHMirror(o,t){
-  r(0,0,18,26,'#3a2a14'); r(1,1,16,24,'#8a6a2a'); r(2,2,14,22,'#5a4418'); for (let k=0;k<18;k+=3){ p(k,0,'#a8884a'); p(k,25,'#2a1a0a'); }
-  r(3,3,12,20,'#2a3038'); r(3,3,12,20,'rgba(140,160,190,.25)'); line(4,20,12,4,'rgba(220,230,255,.18)'); line(6,22,14,6,'rgba(220,230,255,.1)');
-  const k = t % 300; if (k < 34){ const a = k < 10 ? k/10 : (k > 24 ? (34-k)/10 : 1);
-    X.globalAlpha = a*.85; ell(9,11,4,5,'#e8ecf4'); p(7,10,'#0a0a0e'); p(11,10,'#0a0a0e'); r(8,13,2,3,'#0a0a0e'); X.globalAlpha = 1; }
+  r(0,0,20,32,'#0c0a08'); r(1,1,18,30,'#2e2416'); for (let k=0;k<20;k+=2){ p(k,0,(k%4) ? '#4a3a22' : '#0c0a08'); p(k,31,'#0c0a08'); } for (let k=0;k<32;k+=3){ p(0,k,'#4a3a22'); p(19,k,'#4a3a22'); }
+  ell(10,1,3,2,'#2e2416'); p(10,0,'#6a1010');
+  r(3,3,14,26,'#141820'); r(3,3,14,26,'rgba(90,110,130,.18)');
+  const k = t % 480, lunge = T - HRFX.mirror < 44 || (k >= 300 && k < 310);
+  if (lunge){ r(3,3,14,26,'#b8bcc4'); r(3,3,14,6,'#050505'); r(3,3,3,26,'#050505'); r(14,3,3,26,'#050505'); r(6,10,3,4,'#000'); r(11,10,3,4,'#000'); p(7,11,'#ff1a1a'); p(12,11,'#ff1a1a'); ell(10,20,2,4,'#000'); r(7,14,1,6,'#6a0606'); }
+  else if (k < 160){ const a = Math.sin(k/160*Math.PI); X.globalAlpha = a*.85; r(7,6,7,20,'#050505'); r(9,9,3,6,'#b8bcc4'); p(10,11,'#000'); p(11,13,'#3a0000'); X.globalAlpha = 1; }
+  line(12,9,4,4,'#7a8694'); line(12,9,16,22,'#7a8694'); line(12,9,6,21,'#5a6674'); line(12,9,16,4,'#5a6674'); line(9,15,4,13,'#5a6674'); p(12,9,'#c8d0dc');
+  r(5,16,4,4,'#5a0808'); [[5,13],[6,12],[7,12],[8,13]].forEach(([x,y])=>r(x,y,1,4,'#5a0808')); r(5,20,1,5,'#4a0606'); r(8,20,1,3,'#4a0606');
+  if ((t % 240) < 120) pxText('RUN', 5, 23, 'rgba(200,210,220,.28)');
 }
-function drawSpiritBoard(o,t){
-  ell(14,23,13,2,'rgba(0,0,0,.3)');
-  r(12,14,4,9,'#2a1a10'); r(8,22,12,1,'#2a1a10');                                                                  // guéridon
-  ell(14,12,13,4,'#3a2414'); ell(14,11,13,3,'#5a3a20');
-  r(5,7,18,7,'#d8c494'); r(5,7,18,1,'#efe0b4'); r(5,13,18,1,'#a8945c');
-  for (let x=7;x<22;x+=2) p(x,9,'#4a3420'); for (let x=8;x<21;x+=2) p(x,11,'#4a3420'); p(6,8,'#4a3420'); p(22,8,'#4a3420');
-  const a = t*.03, px = Math.round(14 + Math.cos(a)*5 + Math.sin(a*2.3)*2), py = Math.round(10 + Math.sin(a*1.3)*1.4);
-  r(px-1,py-1,3,2,'#1a1410'); p(px,py-1,'#e8e0c8');
-  if ((t>>3)%11===0) p(14,4,'rgba(200,220,255,.6)');
+// La télé qui grésille : sur la chaîne 13, quelqu'un se rapproche
+function drawHTV(o,t){
+  ell(13,31,12,2,'rgba(0,0,0,.3)');
+  line(11,10,5,1,'#3a3a3a'); line(15,10,22,0,'#3a3a3a'); p(5,1,'#8a8a8a'); p(22,0,'#8a8a8a');
+  r(0,10,26,19,'#4a3220'); r(0,10,26,2,'#5e4028'); r(2,29,2,2,'#2a1a10'); r(22,29,2,2,'#2a1a10');
+  r(2,12,17,14,'#0a0a0a'); r(20,13,4,4,'#2a2a2a'); ell(22,15,1.5,1.5,'#5a5a5a'); for (let y=19;y<26;y+=2) r(20,y,4,1,'#2a1a10');
+  const k = t % 640, lunge = T - HRFX.tv < 44;
+  for (let y=13;y<25;y++) for (let x=3;x<18;x++){ const v = Math.random(); p(x,y, v < .3 ? '#d8dce4' : (v < .6 ? '#8a8e96' : '#3a3e46')); }
+  if (lunge){ r(3,13,15,12,'#b8bcc4'); r(3,13,15,3,'#050505'); r(3,13,3,12,'#050505'); r(15,13,3,12,'#050505'); r(7,17,2,2,'#000'); r(12,17,2,2,'#000'); p(7,17,'#ff1a1a'); p(13,17,'#ff1a1a'); r(9,21,3,3,'#000'); }
+  else if (k > 360 && k < 600){ const s = (k-360)/240, h = Math.round(3 + s*9), w = Math.round(2 + s*5), cx = 10;
+    X.globalAlpha = .85; r(cx - (w>>1), 25 - h, w, h, '#050505'); r(cx - 1, 25 - h + Math.round(h*.25), Math.max(1,Math.round(w*.35)), Math.max(1,Math.round(h*.3)), '#c8ccd4'); X.globalAlpha = 1; }
+  r(3,13,15,1,'rgba(255,255,255,.25)'); if ((t>>2)%7===0) r(3,13 + (t%12),15,1,'rgba(255,255,255,.35)');
 }
 function drawBooSpr(f,x,y,z,flip,shadow,t){
   const bob = Math.round(Math.sin((t||0)*.12)*1.5), zz = z + 5 + bob, x0 = x-5, y0 = y-12-zz;
@@ -2340,14 +2358,14 @@ function drawBooSpr(f,x,y,z,flip,shadow,t){
   X.globalAlpha = prev;
 }
 Object.assign(ITEMS, {
-  ev_doll:   { draw:drawDoll, off:[214,134], sortY:150, bbox:()=>({x:0,y:0,w:13,h:16}) },
-  ev_mirror: { draw:drawHMirror, back:true, off:[124,40], bbox:()=>({x:0,y:0,w:18,h:26}) },
-  ev_spirit: { draw:drawSpiritBoard, off:[30,118], sortY:141, bbox:()=>({x:0,y:0,w:28,h:25}) },
+  ev_doll:   { draw:drawPortrait, back:true, off:[200,30], bbox:()=>({x:0,y:0,w:22,h:28}) },
+  ev_mirror: { draw:drawHMirror, back:true, off:[124,38], bbox:()=>({x:0,y:0,w:20,h:32}) },
+  ev_spirit: { draw:drawHTV, off:[30,112], sortY:143, bbox:()=>({x:0,y:0,w:26,h:33}) },
   ev_boo:    { draw:(o,t)=>drawBooSpr('stand',6,18,0,false,false,t), bbox:()=>({x:0,y:0,w:12,h:19}) }
 });
 ['ev_doll','ev_mirror','ev_spirit','ev_boo'].forEach(s=>{ EV_SLOTS.push(s); ALL_SLOTS.push(s); if (s==='ev_boo') return; (ITEMS[s].back ? BACK_SPECIALS : FLOOR_SPECIALS).push(s); });
-Object.assign(EV_G, { ev_doll:[212,132], ev_mirror:[150,30], ev_spirit:[8,130], ev_boo:[123,140] });
-Object.assign(EV_GSORT, { ev_doll:149, ev_spirit:156 });
+Object.assign(EV_G, { ev_doll:[96,24], ev_mirror:[150,28], ev_spirit:[8,124], ev_boo:[123,140] });
+Object.assign(EV_GSORT, { ev_spirit:157 });
 
 function gEvOn(s){ return !(G().off && G().off[s]); }
 function evTap(s, b){
@@ -2359,6 +2377,9 @@ function evTap(s, b){
   else if (s==='ev_baursak'){ burst(cx, cy+3, 6, ['#e8ab4e','#f6cf7e','#fff1c9'], false); label('ev', 'Дәмді! <b>♥</b>', cx, cy-1); blip(880,.05,0,'sine',.04); }
   else if (s==='ev_dombra'){ [392,440,523,587,523,440,392,440].forEach((f,i)=>blip(f,.16,i*.14,'triangle',.05)); label('ev', '♪ ♫', cx, cy-2); }
   else if (s==='ev_tuskiiz'){ burst(cx, cy+10, 8, ['#d9a93a','#f1e3c4','#9e2a2b'], false); }
+  else if (s==='ev_mirror'){ HRFX.mirror = T; noiseBurst(.6,.3,1700,.5); sweep(1000,180,.55,.1,'sawtooth'); try { navigator.vibrate && navigator.vibrate([60,30,160]); } catch(e){} }
+  else if (s==='ev_doll'){ HRFX.portrait = T; blip(98,.8,0,'sine',.09); blip(92,.8,.05,'sine',.06); label('ev', 'Don\'t look at her', cx, cy-2); }
+  else if (s==='ev_spirit'){ HRFX.tv = T; noiseBurst(.9,.16,2600,.5); try { navigator.vibrate && navigator.vibrate(80); } catch(e){} }
   else if (s==='ev_yurt'){ const z = PETS.some(pt=>pt.state==='yurt'); label('ev', z ? 'Shh… zzz' : 'Киіз үй', cx, cy-2); SFX.select(); }
 }
 
@@ -3252,7 +3273,7 @@ function gOff(s){ return (G().pos && G().pos[s]) || [0,0]; }
 function withG(s, fn){ const [dx,dy] = gOff(s); X.save(); X.translate(dx,dy); fn(); X.restore(); }
 const G_BACK = ['gdoor','gposter','gplate','gshelf','gtools','gneon','glights'];
 const G_SORT = { gdisplay:139, car:147, glounge:156, gpets:157.9, gtires:158 };
-Object.assign(G_SORT, EV_GSORT); G_BACK.push('ev_mona','ev_dombra','ev_tuskiiz','ev_jersey','ev_knife','ev_mirror');
+Object.assign(G_SORT, EV_GSORT); G_BACK.push('ev_mona','ev_dombra','ev_tuskiiz','ev_jersey','ev_knife','ev_mirror','ev_doll');
 function gHas(s){ if (isEv(s)) return s!=='ev_baguette' && s!=='ev_pigeon' && s!=='ev_berkut' && s!=='ev_boo' && evWhere(s)==='garage'; return s==='car' ? gDone(1) : !!gPick(s); }
 function gFront(){ return (G().front || []).filter(gHas); }
 function gIsFront(s){ return gFront().includes(s); }
@@ -3785,12 +3806,12 @@ function renderMItemTo(cv, slot, opt, t){
 /* ---------- Moteur de la gaming room (positions, profondeur, toucher) ---------- */
 const EV_M = { ev_knife:[60,40], ev_jersey:[38,58], ev_candles:[160,108], ev_croissant:[96,85], ev_eiffel:[196,58], ev_baguette:[120,150], ev_flag:[230,104], ev_mona:[206,62], ev_pigeon:[123,140],
   ev_baursak:[150,86], ev_dombra:[214,60], ev_tuskiiz:[200,64], ev_yurt:[90,124], ev_kzflag:[4,104], ev_berkut:[123,140],
-  ev_doll:[150,96], ev_mirror:[150,30], ev_spirit:[176,104], ev_boo:[123,140] };
-const EV_MSORT = { ev_candles:155, ev_croissant:110.5, ev_eiffel:101, ev_flag:148, ev_baursak:110.6, ev_yurt:150, ev_kzflag:148, ev_doll:112, ev_spirit:129 };
+  ev_doll:[152,58], ev_mirror:[150,26], ev_spirit:[176,98], ev_boo:[123,140] };
+const EV_MSORT = { ev_candles:155, ev_croissant:110.5, ev_eiffel:101, ev_flag:148, ev_baursak:110.6, ev_yurt:150, ev_kzflag:148, ev_spirit:131 };
 const M_WALLFURN = { mdesk:109, mconsole:113, marcade:120 };   // base de ces meubles : ils restent contre le mur
 function mOff(s){ const o = (M().pos && M().pos[s]) || [0,0]; return M_WALLFURN[s] !== undefined ? [o[0], Math.min(o[1], 122 - M_WALLFURN[s])] : o; }
 function withM(s, fn){ const [dx,dy] = mOff(s); X.save(); X.translate(dx,dy); fn(); X.restore(); }
-const M_BACK = ['mrug','mwindow','mscore','mposter','mrifle','mneon','mshelf','mlights','ev_jersey','ev_knife','ev_mona','ev_dombra','ev_tuskiiz','ev_mirror'];
+const M_BACK = ['mrug','mwindow','mscore','mposter','mrifle','mneon','mshelf','mlights','ev_jersey','ev_knife','ev_mona','ev_dombra','ev_tuskiiz','ev_mirror','ev_doll'];
 const M_SORT = Object.assign({ mdesk:110, mconsole:114, marcade:121, mchair:130, mpets:152, msnack:153 }, EV_MSORT);
 function mHas(s){ if (isEv(s)) return s!=='ev_baguette' && s!=='ev_pigeon' && s!=='ev_berkut' && s!=='ev_boo' && evWhere(s)==='gaming'; return s==='mdesk' ? mDone(1) : !!mPick(s); }
 function mFront(){ return (M().front || []).filter(mHas); }
@@ -4281,12 +4302,12 @@ function renderBItemTo(cv, slot, opt, t){
 /* ---------- Moteur de la bar (positions, profondeur, toucher) ---------- */
 const EV_B = { ev_knife:[84,64], ev_jersey:[80,48], ev_candles:[176,104], ev_croissant:[188,80], ev_eiffel:[4,98], ev_baguette:[128,152], ev_flag:[6,104], ev_mona:[84,64], ev_pigeon:[123,140],
   ev_baursak:[150,80], ev_dombra:[82,22], ev_tuskiiz:[84,64], ev_yurt:[104,118], ev_kzflag:[226,104], ev_berkut:[123,140],
-  ev_doll:[60,108], ev_mirror:[40,40], ev_spirit:[200,116], ev_boo:[123,140] };
-const EV_BSORT = { ev_candles:152, ev_croissant:125.6, ev_eiffel:141, ev_flag:148, ev_baursak:125.7, ev_yurt:142, ev_kzflag:148, ev_doll:124.5, ev_spirit:141 };
+  ev_doll:[210,22], ev_mirror:[40,38], ev_spirit:[200,110], ev_boo:[123,140] };
+const EV_BSORT = { ev_candles:152, ev_croissant:125.6, ev_eiffel:141, ev_flag:148, ev_baursak:125.7, ev_yurt:142, ev_kzflag:148, ev_spirit:143 };
 const B_WALLFURN = { bcounter:122, bpiano:112, bcellar:112 };   // ces meubles restent contre le mur
 function bOff(s){ const o = (BR().pos && BR().pos[s]) || [0,0]; return B_WALLFURN[s] !== undefined ? [o[0], Math.min(o[1], 122 - B_WALLFURN[s])] : o; }
 function withB(s, fn){ const [dx,dy] = bOff(s); X.save(); X.translate(dx,dy); fn(); X.restore(); }
-const B_BACK = ['bwindow','bart','bsign','blights','ev_jersey','ev_knife','ev_mona','ev_dombra','ev_tuskiiz','ev_mirror'];
+const B_BACK = ['bwindow','bart','bsign','blights','ev_jersey','ev_knife','ev_mona','ev_dombra','ev_tuskiiz','ev_mirror','ev_doll'];
 const B_SORT = Object.assign({ bcounter:123, bcocktail:123.5, bpiano:113, bcellar:113.5, bstools:139, blounge:152, bpets:155, bplants:153 }, EV_BSORT);
 function bHas(s){ if (isEv(s)) return s!=='ev_baguette' && s!=='ev_pigeon' && s!=='ev_berkut' && s!=='ev_boo' && evWhere(s)==='bar'; return s==='bcounter' ? bDone(1) : (s==='bcocktail' ? !!bPick(s) && BR().unwrapped : !!bPick(s)); }
 function bFront(){ return (BR().front || []).filter(bHas); }
@@ -4802,7 +4823,7 @@ function makeRoom(C){
     const pending = C.DAYS.map((_,i)=>i+1).filter(i=>R.unl(i) && !R.done(i));
     const today = C.DAYS.findIndex(d=>d.day===dn) + 1;
     const next = C.DAYS.map((d,i)=>i+1).find(i=>!R.unl(i));
-    if (!xrBuilt()) txt.innerHTML = `${C.name} · under construction until <strong>November 20</strong>, when Léo arrives.`;
+    if (!xrBuilt()) txt.innerHTML = `${C.name} · under construction until <strong>November 20</strong>.`;
     else if (R.count() >= R.n) txt.innerHTML = `<strong>${C.name} complete</strong> · ${R.n}/${R.n}`;
     else if (today && pending.includes(today)) txt.innerHTML = `<strong>Today's ${C.lname} door is waiting</strong>` + (pending.length>1 ? ` · ${pending.length-1} to catch up on` : '');
     else if (pending.length) txt.innerHTML = `<strong>${pending.length} ${C.lname} door${pending.length>1?'s':''} to catch up on</strong>`;
@@ -7575,9 +7596,9 @@ FLYERS.push(BOO);
    ===================================================================== */
 const HR_DAYS = [12, 13];
 const HREV = [
-  { slot:'ev_doll',   need:'Find 3 cursed objects',            name:'Porcelain doll',  ds:'She moves when nobody is looking' },
-  { slot:'ev_mirror', need:'Escape the house',                 name:'Haunted mirror',  ds:'Don\'t stare at it too long' },
-  { slot:'ev_spirit', need:'Escape without a close call',      name:'Spirit board',    ds:'The planchette moves by itself' },
+  { slot:'ev_doll',   need:'Find 3 cursed objects',            name:'Watching portrait', ds:'Her eyes follow you. Sometimes she isn\'t there.' },
+  { slot:'ev_mirror', need:'Escape the house',                 name:'Cursed mirror',   ds:'Someone is standing behind your reflection' },
+  { slot:'ev_spirit', need:'Escape without a close call',      name:'Static TV',       ds:'Something is coming closer on channel 13' },
   { slot:'ev_boo',    need:'Escape in Nightmare mode', secret:true, name:'Boo',        ds:'A little ghost who decided to stay' }
 ];
 function hrOpen(){ return DEV || HR_DAYS.includes(dayNumber()); }
@@ -7585,7 +7606,8 @@ function HS(){ if (!state.horror) state.horror = { wins:0, plays:0 }; return sta
 const HW = 256, HH = 160;
 const hcv = $('hrCv'), hctx = hcv.getContext('2d'); hctx.imageSmoothingEnabled = false;
 const hdark = document.createElement('canvas'); hdark.width = HW; hdark.height = HH; const hdk = hdark.getContext('2d');
-let hg = null, hRaf = 0, hAcc = 0, hLast = 0;
+let hg = null, hRaf = 0, hAcc = 0, hLast = 0, hTouch = false;
+const HR_DWELL = 30;
 function noiseBurst(dur, vol, freq, q){
   if (!soundOn) return;
   try { actx = actx || new (window.AudioContext||window.webkitAudioContext)();
@@ -7658,19 +7680,22 @@ function hrStep(){
   const G0 = g.ghost, sp = g.nightmare ? 1.6 : 1;
   const R = hrRadius();
   if (g.flick > 0) g.flick--; else if (Math.random() < .0025*sp) { g.flick = 12 + (Math.random()*20|0); blip(90,.05,0,'square',.03); }
+  g.items.forEach(it=>{ if (it.got) return; if (g.flick===0 && Math.hypot(g.lx-it.x, g.ly-it.y) < 11){ it.dwell = (it.dwell||0) + 1; if (it.dwell >= HR_DWELL) hrCollect(it); } else it.dwell = Math.max(0, (it.dwell||0) - 2); });
+  if (g.st!=='play') return;
   if (G0.hide > 0){ G0.hide--; return; }
-  const d = Math.hypot(g.lx - G0.x, g.ly - G0.y);
-  if (d < R*.85 && g.flick === 0){ G0.lit++; if (G0.lit > 40){ noiseBurst(.35,.18,2400,1.5); sweep(900,300,.3,.05,'sawtooth'); G0.hide = 70; hrGhostRespawn(G0, 2); g.shake = 6; } }
+  const gs = 1 + G0.stage*.45, top = G0.y - GH_ROWS.length*gs, cy = Math.max(top, Math.min(G0.y, g.ly)), d = Math.hypot(g.lx - G0.x, g.ly - cy);   // tout le corps compte, pas seulement les pieds
+  if (d < R*.85 + 3*gs && g.flick === 0){ G0.lit++; if (G0.lit > 40){ noiseBurst(.35,.18,2400,1.5); sweep(900,300,.3,.05,'sawtooth'); G0.hide = 70; hrGhostRespawn(G0, 2); g.shake = 6; } }
   else { G0.lit = Math.max(0, G0.lit - .5); G0.step += sp; if (G0.step > 190){ G0.step = 0; G0.stage++; g.maxStage = Math.max(g.maxStage, G0.stage);
       const tx = 128 + (Math.random()*40-20), ty = 112; G0.x += (tx - G0.x)*.45; G0.y += (ty - G0.y)*.45;
-      if (G0.stage >= 4){ g.st = 'scare'; g.scare = 0; screamFx(); g.shake = 40; $('hrMsg').hidden = true; $('hrToast').classList.remove('show'); return; }
+      if (G0.stage >= 4){ g.st = 'scare'; g.scare = 0; screamFx(); g.shake = 40; try { navigator.vibrate && navigator.vibrate([90,40,220,60,120]); } catch(e){} $('hrMsg').hidden = true; $('hrToast').classList.remove('show'); return; }
       noiseBurst(.4, .05 + G0.stage*.03, 400 + G0.stage*300, 2); } }
+  if (g.st!=='play') return;
   // battements de cœur
   const rate = [90,70,50,34][Math.min(3,G0.stage)]; if (++g.beat >= rate){ g.beat = 0; heartbeat(.6 + G0.stage*.3); }
   // bruits au hasard
   if (Math.random() < .002*sp){ g.events++; const e = Math.random(); if (e < .4){ blip(70,.4,0,'triangle',.08); sweep(180,90,.5,.04,'triangle'); } else if (e < .7){ noiseBurst(.6,.06,600,3); } else { noiseBurst(.15,.3,180,1); g.shake = 10; } }
 }
-function hrRadius(){ const base = hg.nightmare ? 22 : 30; return hg.flick > 0 ? (hg.flick % 4 < 2 ? 4 : base*.5) : base; }
+function hrRadius(){ const base = (hg.nightmare ? 22 : 30) + (hTouch ? 5 : 0); return hg.flick > 0 ? (hg.flick % 4 < 2 ? 4 : base*.5) : base; }
 const GH_ROWS = ['...hhhh...','..hhhhhh..','..hhhhhh..','..hhffhh..','..hfefhh..','..hhffhh..','..hhfmhh..','.hhhffhhh.','.hhhhhhhh.','.hhhhhhhh.',
   'ahdhhhhdha','adddhhddda','adddddddda','adddddddda','adddddddda','adddddddda','adddddddda','fddddddddf','fddddddddf','f.dddddd.f','..dddddd..','..dd.ddd..','..d..d.d..','.....d....'];
 const GH_PAL = { h:'#060508', f:'#c3c9d2', e:'#000000', m:'#2a0000', d:'#d4d8e0', a:'#b8bec8' };
@@ -7724,7 +7749,8 @@ function hrDraw(){
   if (g.st==='play' && G0.hide===0 && G0.stage >= 1 && (g.t % 90) < 70){ const [ex,ey] = ghostEye(G0), sz = G0.stage >= 2 ? 2 : 1;
     r(Math.round(ex - sz/2), Math.round(ey - sz/2), sz, sz, '#ff2a2a'); hctx.save(); hctx.globalCompositeOperation = 'lighter'; hctx.fillStyle = 'rgba(255,30,30,.18)'; hctx.fillRect(Math.round(ex)-2, Math.round(ey)-2, 5, 5); hctx.restore(); }
   // les objets brillent quand la lumière passe dessus
-  g.items.forEach(it=>{ if (!it.got && Math.hypot(g.lx-it.x, g.ly-it.y) < hrRadius()*.7 && (g.t>>3)%2) p(it.x+2, it.y-3, '#ffffff'); });
+  g.items.forEach(it=>{ if (!it.got && Math.hypot(g.lx-it.x, g.ly-it.y) < hrRadius()*.7 && (g.t>>3)%2) p(it.x+2, it.y-3, '#ffffff');
+    if (!it.got && it.dwell > 2){ const n = Math.round(24 * it.dwell / HR_DWELL); for (let k=0;k<n;k++){ const a = -Math.PI/2 + k/24*TAU; p(Math.round(it.x + Math.cos(a)*7), Math.round(it.y + Math.sin(a)*7), '#ffd8a0'); } } });
   hctx.restore(); X = prev;
 }
 function hrLoop(now){
@@ -7739,21 +7765,26 @@ function hrHud(){
   const box = $('hrItems'); if (!hg){ box.innerHTML = ''; return; }
   box.textContent = `${hg.found} / 5 cursed objects` + (hg.nightmare ? ' · NIGHTMARE' : '');
 }
-function hrPos(e){ const b = hcv.getBoundingClientRect(); return [ (e.clientX - b.left) / b.width * HW, (e.clientY - b.top) / b.height * HH ]; }
+function hrPos(e){ const b = hcv.getBoundingClientRect(); const x = (e.clientX - b.left) / b.width * HW, y = (e.clientY - b.top) / b.height * HH; return [ Math.max(0, Math.min(HW, x)), Math.max(0, Math.min(HH, hTouch ? y - 22 : y)) ]; }   // au doigt, la lumière éclaire juste au-dessus
 function hrPointer(e, tap){
   if (!hg) return; const [x,y] = hrPos(e); hg.lx = x; hg.ly = y;
   if (!tap) return;
   if (hg.st==='ready'){ hg.st = 'play'; HS().plays++; save(); $('hrMsg').hidden = true; noiseBurst(1.2,.06,300,2); return; }
   if (hg.st!=='play') return;
-  const it = hg.items.find(q=>!q.got && Math.hypot(q.x - x, q.y - y) < 9 && Math.hypot(hg.lx - q.x, hg.ly - q.y) < hrRadius());
-  if (it){ it.got = true; hg.found++; [523,494,466].forEach((f,i)=>blip(f,.25,i*.12,'sine',.05)); hrMsgFlash(`You found the ${HNAMES[it.k]}…`);
-    if (hg.found >= 3) hrGrant('ev_doll');
-    if (hg.found >= 5) hrEnd(true); }
+  const it = hg.items.find(q=>!q.got && Math.hypot(q.x - x, q.y - y) < (hTouch ? 14 : 9));
+  if (it) hrCollect(it);
+}
+function hrCollect(it){
+  if (!hg || it.got || hg.st!=='play') return;
+  it.got = true; hg.found++; [523,494,466].forEach((f,i)=>blip(f,.25,i*.12,'sine',.05)); hrMsgFlash(`You found the ${HNAMES[it.k]}…`);
+  try { navigator.vibrate && navigator.vibrate(30); } catch(e){}
+  if (hg.found >= 3) hrGrant('ev_doll');
+  if (hg.found >= 5) hrEnd(true);
 }
 function hrMsgFlash(t){ const el = $('hrToast'); el.textContent = t; el.classList.remove('show'); void el.offsetWidth; el.classList.add('show'); }
 function hrGrant(slot){ if (pickOf(slot)) return false; grantEv(slot); hg.newRewards = (hg.newRewards || []).concat(slot); paintHrRewards(); return true; }
 function hrEnd(win){
-  const g = hg; g.st = win ? 'won' : 'lost';
+  const g = hg; g.st = win ? 'won' : 'lost'; g.endAt = performance.now();
   if (win){ HS().wins++; hrGrant('ev_mirror'); if (g.maxStage < 3) hrGrant('ev_spirit'); if (g.nightmare) hrGrant('ev_boo'); if (g.nightmare) HS().nightmareWin = true; save(); sweep(300,600,.8,.04,'sine'); }
   const got = (g.newRewards || []).map(s=>itemName(s));
   const msg = $('hrMsg'); msg.hidden = false;
@@ -7769,7 +7800,7 @@ function paintHrRewards(){
 function paintHrModes(){ $('hrNight').hidden = !HS().wins; $('hrNight').classList.toggle('on', !!(hg && hg.nightmare)); }
 function hrReady(nightmare){
   hg = hgNew(nightmare); const msg = $('hrMsg'); msg.hidden = false;
-  msg.innerHTML = `<span class="pt">${nightmare ? 'Nightmare.' : 'Lights out.'}</span><span class="ps">Something lives in this house. Use your flashlight to find <b>5 cursed objects</b> and tap them.<br>It hates the light. Keep it on it… but don't let it get close.</span><span class="ps dim">Sound on, lights off. Tap to start.</span>`;
+  msg.innerHTML = `<span class="pt">${nightmare ? 'Nightmare.' : 'Lights out.'}</span><span class="ps">Something lives in this house. Find <b>5 cursed objects</b>: keep your light on one for a moment to take it.<br>It hates the light. Shine it on it… but don't let it get close.</span><span class="ps dim hr-touch">On a phone, drag your finger: the light shines just above it.</span><span class="ps dim">Sound on, lights off. Tap to start.</span>`;
   paintHrModes();
 }
 function openHr(){
@@ -7784,9 +7815,9 @@ function closeHr(){ $('hr').hidden = true; document.body.style.overflow = ''; ca
 $('hrBtn').addEventListener('click', openHr);
 $('hrClose').addEventListener('click', closeHr);
 $('hrNight').addEventListener('click', e=>{ e.stopPropagation(); hrReady(!(hg && hg.nightmare)); SFX.tick(); });
-$('hrStage').addEventListener('pointermove', e=>hrPointer(e,false));
-$('hrStage').addEventListener('pointerdown', e=>{ e.preventDefault();
-  if (hg && (hg.st==='won' || hg.st==='lost')){ hrReady(hg.nightmare); return; }
+$('hrStage').addEventListener('pointermove', e=>{ hTouch = e.pointerType !== 'mouse'; hrPointer(e,false); });
+$('hrStage').addEventListener('pointerdown', e=>{ e.preventDefault(); hTouch = e.pointerType !== 'mouse';
+  if (hg && (hg.st==='won' || hg.st==='lost')){ if (performance.now() - (hg.endAt||0) > 900) hrReady(hg.nightmare); return; }
   hrPointer(e,true); });
 document.addEventListener('keydown', e=>{ if (!$('hr').hidden && e.key==='Escape') closeHr(); });
 
