@@ -382,6 +382,9 @@
   .frp{border:1px solid var(--border2);background:linear-gradient(135deg,rgba(46,74,138,.18),rgba(208,32,44,.12));border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:8px;margin:18px 0 6px}
   .frp-t{font-family:'Parisienne',cursive;font-size:30px;line-height:1.05;color:#fff}.frp-t span{font-family:var(--sans);font-size:13px;color:var(--muted);letter-spacing:.04em}
   .frp-s{font-size:14px;color:var(--muted)}
+  .frp-help{border:0;background:none;color:#9fb6ff;font:inherit;text-decoration:underline;cursor:pointer;padding:0}
+  .frr{display:flex;flex-direction:column;gap:10px;padding-left:18px;font-size:15px;line-height:1.45;color:var(--text)}.frr li::marker{color:#d0202c}
+  .frr-box{gap:16px}
   .frp-f{display:flex;gap:8px}.frp-f input{flex:1;min-width:0;background:var(--surface);border:1px solid var(--border2);border-radius:12px;color:var(--text);font:500 17px var(--sans);padding:11px 14px}
   .frp-f input:focus{outline:2px solid #2e4a8a;outline-offset:1px}
   .frp-msg{min-height:20px;font-size:14.5px;line-height:1.45}.frp-msg.ok{color:#9be0b4}.frp-msg.meh{color:#f4d58a}.frp-msg.no{color:#ffb0b6}.frp-spell{color:var(--muted)}
@@ -490,8 +493,8 @@
 
   <div class="frp" id="frPanel" hidden>
     <p class="frp-t">Retrouve tes objets <span id="frRoomN"></span></p>
-    <p class="frp-s">Écris en français le nom d'un objet de ta maison anglaise pour le faire apparaître ici.</p>
-    <form class="frp-f" id="frForm" autocomplete="off"><input id="frInput" type="text" maxlength="40" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="none" enterkeyhint="done" placeholder="ex. : le canapé" aria-label="Nom de l'objet en français"><button class="btn accent small" type="submit">Valider</button></form>
+    <p class="frp-s">Type the French name of an object you own to make it appear. <button type="button" class="frp-help" id="frHelp">How does it work?</button></p>
+    <div class="frp-f" id="frForm"><input id="frInput" type="text" maxlength="40" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="none" enterkeyhint="done" placeholder="ex. : le canapé" aria-label="Nom de l'objet en français"><button class="btn accent small" type="button" id="frGo">Valider</button></div>
     <p class="frp-msg" id="frMsg"></p>
     <div class="frp-row"><span id="frProg"></span><button class="ghost" type="button" id="frDicoBtn" hidden>📖 Dictionnaire</button></div>
   </div>
@@ -638,6 +641,25 @@
       <p class="paris-lead">Your gift</p>
       <div class="kz-rewards su-rw" id="nbRewards"></div>
     </div>
+  </div>
+</div>
+
+<div class="paris" id="frRules" hidden>
+  <div class="paris-box qz-box frr-box" role="dialog" aria-modal="true" aria-label="French mode">
+    <div class="paris-head">
+      <div><span class="nb-t">Version française</span><span class="pe-d"><span class="tri"></span>How it works</span></div>
+      <button class="x" id="frRulesClose" aria-label="Close">✕</button>
+    </div>
+    <ul class="frr">
+      <li>In the French version, your house starts <b>empty</b>. Only you, Léo and the pets are here.</li>
+      <li>To bring an object back, <b>type its name in French</b> in the box under the room, for example <i>le canapé</i>, then press Enter.</li>
+      <li>It has to be an object you <b>already have</b> in the English version.</li>
+      <li>Accents and articles are optional, but you'll be shown the correct spelling (le, la, les…).</li>
+      <li>Don't know a word? Open your <b>📖 dictionary</b>: every object of your house is there, in English and in French.</li>
+      <li>Here you can't move or store objects, only find them again. Your English house doesn't change.</li>
+      <li>Switch back to English anytime with the button at the top.</li>
+    </ul>
+    <button type="button" class="qz-next" id="frRulesOk">Got it · C'est parti !</button>
   </div>
 </div>
 
@@ -8057,9 +8079,8 @@ function setLang(l){
   if (l === state.lang || (!state.lang && l==='en')) return;
   state.lang = l; save();
   if (editing) setEditing(false);
-  if (l==='fr'){ SFX.select(); frSay('Bienvenue dans la version française'); } else SFX.tick();
+  if (l==='fr'){ SFX.select(); showFrRules(); } else SFX.tick();
   frRefreshWorld(); paintLang(); refresh(); paintTools();
-  if (l==='fr') setTimeout(()=>{ try { $('frInput').focus({ preventScroll:true }); } catch(e){} }, 60);
 }
 function paintLang(){
   const fr = FRON(); document.body.classList.toggle('fr', fr);
@@ -8069,6 +8090,8 @@ function paintLang(){
   document.querySelector('h1').innerHTML = fr ? 'Le salon d\'<em>Aidana</em>' : '<em>Aidana</em>\'s living room';
   if (fr) frPaintPanel();
 }
+function showFrRules(){ $('frRules').hidden = false; document.body.style.overflow = 'hidden'; }
+function closeFrRules(){ $('frRules').hidden = true; document.body.style.overflow = ''; try { $('frInput').focus({ preventScroll:true }); } catch(e){} }
 function frRoomItems(room){ return frOwned().filter(it=>it.room===room); }
 function frPaintPanel(){
   const all = frOwned(), keys = [...new Set(all.map(it=>it.key))], found = keys.filter(k=>FRF()[k]).length;
@@ -8284,8 +8307,12 @@ $('dicoClose').addEventListener('click', closeDico);
 $('dicoBtn').addEventListener('click', openDico);
 $('frDicoBtn').addEventListener('click', openDico);
 $('langTog').querySelectorAll('button').forEach(b=>b.addEventListener('click', ()=>setLang(b.dataset.l)));
-$('frForm').addEventListener('submit', e=>{ e.preventDefault(); frSubmit(); });
-document.addEventListener('keydown', e=>{ if (e.key!=='Escape') return; if (!$('nb').hidden) closeNb(); else if (!$('dico').hidden) closeDico(); });
+$('frGo').addEventListener('click', ()=>frSubmit());
+$('frHelp').addEventListener('click', showFrRules);
+$('frRulesOk').addEventListener('click', closeFrRules);
+$('frRulesClose').addEventListener('click', closeFrRules);
+$('frInput').addEventListener('keydown', e=>{ if (e.key==='Enter'){ e.preventDefault(); frSubmit(); } });
+document.addEventListener('keydown', e=>{ if (e.key!=='Escape') return; if (!$('frRules').hidden) closeFrRules(); else if (!$('nb').hidden) closeNb(); else if (!$('dico').hidden) closeDico(); });
 paintLang(); if (FRON()) frRefreshWorld();
 
 /* =====================================================================
