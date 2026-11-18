@@ -365,6 +365,42 @@
   @media (max-width:700px) and (orientation:landscape){ .hr .paris-box{grid-template-columns:minmax(0,1fr)} .hr .kz-stage{width:auto;height:calc(100dvh - 70px);margin:0 auto} }
 
   .ghost.wip{border-style:dashed;opacity:.8}
+  /* ---------- Le français ---------- */
+  .hdr-r{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+  .lang{display:inline-flex;border:1px solid var(--border2);border-radius:999px;padding:2px;background:var(--surface)}
+  .lang button{border:0;background:transparent;color:var(--muted);font:500 12.5px var(--sans);padding:6px 11px;border-radius:999px;cursor:pointer}
+  .lang button[aria-pressed="true"]{background:var(--text);color:var(--bg)}
+  .nb-t{font-family:'Parisienne',cursive;font-size:clamp(30px,4vw,40px);line-height:1;color:#fff}
+  .nb-t small{font-family:var(--sans);font-size:11px;letter-spacing:.14em;color:var(--muted);margin-left:8px;vertical-align:middle}
+  .nb-q{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 0 4px;text-align:center}
+  .nb-big{font-family:var(--serif);font-size:clamp(56px,14vw,84px);line-height:1;color:#fff}
+  .nb-word{font-family:var(--serif);font-size:clamp(24px,6vw,34px);line-height:1.15;color:#fff}
+  .nb-ask{font-size:13px;color:var(--muted)}
+  .nb-say{border:1px solid var(--border2);background:var(--surface2);color:var(--text);border-radius:999px;padding:14px 26px;font:600 18px var(--sans);cursor:pointer}
+  .nb-nums .qz-o{text-align:center;font-family:var(--serif);font-size:24px}
+  .nb-bar{background:linear-gradient(90deg,#2e4a8a calc(var(--p)*50%),#f4f4f4 calc(var(--p)*50%) calc(var(--p)*75%),#d0202c calc(var(--p)*75%) calc(var(--p)*100%),var(--border) 0)}
+  .frp{border:1px solid var(--border2);background:linear-gradient(135deg,rgba(46,74,138,.18),rgba(208,32,44,.12));border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:8px;margin:18px 0 6px}
+  .frp-t{font-family:'Parisienne',cursive;font-size:30px;line-height:1.05;color:#fff}.frp-t span{font-family:var(--sans);font-size:13px;color:var(--muted);letter-spacing:.04em}
+  .frp-s{font-size:14px;color:var(--muted)}
+  .frp-f{display:flex;gap:8px}.frp-f input{flex:1;min-width:0;background:var(--surface);border:1px solid var(--border2);border-radius:12px;color:var(--text);font:500 17px var(--sans);padding:11px 14px}
+  .frp-f input:focus{outline:2px solid #2e4a8a;outline-offset:1px}
+  .frp-msg{min-height:20px;font-size:14.5px;line-height:1.45}.frp-msg.ok{color:#9be0b4}.frp-msg.meh{color:#f4d58a}.frp-msg.no{color:#ffb0b6}.frp-spell{color:var(--muted)}
+  .frp-row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--muted)}.frp-row b{color:#fff}
+  body.fr #grid, body.fr .wrap > h2, body.fr #finalBanner{display:none}
+  .dico-box{grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto minmax(0,1fr);width:min(760px,100%);max-height:min(92vh,900px)}
+  .dico-tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+  .dico-tab{flex:none;display:flex;flex-direction:column;align-items:flex-start;border:1px solid var(--border2);background:var(--surface2);color:var(--text);border-radius:12px;padding:7px 12px;font:600 13px var(--sans);cursor:pointer}
+  .dico-tab small{font-family:'Parisienne',cursive;font-weight:400;font-size:16px;color:var(--muted)}.dico-tab.on{border-color:#2e4a8a;background:rgba(46,74,138,.25)}
+  .dico-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px;overflow:auto;padding-right:2px}
+  .dico-c{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:10px;align-items:center;border:1px solid var(--border2);background:var(--surface2);border-radius:12px;padding:8px}
+  .dico-c.got{border-color:rgba(80,200,120,.5)}
+  .dico-c .pv{width:64px;height:52px;display:grid;place-items:center;background:var(--bg);border-radius:8px}.dico-c canvas{image-rendering:pixelated}
+  .dico-w{display:flex;flex-direction:column;gap:1px;min-width:0}.dico-w .en{font-size:12px;color:var(--muted)}.dico-w .fr{font:600 15.5px/1.2 var(--sans);color:#fff}.dico-w .st{font-size:11px;color:#7ad89a}
+  .dico-c:not(.got) .dico-w .st{color:var(--muted)}
+  .dico-say{border:0;background:transparent;font-size:18px;cursor:pointer;padding:6px}
+  .dico-empty{color:var(--muted);font-size:14px}
+  @media (max-width:700px){ .dico-list{grid-template-columns:minmax(0,1fr)} .frp-t{font-size:26px} }
+
   @media (prefers-reduced-motion:reduce){
 
 *{animation:none!important;transition:none!important}}
@@ -401,9 +437,16 @@
           <span class="hr-t">Lights Out</span>
           <span class="pe-d"><span class="hreye"></span>18 &amp; 19 November<span class="pe-play">Play ▸</span></span>
         </button>
+        <button class="paris-ev" id="nbBtn" type="button" hidden aria-label="Les nombres, 18 to 20 November. Play">
+          <span class="nb-t">Les nombres<small>1 · 2 · 3</small></span>
+          <span class="pe-d"><span class="tri"></span>18–20 November<span class="pe-play">Play ▸</span></span>
+        </button>
       </div>
     </div>
-    <button class="ghost" id="soundBtn" aria-pressed="true">Sound on</button>
+    <div class="hdr-r">
+      <div class="lang" id="langTog" role="group" aria-label="Language" hidden><button type="button" data-l="en" aria-pressed="true">English</button><button type="button" data-l="fr" aria-pressed="false">Français</button></div>
+      <button class="ghost" id="soundBtn" aria-pressed="true">Sound on</button>
+    </div>
   </header>
 
   <section class="room">
@@ -425,6 +468,7 @@
         <button class="ghost" id="wheelBtn" hidden>Wheel of fortune</button>
         <button class="ghost" id="invBtn" hidden>Inventory</button>
         <button class="ghost" id="letterBtn" hidden>✉ Léo's letter</button>
+        <button class="ghost" id="dicoBtn" hidden>📖 Dictionary</button>
         <button class="ghost" id="storeBtn" hidden>Store in inventory</button>
         <button class="ghost" id="curtainBtn" hidden>Close the curtains</button>
         <button class="ghost" id="photoBtn" hidden>Photo mode</button>
@@ -444,6 +488,13 @@
     </div>
   </div>
 
+  <div class="frp" id="frPanel" hidden>
+    <p class="frp-t">Retrouve tes objets <span id="frRoomN"></span></p>
+    <p class="frp-s">Écris en français le nom d'un objet de ta maison anglaise pour le faire apparaître ici.</p>
+    <form class="frp-f" id="frForm" autocomplete="off"><input id="frInput" type="text" maxlength="40" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="none" enterkeyhint="done" placeholder="ex. : le canapé" aria-label="Nom de l'objet en français"><button class="btn accent small" type="submit">Valider</button></form>
+    <p class="frp-msg" id="frMsg"></p>
+    <div class="frp-row"><span id="frProg"></span><button class="ghost" type="button" id="frDicoBtn" hidden>📖 Dictionnaire</button></div>
+  </div>
   <h2>Calendar</h2>
   <div class="grid" id="grid"></div>
 
@@ -573,6 +624,31 @@
       <p class="paris-lead">Gifts to win · tonight only</p>
       <div class="kz-rewards hr-rewards" id="hrRewards"></div>
     </div>
+  </div>
+</div>
+
+<div class="paris qzw nbw" id="nb" hidden>
+  <div class="paris-box qz-box" role="dialog" aria-modal="true" aria-label="Les nombres">
+    <div class="paris-head">
+      <div><span class="nb-t">Les nombres</span><span class="pe-d"><span class="tri"></span>18–20 November · learn to count in French</span></div>
+      <button class="x" id="nbClose" aria-label="Close">✕</button>
+    </div>
+    <div class="qz-body" id="nbBody"></div>
+    <div class="su-reward" id="nbReward" hidden>
+      <p class="paris-lead">Your gift</p>
+      <div class="kz-rewards su-rw" id="nbRewards"></div>
+    </div>
+  </div>
+</div>
+
+<div class="paris dicow" id="dico" hidden>
+  <div class="paris-box dico-box" role="dialog" aria-modal="true" aria-label="Dictionary">
+    <div class="paris-head">
+      <div><span class="nb-t">Mon dictionnaire</span><span class="pe-d"><span class="tri"></span>English · Français</span></div>
+      <button class="x" id="dicoClose" aria-label="Close">✕</button>
+    </div>
+    <div class="dico-tabs" id="dicoTabs"></div>
+    <div class="dico-list" id="dicoList"></div>
   </div>
 </div>
 
@@ -740,7 +816,7 @@ DEV = store.get(DEV_KEY) === '1';
 function save(){ store.set(STORE_KEY, JSON.stringify(state)); }
 
 function pickOf(slot){ return state.picks[slot] || null; }                       // ce qu'elle possède
-function chosenFor(slot){ return state.stored && state.stored[slot] ? null : (state.picks[slot] || null); }   // ce qui est dans la pièce
+function chosenFor(slot){ if (state.stored && state.stored[slot]) return null; const o = state.picks[slot] || null; return o && frOk(slot, o) ? o : null; }   // ce qui est dans la pièce
 function dayDone(i){ return !!state.opened[i]; }
 function countChosen(){ return Object.keys(state.opened).length; }
 const residents = () => dayDone(1);   // Aidana, Cerise et Bushinka arrivent le jour 1
@@ -2037,7 +2113,7 @@ const EVENT = [
 ];
 const EV_SLOTS = EVENT.map(e=>e.slot);
 const isEv = s => EV_SLOTS.includes(s);
-function evWhere(s){ if (!pickOf(s)) return null; return (state.evWhere && state.evWhere[s]) || 'room'; }
+function evWhere(s){ if (!pickOf(s)) return null; if (!frOk(s, pickOf(s))) return 'stored'; return (state.evWhere && state.evWhere[s]) || 'room'; }
 function setEvWhere(s, w){
   state.evWhere = state.evWhere || {}; state.evWhere[s] = w;
   state.stored = state.stored || {};
@@ -2377,6 +2453,7 @@ function evTap(s, b){
   else if (s==='ev_baursak'){ burst(cx, cy+3, 6, ['#e8ab4e','#f6cf7e','#fff1c9'], false); label('ev', 'Дәмді! <b>♥</b>', cx, cy-1); blip(880,.05,0,'sine',.04); }
   else if (s==='ev_dombra'){ [392,440,523,587,523,440,392,440].forEach((f,i)=>blip(f,.16,i*.14,'triangle',.05)); label('ev', '♪ ♫', cx, cy-2); }
   else if (s==='ev_tuskiiz'){ burst(cx, cy+10, 8, ['#d9a93a','#f1e3c4','#9e2a2b'], false); }
+  else if (s==='ev_dico'){ openDico(); }
   else if (s==='ev_mirror'){ HRFX.mirror = T; noiseBurst(.6,.3,1700,.5); sweep(1000,180,.55,.1,'sawtooth'); try { navigator.vibrate && navigator.vibrate([60,30,160]); } catch(e){} }
   else if (s==='ev_doll'){ HRFX.portrait = T; blip(98,.8,0,'sine',.09); blip(92,.8,.05,'sine',.06); label('ev', 'Don\'t look at her', cx, cy-2); }
   else if (s==='ev_spirit'){ HRFX.tv = T; noiseBurst(.9,.16,2600,.5); try { navigator.vibrate && navigator.vibrate(80); } catch(e){} }
@@ -2928,7 +3005,7 @@ const GDAYS = [
 ];
 let scene = 'room';
 function G(){ if (!state.garage) state.garage = { opened:{}, picks:{}, unwrapped:false }; return state.garage; }
-function gPick(slot){ return G().stored && G().stored[slot] ? null : (G().picks[slot] || null); }   // présent dans le garage
+function gPick(slot){ if (G().stored && G().stored[slot]) return null; const o = G().picks[slot] || null; return o && frOk(slot, o) ? o : null; }   // présent dans le garage
 function gOwn(slot){ return G().picks[slot] || null; }
 function gDone(i){ return !!G().opened[i]; }
 function gCount(){ return Object.keys(G().opened).length; }
@@ -3274,7 +3351,7 @@ function withG(s, fn){ const [dx,dy] = gOff(s); X.save(); X.translate(dx,dy); fn
 const G_BACK = ['gdoor','gposter','gplate','gshelf','gtools','gneon','glights'];
 const G_SORT = { gdisplay:139, car:147, glounge:156, gpets:157.9, gtires:158 };
 Object.assign(G_SORT, EV_GSORT); G_BACK.push('ev_mona','ev_dombra','ev_tuskiiz','ev_jersey','ev_knife','ev_mirror','ev_doll');
-function gHas(s){ if (isEv(s)) return s!=='ev_baguette' && s!=='ev_pigeon' && s!=='ev_berkut' && s!=='ev_boo' && evWhere(s)==='garage'; return s==='car' ? gDone(1) : !!gPick(s); }
+function gHas(s){ if (isEv(s)) return s!=='ev_baguette' && s!=='ev_pigeon' && s!=='ev_berkut' && s!=='ev_boo' && evWhere(s)==='garage'; return s==='car' ? gGift() : !!gPick(s); }
 function gFront(){ return (G().front || []).filter(gHas); }
 function gIsFront(s){ return gFront().includes(s); }
 function gLightsOn(){ return !!gPick('glights') && !G().lightsOff; }
@@ -3381,7 +3458,7 @@ function renderGarage(){
   if (lounge==='c'){ const [lx,ly] = at('glounge',20,130); srcs.push({ x:lx, y:ly, r:22, i:.4, c:'150,200,255' }); }
   if (gHas('ev_candles') && gEvOn('ev_candles')){ const [ex,ey] = at('ev_candles', EV_G.ev_candles[0]+20, EV_G.ev_candles[1]+22); srcs.push({ x:ex, y:ey, r:46, i:.7, c:'220,170,255' }); }
   if (gHas('ev_eiffel') && gEvOn('ev_eiffel')){ const [ex,ey] = at('ev_eiffel', EV_G.ev_eiffel[0]+8, EV_G.ev_eiffel[1]+4); srcs.push({ x:ex, y:ey, r:44, i:.75, c:'255,200,120' }); }
-  if (gDone(1) && G().unwrapped){ const [cx,cy] = at('car',CX0-2,128 + carLift()); srcs.push({ x:cx, y:cy, r:26 + carFlash, i:.5 + carFlash*.02, c:'230,240,255' }); }
+  if (gGift() && G().unwrapped){ const [cx,cy] = at('car',CX0-2,128 + carLift()); srcs.push({ x:cx, y:cy, r:26 + carFlash, i:.5 + carFlash*.02, c:'230,240,255' }); }
   const door = gPick('gdoor');
   if (door){ const [dx,dy] = at('gdoor',71,66), open = Math.max(doorP, door==='b' ? .35 : 0);
     if (VD > .2 && open > 0) srcs.push({ x:dx, y:dy, r:80, i:.75*VD*open, c:'255,244,220' });
@@ -3394,7 +3471,7 @@ function renderGarage(){
   if (lounge==='b') withG('glounge', ()=>drawGLounge('b',T,true));
   if (gHas('ev_candles') && gEvOn('ev_candles')) withG('ev_candles', ()=>{ X.translate(EV_G.ev_candles[0], EV_G.ev_candles[1]); glowWizard('x',T,null); });
   if (gHas('ev_eiffel') && gEvOn('ev_eiffel')) withG('ev_eiffel', ()=>{ X.translate(EV_G.ev_eiffel[0], EV_G.ev_eiffel[1]); glowEiffel('x',T,null); });
-  if (gDone(1) && G().unwrapped){ withG('car', ()=>{ const dy = carLift(); r(CX0+1,127+dy,7,1,'#ffffff'); p(CX0+2,128+dy,'#e8f2ff'); }); }
+  if (gGift() && G().unwrapped){ withG('car', ()=>{ const dy = carLift(); r(CX0+1,127+dy,7,1,'#ffffff'); p(CX0+2,128+dy,'#e8f2ff'); }); }
   if (carFlash > 0) carFlash--;
   drawSnow(); drawSky(); drawParts();
   if (editing) gEditSlots().forEach(s=>{ const b = gTight(s), active = (drag && drag.slot===s) || selSlot===s; dashedBox(b, active ? 'rgba(242,184,200,.95)' : 'rgba(236,235,243,.28)', active); });
@@ -3555,7 +3632,7 @@ const MDAYS = [
     opts:[{id:'a',name:'High score board',ds:'Aidana first, obviously'},{id:'b',name:'Controller rack',ds:'Three generations'},{id:'c',name:'Pet portrait',ds:'Cerise & Bushinka in 8-bit'}] }
 ];
 function M(){ if (!state.gaming) state.gaming = { opened:{}, picks:{}, unwrapped:false }; return state.gaming; }
-function mPick(slot){ return M().stored && M().stored[slot] ? null : (M().picks[slot] || null); }
+function mPick(slot){ if (M().stored && M().stored[slot]) return null; const o = M().picks[slot] || null; return o && frOk(slot, o) ? o : null; }
 function mOwn(slot){ return M().picks[slot] || null; }
 function mDone(i){ return !!M().opened[i]; }
 function mCount(){ return Object.keys(M().opened).length; }
@@ -3813,7 +3890,7 @@ function mOff(s){ const o = (M().pos && M().pos[s]) || [0,0]; return M_WALLFURN[
 function withM(s, fn){ const [dx,dy] = mOff(s); X.save(); X.translate(dx,dy); fn(); X.restore(); }
 const M_BACK = ['mrug','mwindow','mscore','mposter','mrifle','mneon','mshelf','mlights','ev_jersey','ev_knife','ev_mona','ev_dombra','ev_tuskiiz','ev_mirror','ev_doll'];
 const M_SORT = Object.assign({ mdesk:110, mconsole:114, marcade:121, mchair:130, mpets:152, msnack:153 }, EV_MSORT);
-function mHas(s){ if (isEv(s)) return s!=='ev_baguette' && s!=='ev_pigeon' && s!=='ev_berkut' && s!=='ev_boo' && evWhere(s)==='gaming'; return s==='mdesk' ? mDone(1) : !!mPick(s); }
+function mHas(s){ if (isEv(s)) return s!=='ev_baguette' && s!=='ev_pigeon' && s!=='ev_berkut' && s!=='ev_boo' && evWhere(s)==='gaming'; return s==='mdesk' ? mGift() : !!mPick(s); }
 function mFront(){ return (M().front || []).filter(mHas); }
 function mIsFront(s){ return mFront().includes(s); }
 function mLightsOn(){ return !!mPick('mlights') && !M().lightsOff; }
@@ -3905,7 +3982,7 @@ function renderGaming(){
     if (L==='b'){ const [lx,ly] = at('mlights',192,28); srcs.push({ x:lx, y:ly, r:56, i:.8, c:rgb(0) }); }
     if (L==='c') [80,178].forEach(x=>{ const [lx,ly] = at('mlights',x+1,66); srcs.push({ x:lx, y:ly, r:44, i:.7, c:rgb(x) }); });
   }
-  if (mDone(1) && M().unwrapped){ const [dx,dy] = at('mdesk',125,78); srcs.push({ x:dx, y:dy, r:40 + deskFlash, i:.7, c:'170,150,255' }); }
+  if (mGift() && M().unwrapped){ const [dx,dy] = at('mdesk',125,78); srcs.push({ x:dx, y:dy, r:40 + deskFlash, i:.7, c:'170,150,255' }); }
   if (mPick('mconsole')){ const [cx,cy] = at('mconsole',206,86); srcs.push({ x:cx, y:cy, r:34, i:.55, c:'150,200,255' }); }
   if (mPick('marcade')){ const [ax,ay] = at('marcade',41,82); srcs.push({ x:ax, y:ay, r:30, i:.55, c:'255,120,200' }); }
   if (mNeonOn()){ const [nx,ny] = at('mneon',132,28); srcs.push({ x:nx, y:ny, r:34, i:.55, c: mPick('mneon')==='a' ? '255,90,170' : '90,230,240' }); }
@@ -3924,7 +4001,7 @@ function renderGaming(){
     lm.fillStyle = `rgba(8,6,24,${dark.toFixed(3)})`; lm.fillRect(0,0,W,H);
     lm.globalCompositeOperation = 'destination-out';
     if (win){ const b = mTight('mwindow'); lm.fillStyle = 'rgba(0,0,0,.75)'; lm.fillRect(b.x+2,b.y+2,b.w-4,b.h-6); }
-    if (mDone(1) && M().unwrapped){ const [dx,dy] = mOff('mdesk'); lm.fillStyle = 'rgba(0,0,0,.85)'; lm.fillRect(94+dx,68+dy,62,18); }
+    if (mGift() && M().unwrapped){ const [dx,dy] = mOff('mdesk'); lm.fillStyle = 'rgba(0,0,0,.85)'; lm.fillRect(94+dx,68+dy,62,18); }
     if (mPick('mconsole')){ const b = mTight('mconsole'); lm.fillStyle = 'rgba(0,0,0,.75)'; lm.fillRect(b.x+6,b.y+6,b.w-12,24); }
     if (mPick('marcade')==='a'){ const [dx,dy] = mOff('marcade'); lm.fillStyle = 'rgba(0,0,0,.8)'; lm.fillRect(28+dx,66+dy,26,28); }
     srcs.forEach(Lt=>{ const g = lm.createRadialGradient(Lt.x,Lt.y,0,Lt.x,Lt.y,Lt.r); g.addColorStop(0,`rgba(0,0,0,${Lt.i})`); g.addColorStop(.5,`rgba(0,0,0,${(Lt.i*.5).toFixed(3)})`); g.addColorStop(1,'rgba(0,0,0,0)'); lm.fillStyle = g; lm.fillRect(Lt.x-Lt.r, Lt.y-Lt.r, Lt.r*2, Lt.r*2); });
@@ -4094,7 +4171,7 @@ const BDAYS = [
     opts:[{id:'a',name:'Neon cocktail',ds:'Pink glow above the bottles'},{id:'b',name:'Brass plaque',ds:'« Le Petit Triangle »'},{id:'c',name:'Chalkboard menu',ds:'Tonight\'s cocktails'}] }
 ];
 function BR(){ if (!state.bar) state.bar = { opened:{}, picks:{}, unwrapped:false }; return state.bar; }
-function bPick(slot){ return BR().stored && BR().stored[slot] ? null : (BR().picks[slot] || null); }
+function bPick(slot){ if (BR().stored && BR().stored[slot]) return null; const o = BR().picks[slot] || null; return o && frOk(slot, o) ? o : null; }
 function bOwn(slot){ return BR().picks[slot] || null; }
 function bDone(i){ return !!BR().opened[i]; }
 function bCount(){ return Object.keys(BR().opened).length; }
@@ -4309,7 +4386,7 @@ function bOff(s){ const o = (BR().pos && BR().pos[s]) || [0,0]; return B_WALLFUR
 function withB(s, fn){ const [dx,dy] = bOff(s); X.save(); X.translate(dx,dy); fn(); X.restore(); }
 const B_BACK = ['bwindow','bart','bsign','blights','ev_jersey','ev_knife','ev_mona','ev_dombra','ev_tuskiiz','ev_mirror','ev_doll'];
 const B_SORT = Object.assign({ bcounter:123, bcocktail:123.5, bpiano:113, bcellar:113.5, bstools:139, blounge:152, bpets:155, bplants:153 }, EV_BSORT);
-function bHas(s){ if (isEv(s)) return s!=='ev_baguette' && s!=='ev_pigeon' && s!=='ev_berkut' && s!=='ev_boo' && evWhere(s)==='bar'; return s==='bcounter' ? bDone(1) : (s==='bcocktail' ? !!bPick(s) && BR().unwrapped : !!bPick(s)); }
+function bHas(s){ if (isEv(s)) return s!=='ev_baguette' && s!=='ev_pigeon' && s!=='ev_berkut' && s!=='ev_boo' && evWhere(s)==='bar'; return s==='bcounter' ? bGift() : (s==='bcocktail' ? !!bPick(s) && BR().unwrapped : !!bPick(s)); }
 function bFront(){ return (BR().front || []).filter(bHas); }
 function bIsFront(s){ return bFront().includes(s); }
 function bLightsOn(){ return !!bPick('blights') && !BR().lightsOff; }
@@ -4399,7 +4476,7 @@ function renderBar(){
     if (L==='b'){ const [lx,ly] = at('blights',70,26); srcs.push({ x:lx, y:ly, r:80, i:.85, c:'255,230,190' }); }
     if (L==='c') [36,110].forEach(x=>{ const [lx,ly] = at('blights',x,44); srcs.push({ x:lx, y:ly, r:40, i:.75, c:'255,210,150' }); });
   }
-  if (bDone(1) && BR().unwrapped){ [60,76].forEach(y=>{ const [bx,by] = at('bcounter',176,y); srcs.push({ x:bx, y:by, r:56, i:.6, c:'255,190,120' }); }); }
+  if (bGift() && BR().unwrapped){ [60,76].forEach(y=>{ const [bx,by] = at('bcounter',176,y); srcs.push({ x:bx, y:by, r:56, i:.6, c:'255,190,120' }); }); }
   if (bPick('bpiano')==='b'){ const [jx,jy] = at('bpiano',47,86); srcs.push({ x:jx, y:jy, r:30, i:.6, c:'255,140,200' }); }
   if (bPick('bcellar')==='b'){ const [cx,cy] = at('bcellar',100,86); srcs.push({ x:cx, y:cy, r:22, i:.45, c:'255,220,180' }); }
   if (bPick('blounge')==='c'){ const [cx,cy] = at('blounge',62,128); srcs.push({ x:cx, y:cy, r:22, i:.55, c:'255,200,130' }); }
@@ -4598,7 +4675,7 @@ function makeRoom(C){
   const R = C; XR[C.id] = R; const onTap = C.tap;
   R.n = C.DAYS.length;
   R.S = ()=>{ if (!state[C.key]) state[C.key] = { opened:{}, picks:{}, unwrapped:false }; return state[C.key]; };
-  R.pick = s=> (R.S().stored && R.S().stored[s]) ? null : (R.S().picks[s] || null);
+  R.pick = s=>{ if (R.S().stored && R.S().stored[s]) return null; const o = R.S().picks[s] || null; return o && frOk(s, o) ? o : null; };
   R.own = s=> R.S().picks[s] || null;
   R.done = i=> !!R.S().opened[i];
   R.count = ()=> Object.keys(R.S().opened).length;
@@ -5800,6 +5877,7 @@ function clampOff(s, dx, dy){
 }
 function roomXY(e){ const rc = room.getBoundingClientRect(); return [(e.clientX-rc.left)/rc.width*W, (e.clientY-rc.top)/rc.height*H]; }
 function setEditing(on){
+  if (on && FRON()) return;
   editing = on; drag = null; selSlot = null;
   document.querySelector('.room').classList.toggle('editing', on);
   $('editBtn').textContent = on ? 'Done' : 'Edit the decor';
@@ -5984,6 +6062,7 @@ function updateHud(){
     $('hint').textContent = BR().unwrapped ? 'Tap the bar, the music or the lights.' : 'Tap the gift to unwrap it.';
   }
   if (XR[scene]) XR[scene].hud();
+  if (FRON()) frHud();
 }
 $('finalTxt').innerHTML = CONFIG.finalMessage.replace("The flowers are real.", "<em>The flowers are real.</em>");
 $('foot').textContent = 'Handmade, pixel by pixel — ' + CONFIG.myName;
@@ -6058,6 +6137,8 @@ function paintTools(){
     $('hint').textContent = !bDone(1) ? '' : (BR().unwrapped ? 'Tap the bar, the music or the lights.' : 'Tap the gift to unwrap it.');
   }
   if (XR[scene]) XR[scene].tools();
+  $('dicoBtn').hidden = !pickOf('ev_dico') || FRON();
+  if (FRON()) frTools();
   $('tools').hidden = false;
 }
 
@@ -6065,7 +6146,7 @@ function paintTools(){
 const NO_STORE = ['walls','floor','character'];
 function ownedObjects(){ return ALL_SLOTS.filter(s=>!NO_STORE.includes(s) && pickOf(s)); }
 function itemName(slot){
-  const sp = SPECIALS.find(q=>q.slot===slot) || EVENT.find(q=>q.slot===slot) || KZEV.find(q=>q.slot===slot) || SUEV.find(q=>q.slot===slot) || QZEV.find(q=>q.slot===slot) || KNEV.find(q=>q.slot===slot) || HREV.find(q=>q.slot===slot); if (sp) return sp.name;
+  const sp = SPECIALS.find(q=>q.slot===slot) || EVENT.find(q=>q.slot===slot) || KZEV.find(q=>q.slot===slot) || SUEV.find(q=>q.slot===slot) || QZEV.find(q=>q.slot===slot) || KNEV.find(q=>q.slot===slot) || HREV.find(q=>q.slot===slot) || NBEV.find(q=>q.slot===slot); if (sp) return sp.name;
   for (const d of DAYS) for (const pk of d.picks) if (pk.slot===slot){ const o = pk.opts.find(q=>q.id===pickOf(slot)); if (o) return o.name; }
   return slot;
 }
@@ -6291,6 +6372,7 @@ function garageStatus(){
   cd.textContent = next ? countdownText(next) : '';
 }
 function updateStatus(){
+  if (FRON()) return frStatus();
   if (scene==='garage') return garageStatus();
   if (scene==='gaming') return gamingStatus();
   if (scene==='bar') return barStatus();
@@ -6914,7 +6996,7 @@ function perchSpots(b){
   const out = [], rm = b.room;
   ['ev_flag','ev_kzflag'].forEach(s=>{ if (evWhere(s)===rm){ const [dx,dy] = evAt(s,rm); out.push({ k:s, x:dx+3, y:dy+43, z:42, sy:evSort(s,rm) + .1 }); } });
   if (evWhere('ev_yurt')===rm){ const [dx,dy] = evAt('ev_yurt',rm); out.push({ k:'yurt', x:dx+16, y:dy+24, z:25, sy:evSort('ev_yurt',rm) + .1 }); }
-  if (rm==='garage' && gDone(1) && G().unwrapped){ const [cx,cy] = gOff('car'); out.push({ k:'car', x:(b===EAGLE ? 120 : 146)+cx, y:147+cy, z:36 - carLift(), sy:147+cy+.1 }); }
+  if (rm==='garage' && gGift() && G().unwrapped){ const [cx,cy] = gOff('car'); out.push({ k:'car', x:(b===EAGLE ? 120 : 146)+cx, y:147+cy, z:36 - carLift(), sy:147+cy+.1 }); }
   if (b.arms) humans().forEach(h=>{ if (h.room===rm && !humanGeom(h).seated && h.state!=='petting' && !(h.dance > 0)) out.push({ k:'arm:'+h.kind, h, x:h.x+7, y:h.y, z:12, sy:h.y+.05 }); });
   const other = FLYERS.filter(q=>q!==b && q.room===rm && q.perch).map(q=>q.perch);
   return out.filter(q=>!other.includes(q.k));
@@ -7334,6 +7416,7 @@ function paintEventBtns(){
   $('letterBtn').hidden = !(state.sudoku && state.sudoku.letter);
   const qb = $('qzBtn'); qb.hidden = !qzOpen(); qb.classList.toggle('fresh', !QS().seen);
   const hb = $('hrBtn'); hb.hidden = !hrOpen(); hb.classList.toggle('fresh', !HS().seen);
+  const nbb = $('nbBtn'); nbb.hidden = !nbOpen(); nbb.classList.toggle('fresh', !NS().seen);
 }
 $('kzBtn').addEventListener('click', openKz);
 $('kzClose').addEventListener('click', closeKz);
@@ -7822,6 +7905,390 @@ $('hrStage').addEventListener('pointerdown', e=>{ e.preventDefault(); hTouch = e
 document.addEventListener('keydown', e=>{ if (!$('hr').hidden && e.key==='Escape') closeHr(); });
 
 /* =====================================================================
+   LE FRANÇAIS — vocabulaire, mode « version française », dictionnaire
+   et l'événement « Les nombres » (19 novembre)
+   ===================================================================== */
+// Nom anglais générique et nom français (avec l'article) de chaque objet.
+// Un tableau = un nom par option (a, b, c, d…).
+var VOC_READY = false;
+const VOC = {
+  // salon
+  walls:{en:'Walls',fr:'les murs'}, floor:{en:'Floor',fr:'le sol'}, window:{en:'Window',fr:'la fenêtre'}, rug:{en:'Rug',fr:'le tapis'}, curtains:{en:'Curtains',fr:'les rideaux'},
+  sofa:{en:'Sofa',fr:'le canapé'}, lamp:{en:'Lamp',fr:'la lampe'}, table:{en:'Coffee table',fr:'la table basse'},
+  plant:{en:['Plant','Cactus','Olive tree','Tulips','Lemon tree','Fig tree','Palm tree'],fr:['la plante','le cactus','l\'olivier','les tulipes','le citronnier','le figuier','le palmier']},
+  shelf:{en:['Bookcase','Shelf','Shelf'],fr:['la bibliothèque','l\'étagère','l\'étagère']},
+  frame:{en:['Painting','Photos','Mirror','Painting'],fr:['le tableau','les photos','le miroir','le tableau']},
+  petcorner:{en:['Cat tree','Basket','Cushion','Baskets'],fr:['l\'arbre à chat','le panier','le coussin','les paniers']},
+  toys:{en:['Balls of yarn','Balls','Toy mouse','Bones'],fr:['les pelotes de laine','les balles','la souris','les os']},
+  ambiance:{en:['Fairy lights','Moon','Lanterns','Heart'],fr:['la guirlande','la lune','les lanternes','le cœur']},
+  music:{en:['Record player','TV','Radio','Guitar'],fr:['le tourne-disque','la télé','la radio','la guitare']},
+  mug:{en:['Hot chocolate','Candle','Tea','Macarons'],fr:['le chocolat chaud','la bougie','le thé','les macarons']},
+  // garage
+  car:{en:'Car',fr:'la voiture'}, gfloor:{en:'Floor',fr:'le sol'}, gwalls:{en:'Walls',fr:'les murs'}, glights:{en:'Lights',fr:'les lumières'}, gdoor:{en:'Door',fr:'la porte'},
+  gtools:{en:'Tools',fr:'les outils'}, gneon:{en:'Neon sign',fr:'le néon'}, gposter:{en:'Poster',fr:'l\'affiche'}, gpets:{en:'Pet bed',fr:'le panier'}, gplate:{en:'Number plate',fr:'la plaque'},
+  gtires:{en:['Tires','Rims','Tires'],fr:['les pneus','les jantes','les pneus']},
+  gdisplay:{en:['Car lift','Turntable','Red carpet'],fr:['le pont élévateur','le plateau tournant','le tapis rouge']},
+  glounge:{en:['Armchair','Arcade machine','Fridge'],fr:['le fauteuil','la borne d\'arcade','le frigo']},
+  gshelf:{en:['Helmets','Trophies','Model cars'],fr:['les casques','les trophées','les petites voitures']},
+  // salle de jeux
+  mdesk:{en:'Desk',fr:'le bureau'}, mfloor:{en:'Floor',fr:'le sol'}, mwalls:{en:'Walls',fr:'les murs'}, mposter:{en:'Poster',fr:'l\'affiche'}, mrifle:{en:'Rifle',fr:'le fusil'},
+  mlights:{en:'Lights',fr:'les lumières'}, mneon:{en:'Neon sign',fr:'le néon'}, mrug:{en:'Rug',fr:'le tapis'}, mwindow:{en:'Window',fr:'la fenêtre'},
+  mchair:{en:['Chairs','Bean bags','Sofa'],fr:['les chaises','les poufs','le canapé']},
+  mconsole:{en:['TV','TV','Screen'],fr:['la télé','la télé','l\'écran']},
+  marcade:{en:['Arcade machine','Pinball machine','Claw machine'],fr:['la borne d\'arcade','le flipper','la machine à pince']},
+  mshelf:{en:['Video games','Figurines','Trophies'],fr:['les jeux vidéo','les figurines','les trophées']},
+  mpets:{en:['Cat tree','Cushions','Pet beds'],fr:['l\'arbre à chat','les coussins','les paniers']},
+  msnack:{en:['Fridge','Popcorn machine','Bubble tea'],fr:['le frigo','la machine à pop-corn','le thé aux perles']},
+  mscore:{en:['Scoreboard','Controllers','Portrait'],fr:['le tableau des scores','les manettes','le portrait']},
+  // bar
+  bcounter:{en:'Bar counter',fr:'le comptoir'}, bwalls:{en:'Walls',fr:'les murs'}, bfloor:{en:'Floor',fr:'le sol'}, bstools:{en:'Bar stools',fr:'les tabourets'}, bwindow:{en:'Window',fr:'la fenêtre'},
+  blights:{en:['Pendant lights','Chandelier','Wall lights'],fr:['les suspensions','le lustre','les appliques']},
+  blounge:{en:['Sofa','Banquette','Armchairs'],fr:['le canapé','la banquette','les fauteuils']},
+  bpiano:{en:['Piano','Jukebox','Gramophone'],fr:['le piano','le juke-box','le gramophone']},
+  bart:{en:['Mirror','Painting','Frames'],fr:['le miroir','le tableau','les cadres']},
+  bcellar:{en:['Wine bottles','Wine fridge','Barrels'],fr:['les bouteilles de vin','la cave à vin','les tonneaux']},
+  bcocktail:{en:['Cocktails','Champagne','Champagne'],fr:['les cocktails','le champagne','le champagne']},
+  bplants:{en:['Palm tree','Orchids','Olive tree'],fr:['le palmier','les orchidées','l\'olivier']},
+  bpets:{en:['Cushions','Little sofa','Baskets'],fr:['les coussins','le petit canapé','les paniers']},
+  bsign:{en:['Neon sign','Plaque','Chalkboard'],fr:['le néon','la plaque','l\'ardoise']},
+  // chambre
+  kbed:{en:'Bed',fr:'le lit'}, kwalls:{en:'Walls',fr:'les murs'}, kfloor:{en:'Floor',fr:'le sol'}, knight:{en:'Bedside tables',fr:'les tables de chevet'}, kwindow:{en:'Window',fr:'la fenêtre'},
+  kbedding:{en:'Cushions',fr:'les coussins'}, krug:{en:'Rug',fr:'le tapis'}, kdresser:{en:'Chest of drawers',fr:'la commode'}, kmirror:{en:'Mirror',fr:'le miroir'}, kflamp:{en:'Floor lamp',fr:'le lampadaire'},
+  kbooks:{en:'Books',fr:'les livres'}, kpets:{en:'Pet bed',fr:'le panier'},
+  klamps:{en:['Bedside lamps','Bedside lamps','Wall lamps'],fr:['les lampes de chevet','les lampes de chevet','les appliques']},
+  kchand:{en:['Chandelier','Lantern','Chandelier'],fr:['le lustre','la lanterne','le lustre']},
+  kwardrobe:{en:['Wardrobe','Wardrobe','Clothes rail'],fr:['l\'armoire','l\'armoire','le portant']},
+  kart:{en:['Painting','Frames','Neon sign'],fr:['le tableau','les cadres','le néon']},
+  kbench:{en:['Bench','Trunk','Bench'],fr:['le banc','la malle','le banc']},
+  karmchair:{en:['Armchair','Armchair','Hanging chair'],fr:['le fauteuil','le fauteuil','le fauteuil suspendu']},
+  kplant:{en:['Fig tree','Olive tree','Orchid'],fr:['le figuier','l\'olivier','l\'orchidée']},
+  kperfume:{en:['Perfumes','Jewellery box','Peonies'],fr:['les parfums','la boîte à bijoux','les pivoines']},
+  kcandles:{en:['Candles','Lanterns','Candelabra'],fr:['les bougies','les lanternes','le chandelier']},
+  kmusic:{en:['Record player','Radio','Gramophone'],fr:['le tourne-disque','la radio','le gramophone']},
+  kslippers:{en:['Slippers','Slippers','Robe'],fr:['les chaussons','les chaussons','le peignoir']},
+  kplush:{en:['Teddy bear','Bunny','Triangle'],fr:['l\'ours en peluche','le lapin','le triangle']},
+  kxmas:{en:['Christmas tree','Garland','Gifts'],fr:['le sapin','la guirlande','les cadeaux']},
+  // salle de bain
+  xtub:{en:'Bathtub',fr:'la baignoire'}, xwalls:{en:'Walls',fr:'les murs'}, xfloor:{en:'Floor',fr:'le sol'}, xsink:{en:'Sink',fr:'le lavabo'}, xmirror:{en:'Mirror',fr:'le miroir'},
+  xsconce:{en:'Wall lights',fr:'les appliques'}, xshower:{en:'Shower',fr:'la douche'}, xwindow:{en:'Window',fr:'la fenêtre'}, xtowels:{en:'Towels',fr:'les serviettes'}, xmat:{en:'Bath mat',fr:'le tapis de bain'},
+  xplants:{en:'Plant',fr:'la plante'}, xshelf:{en:'Shelf',fr:'l\'étagère'}, xart:{en:'Picture',fr:'le tableau'}, xbasket:{en:'Laundry basket',fr:'le panier à linge'},
+  xchand:{en:['Chandelier','Pendant light','Pendant light'],fr:['le lustre','la suspension','la suspension']},
+  xspa:{en:['Bath tray','Candles','Bath bombs'],fr:['le plateau de bain','les bougies','les bombes de bain']},
+  xcandles:{en:['Candles','Lantern','Candles'],fr:['les bougies','la lanterne','les bougies']},
+  xstool:{en:['Side table','Stool','Side table'],fr:['la petite table','le tabouret','la petite table']},
+  xrobe:{en:['Bathrobe','Bathrobe','Kimono'],fr:['le peignoir','le peignoir','le kimono']},
+  xvanity:{en:['Perfumes','Soap','Make-up'],fr:['les parfums','le savon','le maquillage']},
+  xscent:{en:['Diffuser','Diffuser','Incense'],fr:['le diffuseur','le diffuseur','l\'encens']},
+  xcabinet:{en:['Cabinet','Shelving','Trolley'],fr:['l\'armoire','l\'étagère','la desserte']},
+  xmusic:{en:['Radio','Speaker','Gramophone'],fr:['la radio','l\'enceinte','le gramophone']},
+  xduck:{en:['Rubber duck','Rubber ducks','Bubbles'],fr:['le canard','les canards','les bulles']},
+  xxmas:{en:['Christmas tree','Garland','Lantern'],fr:['le sapin','la guirlande','la lanterne']},
+  // toilettes
+  wtoilet:{en:'Toilet',fr:'les toilettes'}, wwalls:{en:'Walls',fr:'les murs'}, wfloor:{en:'Floor',fr:'le sol'}, wbasin:{en:'Sink',fr:'le lavabo'}, wmirror:{en:'Mirror',fr:'le miroir'},
+  wsconce:{en:'Wall lights',fr:'les appliques'}, wpaper:{en:'Toilet paper',fr:'le papier toilette'}, wbrush:{en:'Toilet brush',fr:'la brosse'}, wwindow:{en:'Window',fr:'la fenêtre'},
+  wtowel:{en:'Hand towel',fr:'la serviette'}, wsoap:{en:'Soap',fr:'le savon'}, wcabinet:{en:'Cabinet',fr:'le meuble'}, wrug:{en:'Rug',fr:'le tapis'}, wbin:{en:'Bin',fr:'la poubelle'},
+  wlight:{en:['Pendant light','Chandelier','Lantern'],fr:['la suspension','le lustre','la lanterne']},
+  wshelf:{en:['Plant','Cacti','Pampas grass'],fr:['la plante','les cactus','l\'herbe de la pampa']},
+  wart:{en:['Poster','Frames','Painting'],fr:['l\'affiche','les cadres','le tableau']},
+  wscent:{en:['Candle','Diffuser','Incense'],fr:['la bougie','le diffuseur','l\'encens']},
+  wcandles:{en:['Candles','Candle','Lantern'],fr:['les bougies','la bougie','la lanterne']},
+  wbasket:{en:['Magazines','Magazines','Stool'],fr:['les magazines','les magazines','le tabouret']},
+  wplant:{en:['Plant','Plant','Pampas grass'],fr:['la plante','la plante','l\'herbe de la pampa']},
+  wsign:{en:['Plaque','Neon sign','Sign'],fr:['la plaque','le néon','le panneau']},
+  wmusic:{en:['Radio','Speaker','Gramophone'],fr:['la radio','l\'enceinte','le gramophone']},
+  wbook:{en:['Books','Crossword','Comics'],fr:['les livres','les mots croisés','les BD']},
+  wxmas:{en:['Christmas tree','Garland','Gifts'],fr:['le sapin','la guirlande','les cadeaux']},
+  // objets des événements
+  ev_croissant:{en:'Croissant',fr:'le croissant'}, ev_eiffel:{en:'Eiffel Tower',fr:'la tour Eiffel'}, ev_baguette:{en:'Baguette',fr:'la baguette'}, ev_flag:{en:'French flag',fr:'le drapeau français'},
+  ev_mona:{en:'Mona Lisa',fr:'la Joconde'}, ev_baursak:{en:'Doughnuts',fr:'les beignets'}, ev_dombra:{en:'Dombra',fr:'la dombra'}, ev_tuskiiz:{en:'Tapestry',fr:'la tapisserie'}, ev_yurt:{en:'Yurt',fr:'la yourte'},
+  ev_kzflag:{en:'Kazakh flag',fr:'le drapeau kazakh'}, ev_berkut:{en:'Golden eagle',fr:'l\'aigle'}, ev_candles:{en:'Wizard\'s corner',fr:'le coin du sorcier'}, ev_knife:{en:'Butterfly knife',fr:'le couteau papillon'},
+  ev_doll:{en:'Portrait',fr:'le portrait'}, ev_mirror:{en:'Cursed mirror',fr:'le miroir maudit'}, ev_spirit:{en:'Old TV',fr:'la vieille télé'}, ev_boo:{en:'Ghost',fr:'le fantôme'},
+  ev_pigeon:{en:'Pigeon',fr:'le pigeon'}, ev_jersey:{en:'Football shirt',fr:'le maillot'}, ev_dico:{en:'Dictionary',fr:'le dictionnaire'}
+};
+VOC_READY = true;
+const FR_ROOMS = [['room','Living room','le salon'],['garage','Garage','le garage'],['gaming','Gaming room','la salle de jeux'],['bar','Bar','le bar'],['bed','Bedroom','la chambre'],['bath','Bathroom','la salle de bain'],['wc','Toilets','les toilettes']];
+const FR_ROOMN = Object.fromEntries(FR_ROOMS.map(r0=>[r0[0], r0[2]]));
+function vocOf(slot, opt){ const v = VOC[slot]; if (!v) return null; if (!Array.isArray(v.fr)) return v; const k = Math.max(0, 'abcdefghi'.indexOf(opt || 'a')); return { en:v.en[k] || v.en[0], fr:v.fr[k] || v.fr[0] }; }
+const FR_ART = /^(le|la|les|l'|un|une|des|du|de la|d')\s*/;
+function frBase(s){ return String(s||'').toLowerCase().replace(/[’`´]/g,"'").replace(/œ/g,'oe').replace(/æ/g,'ae').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[-_.,!?;:«»"()]/g,' ').replace(/\s+/g,' ').trim(); }
+function frNorm(s){ return frBase(s).replace(FR_ART, '').trim(); }
+function frArt(s){ const m = frBase(s).match(FR_ART); return m ? m[1] : ''; }
+function FRON(){ return state.lang === 'fr'; }
+function FRF(){ if (!state.frFound) state.frFound = {}; return state.frFound; }
+function frOk(slot, opt){ if (!VOC_READY || state.lang !== 'fr' || slot==='character') return true; const v = vocOf(slot, opt); return !v || !!FRF()[frNorm(v.fr)]; }
+function gGift(){ return gDone(1) && frOk('car','x'); }
+function mGift(){ return mDone(1) && frOk('mdesk','x'); }
+function bGift(){ return bDone(1) && frOk('bcounter','x'); }
+function langOn(){ return DEV || dayNumber() >= 12 || !!pickOf('ev_dico'); }
+let frSpeakVoice = null;
+function frSay(txt){
+  try { if (!('speechSynthesis' in window)) return; const vs = speechSynthesis.getVoices();
+    if (!frSpeakVoice) frSpeakVoice = vs.find(v=>/^fr[-_]FR/i.test(v.lang)) || vs.find(v=>/^fr/i.test(v.lang)) || null;
+    const u = new SpeechSynthesisUtterance(txt); u.lang = 'fr-FR'; if (frSpeakVoice) u.voice = frSpeakVoice; u.rate = .88; speechSynthesis.cancel(); speechSynthesis.speak(u); } catch(e){}
+}
+if ('speechSynthesis' in window) try { speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged = ()=>{ frSpeakVoice = null; }; } catch(e){}
+
+/* ---------- Ce qu'elle possède (dans les pièces, pas dans l'inventaire) ---------- */
+function frOwned(){
+  const out = [], rawWhere = s=> (state.evWhere && state.evWhere[s]) || 'room';
+  const add = (room, slot, opt)=>{ const v = vocOf(slot, opt); if (v) out.push({ room, slot, opt, en:v.en, fr:v.fr, key:frNorm(v.fr) }); };
+  Object.keys(state.picks || {}).forEach(s=>{ if (isEv(s) || s==='character' || (state.stored && state.stored[s])) return; add('room', s, state.picks[s]); });
+  [['garage',G,'car',gDone],['gaming',M,'mdesk',mDone],['bar',BR,'bcounter',bDone]].forEach(([room,S0,gift,done])=>{
+    if (done(1)) add(room, gift, 'x');
+    const st = S0(); Object.keys(st.picks || {}).forEach(s=>{ if (s===gift || (st.stored && st.stored[s])) return; add(room, s, st.picks[s]); }); });
+  Object.values(XR).forEach(R=>{ if (!xrBuilt()) return; const st = R.S(); Object.keys(st.picks || {}).forEach(s=>{ if (st.stored && st.stored[s]) return; add(R.id, s, st.picks[s]); }); });
+  EV_SLOTS.forEach(s=>{ if (!pickOf(s)) return; const w = rawWhere(s); if (w==='stored') return; add(w, s, pickOf(s)); });
+  return out;
+}
+function frItemImage(cv, it){
+  try {
+    if (isEv(it.slot)) return renderItemTo(cv, it.slot, it.opt, T);
+    if (it.room==='garage') return renderGItemTo(cv, it.slot, it.opt, T);
+    if (it.room==='gaming') return renderMItemTo(cv, it.slot, it.opt, T);
+    if (it.room==='bar') return renderBItemTo(cv, it.slot, it.opt, T);
+    if (XR[it.room]) return XR[it.room].renderItemTo(cv, it.slot, it.opt, T);
+    return renderItemTo(cv, it.slot, it.opt, T);
+  } catch(e){ cv.width = 1; cv.height = 1; }
+}
+
+/* ---------- Mode « version française » ---------- */
+function frRefreshWorld(){ if (typeof FLYERS !== 'undefined') FLYERS.forEach(b=>{ try { syncBird(b); } catch(e){} }); }
+function setLang(l){
+  if (l === state.lang || (!state.lang && l==='en')) return;
+  state.lang = l; save();
+  if (editing) setEditing(false);
+  if (l==='fr'){ SFX.select(); frSay('Bienvenue dans la version française'); } else SFX.tick();
+  frRefreshWorld(); paintLang(); refresh(); paintTools();
+  if (l==='fr') setTimeout(()=>{ try { $('frInput').focus({ preventScroll:true }); } catch(e){} }, 60);
+}
+function paintLang(){
+  const fr = FRON(); document.body.classList.toggle('fr', fr);
+  $('langTog').hidden = !langOn();
+  $('langTog').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed', String(b.dataset.l === (fr ? 'fr' : 'en'))));
+  $('frPanel').hidden = !fr;
+  document.querySelector('h1').innerHTML = fr ? 'Le salon d\'<em>Aidana</em>' : '<em>Aidana</em>\'s living room';
+  if (fr) frPaintPanel();
+}
+function frRoomItems(room){ return frOwned().filter(it=>it.room===room); }
+function frPaintPanel(){
+  const all = frOwned(), keys = [...new Set(all.map(it=>it.key))], found = keys.filter(k=>FRF()[k]).length;
+  const here = all.filter(it=>it.room===scene), hereFound = here.filter(it=>FRF()[it.key]).length;
+  $('frRoomN').textContent = '· ' + (FR_ROOMN[scene] || 'le salon');
+  $('frProg').innerHTML = `<b>${found}</b> / ${keys.length} mots trouvés · ici : ${hereFound} / ${here.length}`;
+  $('frDicoBtn').hidden = !pickOf('ev_dico');
+}
+function frStatus(){ const all = frOwned(), keys = [...new Set(all.map(it=>it.key))], found = keys.filter(k=>FRF()[k]).length;
+  $('statusTxt').innerHTML = found >= keys.length && keys.length ? '<strong>Tout est retrouvé !</strong> Bravo, tu parles « maison » en français.' : `<strong>Version française</strong> · ${found} objet${found>1?'s':''} retrouvé${found>1?'s':''} sur ${keys.length}`;
+  $('countdown').textContent = ''; }
+function frHud(){
+  const here = frRoomItems(scene), f = here.filter(it=>FRF()[it.key]).length;
+  $('bar').style.width = (here.length ? f/here.length*100 : 0) + '%';
+  $('emptyHint').textContent = 'Une pièce vide… pour l\'instant.'; $('emptyHint').style.display = (here.length && f===0) ? 'flex' : 'none';
+  $('hint').hidden = false; $('hint').textContent = 'Écris le nom d\'un objet en français pour le faire apparaître.';
+  $('finalBanner').classList.remove('show'); frPaintPanel();
+}
+function frTools(){
+  ['editBtn','invBtn','storeBtn','resetPosBtn','wheelBtn','editHint'].forEach(id=>{ $(id).hidden = true; });
+  $('hint').hidden = false; $('hint').textContent = 'Écris le nom d\'un objet en français pour le faire apparaître.';
+  const FRB = { garageBtn:['garage','Garage'], gamingBtn:['gaming','Salle de jeux'], barBtn:['bar','Bar'], bedBtn:['bed','Chambre'], bathBtn:['bath','Salle de bain'], wcBtn:['wc','Toilettes'] };
+  Object.entries(FRB).forEach(([id,[sc,lab]])=>{ $(id).textContent = scene===sc ? '← Salon' : lab; });
+  if ($('gLightBtn').textContent) $('gLightBtn').textContent = /off/i.test($('gLightBtn').textContent) ? 'Éteindre' : 'Allumer';
+  if (!$('photoBtn').hidden) $('photoBtn').textContent = 'Mode photo';
+}
+function lev(a, b){ const m = a.length, n = b.length; if (Math.abs(m-n) > 2) return 9; const d = Array.from({length:m+1},(_,i)=>[i]); for (let j=1;j<=n;j++) d[0][j] = j;
+  for (let i=1;i<=m;i++) for (let j=1;j<=n;j++) d[i][j] = Math.min(d[i-1][j]+1, d[i][j-1]+1, d[i-1][j-1] + (a[i-1]===b[j-1] ? 0 : 1)); return d[m][n]; }
+function frMsg(html, kind){ const el = $('frMsg'); el.innerHTML = html; el.className = 'frp-msg ' + (kind || ''); }
+function frSubmit(){
+  const raw = $('frInput').value.trim(); if (!raw) return;
+  const n = frNorm(raw), art = frArt(raw), owned = frOwned();
+  const hits = owned.filter(it=>it.key === n);
+  if (hits.length){
+    const it = hits[0], good = it.fr, gArt = frArt(good);
+    $('frInput').value = '';
+    if (FRF()[n]){ frMsg(`Déjà trouvé : <b>« ${good} »</b> ✓`, 'ok'); frSay(good); SFX.tick(); return; }
+    FRF()[n] = true; save();
+    const rooms = [...new Set(hits.map(h=>h.room))].map(r0=>FR_ROOMN[r0]);
+    const exact = frBase(raw) === frBase(good) && raw.toLowerCase().normalize('NFC') === good.toLowerCase().normalize('NFC');
+    let txt = `Bravo ! <b>« ${good} »</b> — ${it.en.toLowerCase()} ✓`;
+    if (art && art !== gArt) txt = `Presque ! On dit <b>« ${good} »</b>, pas « ${raw.replace(/[<>&]/g,'')} ». C'est retrouvé quand même ✓`;
+    else if (!exact) txt += ` <span class="frp-spell">(on l'écrit « ${good} »)</span>`;
+    if (!rooms.includes(FR_ROOMN[scene])) txt += `<br>Il est dans ${rooms.join(', ')}.`;
+    frMsg(txt, 'ok'); frSay(good);
+    [523,659,784,1046].forEach((f,i)=>blip(f,.12,i*.08,'sine',.045));
+    const fl = $('flash'); fl.classList.remove('go'); void fl.offsetWidth; fl.classList.add('go');
+    frRefreshWorld(); refresh(); paintTools();
+    burst(128, 100, 26, ['#2e4a8a','#ffffff','#d0202c','#f4d070']);
+    return;
+  }
+  const all = Object.keys(VOC).flatMap(s=>{ const v = VOC[s]; return Array.isArray(v.fr) ? v.fr : [v.fr]; });
+  const known = all.find(f=>frNorm(f) === n);
+  if (known){ frMsg(`<b>« ${known} »</b> est bien écrit… mais il n'est pas (encore) dans ta maison.`, 'meh'); frSay(known); SFX.nope(); return; }
+  const close = owned.find(it=>n.length > 3 && lev(n, it.key) <= (it.key.length > 7 ? 2 : 1));
+  if (close){ frMsg('Presque ! Vérifie l\'orthographe…', 'meh'); blip(330,.12,0,'triangle',.04); return; }
+  frMsg(`Je ne trouve pas « ${raw.replace(/[<>&]/g,'')} » dans ta maison. Essaie un autre mot !`, 'no'); SFX.nope();
+}
+
+/* ---------- Le dictionnaire ---------- */
+let dicoRoom = null;
+function openDico(){
+  if (!pickOf('ev_dico')){ toast('Win the dictionary in « Les nombres » first.'); SFX.nope(); return; }
+  if (editing) setEditing(false);
+  dicoRoom = scene; $('dico').hidden = false; document.body.style.overflow = 'hidden'; SFX.open(); paintDico();
+}
+function closeDico(){ $('dico').hidden = true; document.body.style.overflow = ''; try { speechSynthesis.cancel(); } catch(e){} }
+function paintDico(){
+  const owned = frOwned(), tabs = $('dicoTabs'), list = $('dicoList'), fr = FRON();
+  const rooms = FR_ROOMS.filter(r0=>owned.some(it=>it.room===r0[0]));
+  if (!rooms.some(r0=>r0[0]===dicoRoom)) dicoRoom = rooms.length ? rooms[0][0] : 'room';
+  tabs.innerHTML = '';
+  rooms.forEach(([id,en,frn])=>{ const b = document.createElement('button'); b.type = 'button'; b.className = 'dico-tab' + (id===dicoRoom ? ' on' : ''); b.innerHTML = `${en}<small>${frn}</small>`;
+    b.addEventListener('click', ()=>{ dicoRoom = id; SFX.tick(); paintDico(); }); tabs.appendChild(b); });
+  list.innerHTML = '';
+  const seen = new Set();
+  owned.filter(it=>it.room===dicoRoom).forEach(it=>{
+    const id = it.slot + it.opt; if (seen.has(id)) return; seen.add(id);
+    const c = document.createElement('div'); c.className = 'dico-c' + (fr && FRF()[it.key] ? ' got' : '');
+    const pv = document.createElement('div'); pv.className = 'pv'; const cv = document.createElement('canvas'); pv.appendChild(cv); c.appendChild(pv);
+    const tx = document.createElement('div'); tx.className = 'dico-w';
+    tx.innerHTML = `<span class="en">${it.en}</span><span class="fr">${it.fr}</span>` + (fr ? `<span class="st">${FRF()[it.key] ? '✓ retrouvé' : 'à retrouver'}</span>` : '');
+    c.appendChild(tx);
+    const sp = document.createElement('button'); sp.type = 'button'; sp.className = 'dico-say'; sp.setAttribute('aria-label', 'Écouter ' + it.fr); sp.textContent = '🔊';
+    sp.addEventListener('click', ()=>frSay(it.fr)); c.appendChild(sp);
+    list.appendChild(c);
+    requestAnimationFrame(()=>{ frItemImage(cv, it); fitCanvas(cv, pv.clientWidth-8, pv.clientHeight-8); });
+  });
+  if (!list.children.length) list.innerHTML = '<p class="dico-empty">Nothing in this room yet.</p>';
+}
+
+/* ---------- Le dictionnaire, l'objet ---------- */
+function drawDico(o,t){
+  ell(10,25,9,1.6,'rgba(0,0,0,.25)');
+  r(9,13,2,11,'#6a442a'); r(10,13,1,11,'#845636'); r(4,23,12,2,'#5a3820'); r(4,23,12,1,'#7a5232');
+  for (let k=0;k<4;k++) r(2+k, 9+k, 16-k*2, 1, '#7a5232'); r(1,8,18,2,'#2e4a8a');
+  r(2,3,8,6,'#f6f1e4'); r(10,3,8,6,'#efe8d8'); r(9,4,2,5,'#d8ccb4'); r(2,3,8,1,'#ffffff');
+  [4,5,6,7].forEach((y,k)=>{ r(3,y,5 - (k%2),1,'#b8ae9c'); r(11,y,5 - ((k+1)%2),1,'#b8ae9c'); });
+  r(13,8,1,5,'#2e4a8a'); r(14,8,1,5,'#f4f4f4'); r(15,8,1,5,'#d0202c');
+}
+const NBEV = [ { slot:'ev_dico', name:'Dictionary', ds:'Your whole house, in English and in French' } ];
+ITEMS.ev_dico = { draw:drawDico, off:[204,118], sortY:143, bbox:()=>({x:0,y:0,w:20,h:27}) };
+EV_SLOTS.push('ev_dico'); ALL_SLOTS.push('ev_dico'); FLOOR_SPECIALS.push('ev_dico');
+Object.assign(EV_G, { ev_dico:[176,118] }); Object.assign(G_SORT, { ev_dico:145 }); EV_GSORT.ev_dico = 145;
+EV_M.ev_dico = [60,112]; EV_MSORT.ev_dico = 139; M_SORT.ev_dico = 139;
+EV_B.ev_dico = [70,118]; EV_BSORT.ev_dico = 145; B_SORT.ev_dico = 145;
+
+/* ---------- L'événement « Les nombres » (19 novembre) ---------- */
+const NB_DAYS = [12,13,14], NB_N = 15, NB_PASS = 10;
+const NB_U = ['zéro','un','deux','trois','quatre','cinq','six','sept','huit','neuf','dix','onze','douze','treize','quatorze','quinze','seize','dix-sept','dix-huit','dix-neuf'];
+const NB_T = { 2:'vingt', 3:'trente', 4:'quarante', 5:'cinquante', 6:'soixante' };
+function nbFr(n){
+  if (n < 20) return NB_U[n];
+  if (n < 100){ const t = Math.floor(n/10), u = n%10;
+    if (t===7) return n===71 ? 'soixante et onze' : 'soixante-' + NB_U[n-60];
+    if (t===8) return u===0 ? 'quatre-vingts' : 'quatre-vingt-' + NB_U[u];
+    if (t===9) return 'quatre-vingt-' + NB_U[n-80];
+    return NB_T[t] + (u===0 ? '' : (u===1 ? ' et un' : '-' + NB_U[u])); }
+  if (n < 1000){ const h = Math.floor(n/100), rest = n%100, hs = h===1 ? 'cent' : NB_U[h] + ' cent' + (rest===0 ? 's' : ''); return rest ? hs + ' ' + nbFr(rest) : hs; }
+  const k = Math.floor(n/1000), rest = n%1000, ks = k===1 ? 'mille' : nbFr(k).replace(/quatre-vingts$/,'quatre-vingt') + ' mille'; return rest ? ks + ' ' + nbFr(rest) : ks;
+}
+function nbOpen(){ return DEV || NB_DAYS.includes(dayNumber()); }
+function NS(){ if (!state.nombres) state.nombres = { best:0, tries:0 }; return state.nombres; }
+const NB_CAN_SAY = 'speechSynthesis' in window;
+function nbRand(a, b){ return a + Math.floor(Math.random()*(b-a+1)); }
+function nbPick(level){
+  if (level===0) return nbRand(0,20);
+  if (level===1) return nbRand(21,69);
+  if (level===2) return nbRand(70,99);
+  return [100,200,300,500,1000,2000,2026,101,180,365,999,1500,750,480][nbRand(0,13)];
+}
+function nbConfusers(n){
+  const c = new Set(), add = x=>{ if (x>=0 && x<=9999 && x!==n) c.add(x); };
+  if (n < 20){ [n+1,n-1,n+10,n-10,(n%10)+10,n%10,[12,2,13,3,14,4,15,5,16,6][nbRand(0,9)]].forEach(add); }
+  else if (n < 100){ const t = Math.floor(n/10), u = n%10; [n+1,n-1,n+10,n-10,u*10+t,n+20,n-20].forEach(add); if (n>=60) [n-60+60, 60+(n%20), 80+(n%20), n>=80 ? n-20 : n+20, 60+u, 70+u, 90+u].forEach(add); }
+  else [n+100,n-100,n+1,n+10,Math.round(n/10),n*2,n+1000].forEach(add);
+  const arr = [...c].sort(()=>Math.random()-.5).slice(0,3);
+  while (arr.length < 3){ const x = n + nbRand(-15,15); if (x>=0 && x!==n && !arr.includes(x)) arr.push(x); }
+  return arr;
+}
+function nbNewQuiz(){
+  const qs = [];
+  for (let i=0;i<NB_N;i++){
+    const level = i < 4 ? 0 : (i < 8 ? 1 : (i < 12 ? 2 : 3));
+    let n; do { n = nbPick(level); } while (qs.some(q=>q.n===n));
+    const types = NB_CAN_SAY ? ['n2w','w2n','say'] : ['n2w','w2n'];
+    const type = types[i % types.length];
+    const opts = [n, ...nbConfusers(n)].sort(()=>Math.random()-.5);
+    qs.push({ n, type, opts });
+  }
+  return { qs, i:0, score:0, picked:null };
+}
+let nb = null;
+function nbFmt(n){ return n >= 1000 ? String(n).replace(/\B(?=(\d{3})+(?!\d))/g,' ') : String(n); }
+function paintNb(){
+  const box = $('nbBody'); box.innerHTML = '';
+  if (!nb) nb = nbNewQuiz();
+  const has = !!pickOf('ev_dico');
+  if (nb.i >= NB_N){
+    const ok = nb.score >= NB_PASS;
+    box.innerHTML = `<div class="qz-end"><span class="qz-score">${nb.score}<small>/${NB_N}</small></span><p>${nb.score===NB_N ? 'Parfait ! Tu comptes comme une Parisienne.' : (ok ? 'Très bien ! Bravo.' : `Encore un petit effort : il faut ${NB_PASS}/${NB_N} pour gagner le dictionnaire.`)}</p></div>`;
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'qz-next'; b.textContent = ok ? 'Rejouer' : 'Réessayer';
+    b.addEventListener('click', ()=>{ nb = nbNewQuiz(); SFX.select(); paintNb(); }); box.appendChild(b);
+    $('nbReward').hidden = !has; if (has) paintEvRewards(NBEV, $('nbRewards'), 1);
+    return;
+  }
+  const Q = nb.qs[nb.i], lvl = ['0 – 20','21 – 69','70 – 99','100 +'][nb.i < 4 ? 0 : (nb.i < 8 ? 1 : (nb.i < 12 ? 2 : 3))];
+  const prompt = Q.type==='n2w' ? `<span class="nb-big">${nbFmt(Q.n)}</span><span class="nb-ask">How do you say it in French?</span>`
+    : (Q.type==='w2n' ? `<span class="nb-word">${nbFr(Q.n)}</span><span class="nb-ask">Which number is it?</span>`
+    : `<button type="button" class="nb-say" id="nbSay">🔊 Écoute</button><span class="nb-ask">Listen. Which number do you hear?</span>`);
+  box.insertAdjacentHTML('beforeend', `<div class="qz-top"><span>Question ${nb.i+1} / ${NB_N} · ${lvl}</span><span>${nb.score} ✓</span></div><i class="qz-bar nb-bar" style="--p:${nb.i/NB_N}"></i><div class="nb-q">${prompt}</div>`);
+  if (Q.type==='say'){ $('nbSay').addEventListener('click', ()=>frSay(nbFr(Q.n))); if (nb.picked===null) setTimeout(()=>frSay(nbFr(Q.n)), 250); }
+  const opts = document.createElement('div'); opts.className = 'qz-opts' + (Q.type==='n2w' ? '' : ' nb-nums');
+  Q.opts.forEach(v=>{
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'qz-o'; b.textContent = Q.type==='n2w' ? nbFr(v) : nbFmt(v);
+    if (nb.picked !== null){ b.disabled = true; if (v===Q.n) b.classList.add('ok'); else if (v===nb.picked) b.classList.add('no'); }
+    b.addEventListener('click', ()=>{ if (nb.picked !== null) return; nb.picked = v; const good = v===Q.n;
+      if (good){ nb.score++; [784,1046].forEach((f,i)=>blip(f,.08,i*.07,'sine',.04)); } else blip(200,.18,0,'sawtooth',.03);
+      frSay(nbFr(Q.n)); paintNb(); });
+    opts.appendChild(b);
+  });
+  box.appendChild(opts);
+  if (nb.picked !== null){
+    const good = nb.picked === Q.n, tip = nbTip(Q.n);
+    box.insertAdjacentHTML('beforeend', `<p class="qz-fb ${good ? 'good' : 'bad'}">${good ? 'Bravo !' : 'Pas tout à fait…'} ${nbFmt(Q.n)} = <b>${nbFr(Q.n)}</b>${tip ? '<br>' + tip : ''}</p>`);
+    const nx = document.createElement('button'); nx.type = 'button'; nx.className = 'qz-next'; nx.textContent = nb.i === NB_N-1 ? 'See my score' : 'Next';
+    nx.addEventListener('click', ()=>{ nb.i++; nb.picked = null;
+      if (nb.i >= NB_N){ const S0 = NS(); S0.tries++; S0.best = Math.max(S0.best, nb.score); save();
+        if (nb.score >= NB_PASS && !pickOf('ev_dico')){ grantEv('ev_dico'); SFX.final(); toast('Bravo ! The dictionary is yours'); buildGrid(); paintTools(); paintLang(); } }
+      SFX.tick(); paintNb(); });
+    box.appendChild(nx);
+  }
+  $('nbReward').hidden = !has; if (has) paintEvRewards(NBEV, $('nbRewards'), 1);
+}
+function nbTip(n){
+  if (n >= 70 && n < 80) return 'Tip: 70 = 60 + 10 → <i>soixante-dix</i>. 75 = <i>soixante-quinze</i> (60 + 15).';
+  if (n >= 80 && n < 90) return 'Tip: 80 = 4 × 20 → <i>quatre-vingts</i>.';
+  if (n >= 90 && n < 100) return 'Tip: 90 = 4 × 20 + 10 → <i>quatre-vingt-dix</i>.';
+  if (n > 20 && n < 70 && n % 10 === 1) return 'Tip: 21, 31, 41, 51, 61 take « et un ».';
+  return '';
+}
+function openNb(){
+  if (!nbOpen() && !pickOf('ev_dico')){ toast('« Les nombres » was on November 18–20.'); SFX.nope(); return; }
+  if (editing) setEditing(false);
+  if (photoMode) exitPhoto();
+  nb = nbNewQuiz(); $('nb').hidden = false; document.body.style.overflow = 'hidden'; SFX.open(); paintNb();
+}
+function closeNb(){ $('nb').hidden = true; document.body.style.overflow = ''; NS().seen = true; save(); try { speechSynthesis.cancel(); } catch(e){} paintEventBtns(); paintTools(); }
+
+$('nbBtn').addEventListener('click', openNb);
+$('nbClose').addEventListener('click', closeNb);
+$('dicoClose').addEventListener('click', closeDico);
+$('dicoBtn').addEventListener('click', openDico);
+$('frDicoBtn').addEventListener('click', openDico);
+$('langTog').querySelectorAll('button').forEach(b=>b.addEventListener('click', ()=>setLang(b.dataset.l)));
+$('frForm').addEventListener('submit', e=>{ e.preventDefault(); frSubmit(); });
+document.addEventListener('keydown', e=>{ if (e.key!=='Escape') return; if (!$('nb').hidden) closeNb(); else if (!$('dico').hidden) closeDico(); });
+paintLang(); if (FRON()) frRefreshWorld();
+
+/* =====================================================================
    CODES SECRETS
    ===================================================================== */
 const CHEATS = {
@@ -7876,6 +8343,10 @@ const CHEATS = {
   HORROR(){ if (!hrOpen()) return 'Lights Out was on November 18 & 19'; openHr(); return 'Don\'t look behind you'; },
   HRTEST(){ if (!DEV) return 'Nice try'; HREV.forEach(ev=>grantEv(ev.slot)); HS().wins = Math.max(1, HS().wins); refresh(); paintTools(); return 'All Lights Out gifts unlocked'; },
   BOO(){ return callFlyer(BOO); },
+  NOMBRES(){ if (!nbOpen() && !pickOf('ev_dico')) return '« Les nombres » was on November 18–20'; openNb(); return 'Un, deux, trois…'; },
+  NUMBERS(){ if (!nbOpen() && !pickOf('ev_dico')) return '« Les nombres » was on November 18–20'; openNb(); return 'Un, deux, trois…'; },
+  DICO(){ if (!pickOf('ev_dico')) return 'Win the dictionary first'; openDico(); return 'Mon dictionnaire'; },
+  NBTEST(){ if (!DEV) return 'Nice try'; grantEv('ev_dico'); refresh(); paintTools(); paintLang(); return 'Dictionary unlocked'; },
   QUIZ(){ if (!qzOpen()) return 'The quiz was on November 13'; openQz(); return 'CR7 Quiz'; },
   CR7(){ if (!qzOpen()) return 'The quiz was on November 13'; openQz(); return 'Siuuu!'; },
   SUDOKU(){ const d = suOpenFor(SUDOKUS.s2) ? SUDOKUS.s2 : SUDOKUS.s1; openSu(d); return 'Sudoku'; },
