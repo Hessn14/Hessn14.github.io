@@ -408,20 +408,27 @@
   .evy-bt{font-family:'Parisienne','Snell Roundhand','Apple Chancery',cursive;font-size:clamp(30px,4vw,38px);line-height:1;color:#f3d9de}
   .evy-env{width:16px;height:11px;flex:none;border-radius:2px;background:#f3e8d4;position:relative;overflow:hidden}
   .evy-env::after{content:'';position:absolute;left:0;right:0;top:-6px;height:11px;border:1.5px solid #c9a0a8;transform:rotate(45deg) translate(2px,2px);transform-origin:top left;width:9px}
-  .evy-card{position:absolute;width:min(460px,92vw);max-height:84vh;overflow:auto;background:#fbf6ec;color:#3a2a2a;border-radius:10px;padding:26px 26px 22px;box-shadow:0 24px 60px rgba(0,0,0,.5);
-    opacity:0;transform:translateY(60px) scale(.9);transition:opacity .6s ease .2s,transform .7s cubic-bezier(.2,.8,.2,1) .2s;pointer-events:none;
-    background-image:linear-gradient(transparent 0 calc(100% - 1px),rgba(122,42,58,.07) 0);background-size:100% 30px}
+  .evy-card{position:absolute;width:min(440px,92vw);perspective:1600px;cursor:pointer;opacity:0;transform:translateY(60px) scale(.9);transition:opacity .6s ease .2s,transform .7s cubic-bezier(.2,.8,.2,1) .2s;pointer-events:none}
   .letter.out .evy-card{opacity:1;transform:none;pointer-events:auto}
+  .evy-inner{position:relative;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.3,.7,.2,1)}
+  .letter.flip .evy-inner{transform:rotateY(180deg)}
+  .evy-face{backface-visibility:hidden;-webkit-backface-visibility:hidden;background:#fbf6ec;color:#3a2a2a;border-radius:10px;box-shadow:0 24px 60px rgba(0,0,0,.5)}
+  .evy-front{padding:26px 26px 18px;max-height:84vh;overflow:auto;background-image:linear-gradient(transparent 0 calc(100% - 1px),rgba(122,42,58,.07) 0);background-size:100% 30px;background-color:#fbf6ec}
+  .evy-back{position:absolute;inset:0;transform:rotateY(180deg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;overflow:hidden;
+    background:radial-gradient(circle at 50% 45%,#fff8f0 0,#f6ebdc 70%)}
+  .evy-heart{width:58%;max-width:220px;filter:drop-shadow(0 10px 18px rgba(154,31,53,.35));animation:evyBeat 1.6s ease-in-out infinite}
+  @keyframes evyBeat{0%,100%{transform:scale(1)}12%{transform:scale(1.08)}24%{transform:scale(.98)}36%{transform:scale(1.05)}}
+  .evy-al{font-family:'Parisienne','Snell Roundhand','Apple Chancery',cursive;font-size:38px;color:#7a2a3a;line-height:1}.evy-al span{font-size:26px;color:#c98a96}
+  .evy-mini{position:absolute;color:#e8b4be;font-size:16px}.evy-mini.m1{top:9%;left:10%;transform:rotate(-14deg)}.evy-mini.m2{top:14%;right:12%;font-size:12px;transform:rotate(12deg)}.evy-mini.m3{bottom:12%;left:16%;font-size:12px;transform:rotate(10deg)}.evy-mini.m4{bottom:9%;right:10%;transform:rotate(-8deg)}
   .evy-t{font-family:'Parisienne','Snell Roundhand','Apple Chancery',cursive;font-size:44px;line-height:1;color:#7a2a3a;text-align:center}
   .evy-s{text-align:center;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:#a08070;margin:6px 0 14px}
-  .evy-list{list-style:none;counter-reset:e;padding:0;margin:0;display:flex;flex-direction:column;gap:2px}
-  .evy-list li{counter-increment:e;display:flex;gap:10px;align-items:baseline;opacity:0;transform:translateY(6px)}
+  .evy-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:2px}
+  .evy-list li{display:flex;gap:10px;align-items:baseline;padding:4px 0;font:italic 400 17px/1.4 var(--serif);color:#3a2a2a;opacity:0;transform:translateY(6px)}
   .letter.out .evy-list li{animation:evyIn .5s ease forwards}
-  .evy-list li::before{content:'♥';color:#d8a0aa;font-size:11px;flex:none}
-  .evy-l{border:0;background:none;padding:4px 0;text-align:left;font:italic 400 17px/1.4 var(--serif);color:#3a2a2a;cursor:pointer}
-  .evy-l:hover,.evy-l.say{color:#9a2f45}
+  .evy-list li::before{content:'♥';color:#d8a0aa;font-size:11px;font-style:normal;flex:none}
   .evy-sign{margin-top:16px;text-align:right;font-family:'Parisienne','Snell Roundhand','Apple Chancery',cursive;font-size:30px;color:#7a2a3a}
   .evy-sign span{font-family:var(--serif);font-style:italic;font-size:16px;color:#6a5040;margin-left:6px}
+  .evy-turn{text-align:center;font-size:11px;color:#b09a8a;margin-top:8px;letter-spacing:.06em}
   @keyframes evyIn{to{opacity:1;transform:none}}
 
   @media (prefers-reduced-motion:reduce){
@@ -633,12 +640,27 @@
     </div>
     <p class="env-hint">Tap the envelope to open it</p>
   </div>
-  <div class="evy-card" id="evyCard">
-    <p class="evy-t">Everything</p>
-    <p class="evy-s">Tout ce que tu es · tap a line to hear it</p>
-    <ol class="evy-list"><li><button type="button" class="evy-l">Tu es la plus belle chose qui me soit arrivée.</button></li><li><button type="button" class="evy-l">Tu es la plus belle.</button></li><li><button type="button" class="evy-l">Tu es une personne incroyable.</button></li><li><button type="button" class="evy-l">Tu es la plus sexy.</button></li><li><button type="button" class="evy-l">Tu es la plus hot.</button></li><li><button type="button" class="evy-l">Tu es la plus smart.</button></li><li><button type="button" class="evy-l">Je suis fier de toi, tous les jours.</button></li><li><button type="button" class="evy-l">Tu es ma personne préférée.</button></li><li><button type="button" class="evy-l">Tu es mon petit triangle préféré.</button></li></ol>
-    <p class="evy-sign">Je t'aime. <span>— Léo</span></p>
+  <div class="evy-card" id="evyCard" role="button" tabindex="0" aria-label="Turn the card over">
+    <div class="evy-inner">
+      <div class="evy-face evy-front">
+        <p class="evy-t">Everything</p>
+        <p class="evy-s">Tout ce que tu es</p>
+        <ol class="evy-list"><li>Tu es la plus belle chose qui me soit arrivée.</li><li>Tu es la plus belle.</li><li>Tu es une personne incroyable.</li><li>Tu es la plus sexy.</li><li>Tu es la plus hot.</li><li>Tu es la plus smart.</li><li>Je suis fier de toi, tous les jours.</li><li>Tu es ma personne préférée.</li><li>Tu es mon petit triangle préféré.</li></ol>
+        <p class="evy-sign">Je t'aime. <span>— Léo</span></p>
+        <p class="evy-turn">Tap the card to turn it over</p>
+      </div>
+      <div class="evy-face evy-back">
+        <span class="evy-mini m1">♥</span><span class="evy-mini m2">♥</span><span class="evy-mini m3">♥</span><span class="evy-mini m4">♥</span>
+        <svg class="evy-heart" viewBox="0 0 200 180" aria-hidden="true">
+          <defs><linearGradient id="evyG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e2697f"/><stop offset="1" stop-color="#9a1f35"/></linearGradient></defs>
+          <path d="M100 168 C 40 120, 6 92, 6 52 C 6 24, 28 6, 54 6 C 74 6, 90 18, 100 34 C 110 18, 126 6, 146 6 C 172 6, 194 24, 194 52 C 194 92, 160 120, 100 168 Z" fill="url(#evyG)"/>
+          <path d="M40 40 C 46 26, 60 20, 72 22" stroke="rgba(255,255,255,.55)" stroke-width="6" fill="none" stroke-linecap="round"/>
+        </svg>
+        <p class="evy-al">A <span>&amp;</span> L</p>
+      </div>
+    </div>
   </div>
+</div>
 </div>
 
 <div class="paris qzw" id="qz" hidden>
@@ -8362,13 +8384,14 @@ paintLang(); if (FRON()) frRefreshWorld();
 
 
 /* ---------- La petite lettre « Everything » ---------- */
-function openEvy(){ const L = $('evy'); L.hidden = false; L.className = 'letter evy'; document.body.style.overflow = 'hidden'; SFX.open();
+function openEvy(){ const L = $('evy'); L.hidden = false; L.className = 'letter evy'; document.body.style.overflow = 'hidden';
   $('evy').querySelectorAll('.evy-list li').forEach((li,i)=>{ li.style.animationDelay = (0.5 + i*0.12) + 's'; }); }
-function closeEvy(){ $('evy').hidden = true; $('evy').className = 'letter evy'; document.body.style.overflow = ''; try { speechSynthesis.cancel(); } catch(e){} if (!state.evySeen){ state.evySeen = true; save(); paintEventBtns(); } }
+function closeEvy(){ $('evy').hidden = true; $('evy').className = 'letter evy'; document.body.style.overflow = ''; if (!state.evySeen){ state.evySeen = true; save(); paintEventBtns(); } }
 $('evyBtn').addEventListener('click', openEvy);
 $('evyClose').addEventListener('click', closeEvy);
-$('evyEnv').addEventListener('click', ()=>{ const L = $('evy'); if (L.classList.contains('open')) return; L.classList.add('open'); [523,659,784,1046].forEach((f,i)=>blip(f,.14,i*.12,'sine',.04)); setTimeout(()=>L.classList.add('out'), 1300); });
-$('evy').querySelectorAll('.evy-l').forEach(b=>b.addEventListener('click', ()=>{ $('evy').querySelectorAll('.evy-l.say').forEach(q=>q.classList.remove('say')); b.classList.add('say'); frSay(b.textContent); }));
+$('evyEnv').addEventListener('click', ()=>{ const L = $('evy'); if (L.classList.contains('open')) return; L.classList.add('open'); setTimeout(()=>L.classList.add('out'), 1300); });
+$('evyCard').addEventListener('click', ()=>{ const L = $('evy'); if (L.classList.contains('out')) L.classList.toggle('flip'); });
+$('evyCard').addEventListener('keydown', e=>{ if (e.key==='Enter' || e.key===' '){ e.preventDefault(); $('evyCard').click(); } });
 document.addEventListener('keydown', e=>{ if (!$('evy').hidden && e.key==='Escape') closeEvy(); });
 
 /* =====================================================================
