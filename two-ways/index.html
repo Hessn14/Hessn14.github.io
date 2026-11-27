@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Two Ways · RU ↔ FR</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;1,7..72,400&display=swap">
+  <style>
+/*
+  VOICE: calm, tender, bilingual notebook — two inks on clean paper.
+  IDEA: an interlinear reader: each line in its own ink, its reading pencilled beneath.
+  PICTURE: the dialogue itself, as two voices answering each other.
+  COLOUR and TYPE: white / night ground; French in deep blue ink, Russian in berry. Literata for text, Golos Text for UI.
+  LAYOUT: modest header with tabs; situations rail + conversation; stacks below 760px.
+*/
+:root {
+  color-scheme: light dark;
+  --bg: light-dark(#ffffff, #141519);
+  --surface: light-dark(#f6f6f3, #1c1e23);
+  --surface-2: light-dark(#efefeb, #24262c);
+  --ink: light-dark(#1b1c1f, #ecebe6);
+  --muted: light-dark(#696c74, #9b9ea7);
+  --line: light-dark(#e5e5e0, #2c2f36);
+  --fr: light-dark(#2c4aa0, #93abff);
+  --fr-soft: light-dark(#eef1fb, #1e2438);
+  --ru: light-dark(#a02f4e, #f08aa6);
+  --ru-soft: light-dark(#fbeff2, #34202a);
+  --danger: light-dark(#b3261e, #ff8a80);
+  --radius: 14px;
+  --serif: "Literata", Georgia, "Times New Roman", serif;
+  --sans: "Golos Text", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }
+
+* { box-sizing: border-box; min-width: 0; }
+html { scroll-padding-top: 80px; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.55 var(--sans);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+button, input, textarea { font: inherit; color: inherit; }
+h1, h2, h3 { font-weight: 600; line-height: 1.15; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(26px, 3.4vw, 34px); letter-spacing: -0.01em; }
+h2 { font-size: 20px; }
+h3 { font-size: 16px; }
+p { margin: 0; }
+.muted { color: var(--muted); }
+.small { font-size: 14px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.ru-ink { color: var(--ru); }
+.fr-ink { color: var(--fr); }
+code { font-size: 0.9em; background: var(--surface-2); padding: 1px 5px; border-radius: 5px; overflow-wrap: anywhere; }
+:focus-visible { outline: 2px solid var(--fr); outline-offset: 2px; border-radius: 6px; }
+
+/* ---------- header ---------- */
+.top {
+  position: sticky; top: 0; z-index: 20;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.top-inner {
+  max-width: 1180px; margin: 0 auto;
+  display: flex; align-items: center; gap: 16px;
+  padding: 10px max(4vw, 16px);
+}
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; flex: none; }
+.mark { width: 40px; height: 24px; }
+.mark path { fill: none; stroke-width: 3; stroke-linecap: round; }
+.arc-fr { stroke: var(--fr); }
+.arc-ru { stroke: var(--ru); }
+.brand-name { font-family: var(--serif); font-size: 21px; font-weight: 500; }
+.brand-pair { font-size: 13px; color: var(--muted); font-weight: 500; white-space: nowrap; }
+.tabs { display: flex; gap: 4px; margin-left: auto; background: var(--surface); padding: 4px; border-radius: 999px; }
+.tab {
+  border: 0; background: transparent; padding: 8px 18px; min-height: 40px;
+  border-radius: 999px; cursor: pointer; color: var(--muted); font-weight: 500;
+}
+.tab[aria-selected="true"] { background: var(--bg); color: var(--ink); box-shadow: 0 1px 3px rgb(0 0 0 / 0.08); }
+.help-btn { flex: none; }
+
+/* ---------- buttons & controls ---------- */
+.ghost, .primary {
+  border-radius: 999px; padding: 9px 16px; min-height: 44px; cursor: pointer;
+  font-weight: 500; border: 1px solid var(--line); background: transparent;
+}
+.ghost:hover { background: var(--surface); }
+.ghost.small { min-height: 36px; padding: 6px 14px; font-size: 14px; }
+.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.primary:hover { opacity: 0.9; }
+.danger { color: var(--danger); }
+.danger-fill { background: var(--danger); border-color: var(--danger); color: #fff; }
+.linkish { border: 0; background: var(--surface-2); padding: 0 8px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+
+.switch { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; min-height: 44px; font-weight: 500; font-size: 15px; }
+.switch input {
+  appearance: none; width: 40px; height: 24px; border-radius: 999px; margin: 0;
+  background: var(--surface-2); border: 1px solid var(--line); position: relative; cursor: pointer;
+  transition: background .2s;
+}
+.switch input::after {
+  content: ""; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px;
+  border-radius: 50%; background: var(--bg); box-shadow: 0 1px 2px rgb(0 0 0 / 0.25); transition: transform .2s;
+}
+.switch input:checked { background: var(--ink); border-color: var(--ink); }
+.switch input:checked::after { transform: translateX(16px); }
+
+/* ---------- tip banner ---------- */
+.tip {
+  max-width: 1180px; margin: 14px auto 0; padding: 12px 16px;
+  display: flex; gap: 16px; align-items: center; justify-content: space-between;
+  background: var(--surface); border-radius: var(--radius); font-size: 15px;
+  width: calc(min(1180px, 100%) - 2 * max(4vw, 16px));
+}
+
+main { max-width: 1180px; margin: 0 auto; padding: 24px max(4vw, 16px) 64px; }
+
+/* ---------- dialogues ---------- */
+.dlg-layout { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 40px; align-items: start; }
+.scenes { position: sticky; top: 84px; }
+.eyebrow { font-size: 13px; font-weight: 600; color: var(--muted); margin: 6px 0 10px 12px; }
+.scene-list { display: flex; flex-direction: column; gap: 2px; }
+.scene {
+  text-align: left; border: 0; background: transparent; cursor: pointer;
+  padding: 10px 12px; border-radius: 12px; min-height: 44px;
+  display: flex; flex-direction: column; gap: 1px;
+}
+.scene:hover { background: var(--surface); }
+.scene[aria-current="true"] { background: var(--surface); }
+.scene b { font-weight: 600; font-size: 15px; }
+.scene span { font-size: 13px; color: var(--muted); }
+.scene .num { font-family: var(--serif); color: var(--muted); font-size: 13px; }
+
+.dialogue { max-width: 760px; }
+.dlg-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; }
+.dlg-head .muted { margin-top: 6px; }
+.toggles { display: flex; gap: 18px; flex-wrap: wrap; }
+.legend { display: flex; gap: 8px; flex-wrap: wrap; margin: 22px 0 8px; }
+.who-chip { font-size: 13px; font-weight: 500; padding: 4px 10px; border-radius: 999px; }
+.who-chip.her { background: var(--fr-soft); color: var(--fr); }
+.who-chip.me { background: var(--ru-soft); color: var(--ru); }
+
+.turns { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+.turn {
+  position: relative; max-width: 88%;
+  padding: 14px 18px 15px; border-radius: 18px;
+  animation: rise .35s ease both;
+}
+.turn.her { align-self: flex-start; background: var(--fr-soft); border-bottom-left-radius: 6px; }
+.turn.me { align-self: flex-end; background: var(--ru-soft); border-bottom-right-radius: 6px; }
+.who { font-size: 12.5px; font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+.turn.her .who { color: var(--fr); }
+.turn.me .who { color: var(--ru); }
+.line-row { display: flex; gap: 10px; align-items: flex-start; }
+.line-body { flex: 1; cursor: pointer; }
+.target { font-family: var(--serif); font-size: 21px; line-height: 1.35; }
+.read { font-family: var(--serif); font-style: italic; font-size: 16.5px; color: var(--muted); margin-top: 3px; letter-spacing: 0.01em; }
+.en { font-size: 14.5px; color: var(--muted); margin-top: 8px; padding-top: 8px; border-top: 1px solid color-mix(in srgb, var(--line) 70%, transparent); }
+.note { font-size: 13.5px; color: var(--muted); margin-top: 6px; }
+.note::before { content: "Note · "; font-weight: 600; }
+.peek { display: none; font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+/* phonetics hidden -> show a peek hint, reveal on tap */
+.hide-phon .read { display: none; }
+.hide-phon .peek { display: block; }
+.hide-phon .revealed .read { display: block; }
+.hide-phon .revealed .peek { display: none; }
+.hide-en .en { display: none; }
+
+.speak {
+  flex: none; width: 36px; height: 36px; border-radius: 50%; border: 0; cursor: pointer;
+  background: transparent; color: var(--muted); display: grid; place-items: center; margin: -4px -8px 0 0;
+}
+.speak:hover { background: color-mix(in srgb, var(--ink) 7%, transparent); color: var(--ink); }
+.speak svg { width: 18px; height: 18px; }
+
+.dlg-nav { display: flex; justify-content: space-between; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
+
+/* ---------- dictionary ---------- */
+.dict-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; }
+.dict-head .muted { margin-top: 6px; }
+.dict-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.dict-tools { display: flex; gap: 18px; align-items: center; margin-top: 22px; flex-wrap: wrap; }
+.search { flex: 1 1 320px; }
+.search input, .field input, textarea {
+  width: 100%; font-size: 16px; padding: 11px 14px; min-height: 46px;
+  border: 1px solid var(--line); border-radius: 12px; background: var(--bg);
+}
+.search input { background: var(--surface); border-color: transparent; }
+.search input:focus, .field input:focus, textarea:focus { outline: 2px solid var(--fr); outline-offset: 0; border-color: transparent; }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 14px; }
+.chip {
+  border: 1px solid var(--line); background: transparent; border-radius: 999px;
+  padding: 6px 13px; min-height: 38px; cursor: pointer; font-size: 14px; color: var(--muted);
+}
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.chip .c { opacity: 0.7; margin-left: 4px; font-variant-numeric: tabular-nums; }
+.sync-note { font-size: 13px; margin-top: 12px; min-height: 1em; }
+
+.cat-block { margin-top: 26px; }
+.cat-title { font-size: 14px; font-weight: 600; color: var(--muted); padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+.entries { list-style: none; margin: 0; padding: 0; }
+.entry { padding: 14px 0 16px; border-bottom: 1px solid var(--line); }
+.entry-top { display: flex; align-items: center; gap: 8px; }
+.gloss { font-size: 14px; font-weight: 600; flex: 1; }
+.badge { font-size: 11.5px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: var(--surface-2); color: var(--muted); }
+.icon-btn {
+  width: 36px; height: 36px; border-radius: 50%; border: 0; background: transparent; cursor: pointer;
+  color: var(--muted); display: grid; place-items: center;
+}
+.icon-btn:hover { background: var(--surface); color: var(--ink); }
+.icon-btn svg { width: 17px; height: 17px; }
+.pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px 28px; margin-top: 6px; }
+.side { display: flex; gap: 10px; align-items: flex-start; padding-left: 12px; border-left: 3px solid; }
+.side.ru { border-color: var(--ru); }
+.side.fr { border-color: var(--fr); }
+.side .line-body .target { font-size: 20px; }
+.side .read { font-size: 15.5px; }
+.lang-tag { font-size: 11px; font-weight: 600; letter-spacing: 0.02em; }
+.side.ru .lang-tag { color: var(--ru); }
+.side.fr .lang-tag { color: var(--fr); }
+.entry .note { margin-top: 10px; }
+.empty { text-align: center; padding: 56px 16px; color: var(--muted); }
+.empty b { display: block; color: var(--ink); font-size: 17px; margin-bottom: 4px; }
+
+/* ---------- modals ---------- */
+.modal {
+  position: fixed; inset: 0; z-index: 50; display: grid; place-items: center;
+  background: rgb(10 12 16 / 0.42); padding: 16px;
+}
+.modal[hidden] { display: none; }
+.sheet {
+  width: min(720px, 100%); max-height: calc(100dvh - 32px); overflow: auto;
+  background: var(--bg); border-radius: 20px; padding: 24px clamp(18px, 3vw, 30px);
+  box-shadow: 0 20px 60px rgb(0 0 0 / 0.25);
+  display: flex; flex-direction: column; gap: 14px;
+}
+.sheet.narrow { width: min(440px, 100%); }
+.sheet-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.close { width: 44px; padding: 0; font-size: 22px; line-height: 1; }
+.sheet-foot { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 4px; }
+.spacer { flex: 1; }
+.keys { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+.key { background: var(--surface); border-radius: var(--radius); padding: 16px 18px; }
+.key h3 { margin-bottom: 2px; }
+.key dl { margin: 12px 0 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 7px 12px; font-size: 14.5px; }
+.key dt { font-family: var(--serif); font-weight: 500; white-space: nowrap; }
+.key dd { margin: 0; color: var(--muted); }
+.key dd i { color: var(--ink); font-family: var(--serif); }
+.howto { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; font-size: 15px; }
+
+.form-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px 16px; }
+.field { display: flex; flex-direction: column; gap: 5px; font-size: 14px; font-weight: 500; }
+.field em { color: var(--danger); font-style: normal; }
+.field.wide { grid-column: 1 / -1; }
+.side-field { border: 0; margin: 0; padding: 12px 0 0 14px; display: flex; flex-direction: column; gap: 12px; border-left: 3px solid; }
+.side-field.ru { border-color: var(--ru); }
+.side-field.fr { border-color: var(--fr); }
+.side-field legend { font-weight: 600; padding: 0; margin-bottom: 4px; }
+.form-error { color: var(--danger); font-size: 14px; min-height: 1em; }
+.seg { display: flex; flex-direction: column; gap: 6px; font-size: 15px; }
+.seg label { display: flex; gap: 8px; align-items: center; min-height: 32px; cursor: pointer; }
+textarea { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 13px; line-height: 1.5; resize: vertical; }
+
+.toast {
+  position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); z-index: 60;
+  background: var(--ink); color: var(--bg); padding: 10px 18px; border-radius: 999px; font-size: 14.5px;
+  opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; max-width: calc(100% - 32px);
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+@keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .turn { animation: none; } .toast { transition: none; } }
+
+/* ---------- narrow screens ---------- */
+@media (max-width: 860px) {
+  .dlg-layout { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .scenes { position: static; }
+  .eyebrow { display: none; }
+  .scene-list { flex-direction: row; overflow-x: auto; gap: 6px; padding-bottom: 6px; scroll-snap-type: x mandatory; }
+  .scene { flex: none; scroll-snap-align: start; border: 1px solid var(--line); padding: 8px 14px; border-radius: 999px; }
+  .scene span:not(.num) { display: none; }
+  .scene[aria-current="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .scene[aria-current="true"] .num { color: inherit; }
+  .scene { flex-direction: row; gap: 6px; align-items: center; }
+}
+@media (max-width: 640px) {
+  .top-inner { flex-wrap: wrap; gap: 8px 12px; padding-top: 8px; padding-bottom: 8px; }
+  .brand-pair { display: none; }
+  .tabs { order: 3; width: 100%; margin-left: 0; }
+  .tab { flex: 1; }
+  .help-btn { margin-left: auto; min-height: 38px; padding: 6px 14px; font-size: 14px; }
+  .turn { max-width: 96%; padding: 12px 14px 13px; }
+  .target { font-size: 19px; }
+  .pair, .keys, .form-grid { grid-template-columns: minmax(0, 1fr); }
+  .tip { flex-direction: column; align-items: flex-start; }
+}
+
+</style>
+</head>
+<body>
+  <header class="top">
+    <div class="top-inner">
+      <a class="brand" href="#dialogues" aria-label="Two Ways, home">
+        <svg class="mark" viewBox="0 0 40 24" aria-hidden="true">
+          <path d="M4 18 C 10 2, 22 2, 28 12" class="arc-fr"/>
+          <path d="M36 6 C 30 22, 18 22, 12 12" class="arc-ru"/>
+        </svg>
+        <span class="brand-name">Two Ways</span>
+        <span class="brand-pair"><span class="ru-ink">RU</span> ↔ <span class="fr-ink">FR</span></span>
+      </a>
+      <nav class="tabs" role="tablist" aria-label="Sections">
+        <button class="tab" role="tab" id="tab-dialogues" aria-controls="view-dialogues" data-view="dialogues">Dialogues</button>
+        <button class="tab" role="tab" id="tab-dictionary" aria-controls="view-dictionary" data-view="dictionary">Dictionary</button>
+      </nav>
+      <button class="ghost help-btn" id="open-help" type="button">How to read</button>
+    </div>
+  </header>
+
+  <div class="tip" id="tip" hidden>
+    <p><strong>Tip:</strong> each line shows the text, then <em>how to read it</em> in your own alphabet. Turn phonetics off to test yourself — tap a line to peek.</p>
+    <button class="ghost small" id="tip-close" type="button">Got it</button>
+  </div>
+
+  <main>
+    <!-- DIALOGUES -->
+    <section class="view" id="view-dialogues" role="tabpanel" aria-labelledby="tab-dialogues">
+      <div class="dlg-layout">
+        <aside class="scenes" aria-label="Situations">
+          <h2 class="eyebrow">Situations</h2>
+          <div class="scene-list" id="scene-list"></div>
+        </aside>
+        <article class="dialogue" id="dialogue">
+          <div class="dlg-head">
+            <div>
+              <h1 id="dlg-title"></h1>
+              <p class="muted" id="dlg-sub"></p>
+            </div>
+            <div class="toggles" role="group" aria-label="Display options">
+              <label class="switch"><input type="checkbox" id="t-phon"><span>Phonetics</span></label>
+              <label class="switch"><input type="checkbox" id="t-en"><span>English</span></label>
+            </div>
+          </div>
+          <div class="legend">
+            <span class="who-chip her">Her · speaks French</span>
+            <span class="who-chip me">Me · speaks Russian</span>
+          </div>
+          <ol class="turns" id="turns"></ol>
+          <div class="dlg-nav">
+            <button class="ghost" id="prev-scene" type="button">← Previous</button>
+            <button class="ghost" id="next-scene" type="button">Next situation →</button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- DICTIONARY -->
+    <section class="view" id="view-dictionary" role="tabpanel" aria-labelledby="tab-dictionary" hidden>
+      <div class="dict-head">
+        <div>
+          <h1>Dictionary</h1>
+          <p class="muted" id="dict-count"></p>
+        </div>
+        <div class="dict-actions">
+          <button class="primary" id="add-word" type="button">+ Add word</button>
+          <button class="ghost" id="export-words" type="button">Export</button>
+        </div>
+      </div>
+      <div class="dict-tools">
+        <label class="search">
+          <span class="sr">Search</span>
+          <input type="search" id="search" placeholder="Search in English, Russian or French…" autocomplete="off">
+        </label>
+        <label class="switch"><input type="checkbox" id="t-phon-dict"><span>Phonetics</span></label>
+      </div>
+      <div class="chips" id="chips" role="group" aria-label="Categories"></div>
+      <p class="sync-note muted" id="sync-note"></p>
+      <div id="dict-list"></div>
+    </section>
+  </main>
+
+  <!-- MODAL: how to read -->
+  <div class="modal" id="m-help" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="help-title">
+      <div class="sheet-head">
+        <h2 id="help-title">How to read the phonetics</h2>
+        <button class="ghost close" data-close type="button" aria-label="Close">×</button>
+      </div>
+      <p>Every Russian or French line has a second line underneath: a reading guide written with <em>the reader's own habits</em>. It's an approximation — listen to your partner, and use it as a crutch, not a rule.</p>
+      <div class="keys">
+        <div class="key">
+          <h3><span class="ru-ink">Russian</span>, read the French way</h3>
+          <p class="muted small">For the French speaker.</p>
+          <dl>
+            <dt>CAPS</dt><dd>the stressed syllable — longer and louder: <i>spa-SSI-ba</i></dd>
+            <dt>a</dt><dd>unstressed о sounds like "a" — that's why молоко is <i>ma-la-KO</i></dd>
+            <dt>t, s, k…</dt><dd>every final consonant is pronounced: <i>pri-VIÉT</i>, <i>khliép</i></dd>
+            <dt>nn, mm</dt><dd>never nasal: a clear vowel, then n/m — <i>a-DINN</i></dd>
+            <dt>ou · ch · j</dt><dd>у · ш · ж</dd>
+            <dt>tch · chtch</dt><dd>ч · щ (a long, soft "ch")</dd>
+            <dt>kh</dt><dd>х — like the Spanish jota</dd>
+            <dt>y</dt><dd>ы — say "i" with the tongue pulled back</dd>
+            <dt>'</dt><dd>soft consonant — a tiny "y" glide after it: <i>pit'</i></dd>
+            <dt>ï</dt><dd>й — as in "aïe": <i>tchaï</i></dd>
+            <dt>ss</dt><dd>always a hard s, never z</dd>
+          </dl>
+        </div>
+        <div class="key">
+          <h3><span class="fr-ink">French</span>, read the Russian way</h3>
+          <p class="muted small">For the Russian speaker.</p>
+          <dl>
+            <dt>´</dt><dd>French stresses the last syllable of a phrase, lightly; keep the rest even</dd>
+            <dt>он ан эн</dt><dd>н at the end of a syllable = nasal vowel: don't close on the н, let the vowel ring through the nose — <i>бонжу́р</i></dd>
+            <dt>нн</dt><dd>a real, clear n — <i>бонн</i> (bonne)</dd>
+            <dt>ю</dt><dd>French u: say "и" with lips rounded as for "у" — <i>тю</i></dd>
+            <dt>ё</dt><dd>French eu / e: "э" with rounded lips, no й before it — <i>дё</i></dd>
+            <dt>р</dt><dd>French r — soft, from the back of the throat</dd>
+            <dt>е / э</dt><dd>е = closed é (don't soften the consonant much), э = open è</dd>
+            <dt>silent</dt><dd>silent letters are already removed — read only what you see</dd>
+          </dl>
+        </div>
+      </div>
+      <h3>Using the app</h3>
+      <ul class="howto">
+        <li><b>Phonetics off</b> hides every reading guide. Tap any line to peek at just that one.</li>
+        <li><b>English</b> shows the meaning of each line.</li>
+        <li>The <b>speaker</b> button reads a line aloud with your browser's built-in voice (only shown if your device has a French or Russian voice).</li>
+        <li>In the <b>Dictionary</b>, add your own words, edit or delete any word. <b>Export</b> copies your words as code for <code>data/dictionary.js</code>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- MODAL: add / edit word -->
+  <div class="modal" id="m-word" hidden>
+    <form class="sheet" id="word-form" role="dialog" aria-modal="true" aria-labelledby="word-title" novalidate>
+      <div class="sheet-head">
+        <h2 id="word-title">Add a word</h2>
+        <button class="ghost close" data-close type="button" aria-label="Close">×</button>
+      </div>
+      <div class="form-grid">
+        <label class="field wide">
+          <span>English meaning <em>*</em></span>
+          <input name="en" id="f-en" required maxlength="200" placeholder="e.g. Good luck">
+        </label>
+        <label class="field wide">
+          <span>Category</span>
+          <input name="category" id="f-category" list="cat-options" maxlength="60" placeholder="Pick or type a new one">
+          <datalist id="cat-options"></datalist>
+        </label>
+        <fieldset class="side-field ru">
+          <legend><span class="ru-ink">Russian</span></legend>
+          <label class="field"><span>Word or phrase <em>*</em></span>
+            <input name="ru" id="f-ru" lang="ru" required maxlength="200" placeholder="Удачи"></label>
+          <label class="field"><span>French-style reading</span>
+            <input name="ruRead" id="f-ruRead" maxlength="200" placeholder="ou-DA-tchi"></label>
+        </fieldset>
+        <fieldset class="side-field fr">
+          <legend><span class="fr-ink">French</span></legend>
+          <label class="field"><span>Word or phrase <em>*</em></span>
+            <input name="fr" id="f-fr" lang="fr" required maxlength="200" placeholder="Bonne chance"></label>
+          <label class="field"><span>Cyrillic reading</span>
+            <input name="frRead" id="f-frRead" lang="ru" maxlength="200" placeholder="бонн ша́нс"></label>
+        </fieldset>
+        <label class="field wide">
+          <span>Note <span class="muted">(optional)</span></span>
+          <input name="note" id="f-note" maxlength="300" placeholder="Context, gender, a pronunciation trap…">
+        </label>
+      </div>
+      <p class="form-hint muted small">Tip: let the native speaker write the reading for the other — you'll know best how your own alphabet sounds. Mark Russian stress in CAPITALS. For French, put a stress mark right after the last vowel — <button type="button" class="linkish" id="copy-accent">copy ´</button> then paste it.</p>
+      <p class="form-error" id="form-error" role="alert"></p>
+      <div class="sheet-foot">
+        <button class="ghost danger" type="button" id="word-delete" hidden>Delete</button>
+        <button class="ghost" type="button" id="word-restore" hidden>Restore original</button>
+        <span class="spacer"></span>
+        <button class="ghost" type="button" data-close>Cancel</button>
+        <button class="primary" type="submit" id="word-save">Save word</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- MODAL: confirm delete -->
+  <div class="modal" id="m-confirm" hidden>
+    <div class="sheet narrow" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title">
+      <h2 id="confirm-title">Delete this word?</h2>
+      <p id="confirm-text"></p>
+      <div class="sheet-foot">
+        <span class="spacer"></span>
+        <button class="ghost" type="button" data-close>Keep it</button>
+        <button class="primary danger-fill" type="button" id="confirm-yes">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: export -->
+  <div class="modal" id="m-export" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="export-title">
+      <div class="sheet-head">
+        <h2 id="export-title">Export your words</h2>
+        <button class="ghost close" data-close type="button" aria-label="Close">×</button>
+      </div>
+      <div class="seg" role="radiogroup" aria-label="What to export">
+        <label><input type="radio" name="exp" value="mine" checked> Only my added &amp; edited words</label>
+        <label><input type="radio" name="exp" value="all"> The whole dictionary</label>
+      </div>
+      <p class="muted small" id="export-help"></p>
+      <textarea id="export-text" readonly rows="12" spellcheck="false"></textarea>
+      <div class="sheet-foot">
+        <button class="ghost danger" type="button" id="reset-mine">Reset my changes…</button>
+        <span class="spacer"></span>
+        <button class="primary" type="button" id="copy-export">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- Single-file version. To add words or dialogues permanently, edit the two DATA blocks below (data/dialogues.js and data/dictionary.js). -->
+  <script>
+/* ===== data/dialogues.js ===== */
+/*
+ * DIALOGUES
+ * ---------------------------------------------------------------
+ * Each dialogue is a list of lines. "her" lines are French (she is
+ * learning French), "me" lines are Russian (I am learning Russian).
+ *
+ *   text   – the sentence in the speaker's target language
+ *   read   – the phonetic guide written in the OTHER script:
+ *              French line  -> Cyrillic reading for a Russian speaker
+ *              Russian line -> Latin/French reading for a French speaker
+ *   en     – English meaning (shown with the "English" toggle)
+ *   note   – optional short tip
+ *
+ * To add a situation: copy one block { id, title, ... }, give it a new
+ * unique id, and edit the lines. Save the file and reload the page.
+ */
+window.TW_DIALOGUES = [
+  {
+    id: "morning-coffee",
+    title: "Morning coffee",
+    subtitle: "Waking up and starting the day",
+    lines: [
+      { speaker: "her", text: "Bonjour ! Tu as bien dormi ?", read: "Бонжу́р ! Тю а бьен дорми́ ?", en: "Good morning! Did you sleep well?" },
+      { speaker: "me", text: "Доброе утро! Да, спал отлично. А ты?", read: "DO-bra-ïe OU-tra ! Da, spal at-LITCH-na. A ty ?", en: "Good morning! Yes, I slept great. And you?", note: "спал = I slept (a man speaking). A woman would say спала." },
+      { speaker: "her", text: "Pas trop. J'ai besoin d'un café.", read: "Па тро. Жэ бёзуэн дэн кафе́.", en: "Not really. I need a coffee." },
+      { speaker: "me", text: "Я уже сделал кофе. С молоком?", read: "Ia ou-JÉ ZDIÉ-lal KO-fi. S ma-la-KOMM ?", en: "I've already made coffee. With milk?" },
+      { speaker: "her", text: "Oui, avec un peu de sucre, s'il te plaît.", read: "Уи, авэк эн пё дё сюкр, сил тё плэ́.", en: "Yes, with a little sugar, please." },
+      { speaker: "me", text: "Вот, держи. Осторожно, горячо!", read: "Vot, dir-JY. As-ta-ROJ-na, ga-ri-TCHO !", en: "Here you go. Careful, it's hot!" },
+      { speaker: "her", text: "Merci. Qu'est-ce que tu fais aujourd'hui ?", read: "Мэрси. Кэс кё тю фэ ожурдюи́ ?", en: "Thanks. What are you doing today?" },
+      { speaker: "me", text: "Сначала работа, а вечером я свободен.", read: "Sna-TCHA-la ra-BO-ta, a VIÉ-tchi-ramm ia sva-BO-dinn.", en: "Work first, but this evening I'm free." },
+      { speaker: "her", text: "Parfait ! Alors on se voit ce soir.", read: "Парфэ́ ! Алор он сё вуа сё суа́р.", en: "Perfect! Then we'll see each other tonight." },
+      { speaker: "me", text: "Договорились. Хорошего дня!", read: "Da-ga-va-RI-lis'. Kha-RO-che-va DNIA !", en: "Deal. Have a good day!" }
+    ]
+  },
+  {
+    id: "grocery-shopping",
+    title: "Grocery shopping",
+    subtitle: "Picking food at the market",
+    lines: [
+      { speaker: "her", text: "Il nous faut du pain et des œufs.", read: "Ил ну фо дю пэн э дэзё́.", en: "We need bread and eggs." },
+      { speaker: "me", text: "Хорошо. Ещё возьмём молоко и сыр.", read: "Kha-ra-CHO. I-CHTCHO vaz'-MIOM ma-la-KO i syr.", en: "OK. Let's also get milk and cheese." },
+      { speaker: "her", text: "Tu préfères quel fromage ?", read: "Тю префэр кэл фрома́ж ?", en: "Which cheese do you prefer?" },
+      { speaker: "me", text: "Любой, только не слишком солёный.", read: "Liou-BOÏ, TOL'-ka ni SLICH-kamm sa-LIO-nyï.", en: "Any kind, just not too salty." },
+      { speaker: "her", text: "Regarde, les tomates sont en promo.", read: "Рёгард, лэ томат сон тан промо́.", en: "Look, the tomatoes are on sale.", note: "sont en → liaison: the t is heard, «сон тан»." },
+      { speaker: "me", text: "Отлично! Сколько стоит килограмм?", read: "At-LITCH-na ! SKOL'-ka STO-it ki-la-GRAMM ?", en: "Great! How much is a kilo?" },
+      { speaker: "her", text: "Deux euros cinquante. On en prend deux kilos ?", read: "Дё зёро сэнка́нт. Он нан пран дё кило́ ?", en: "Two euros fifty. Shall we take two kilos?" },
+      { speaker: "me", text: "Давай один. Я плачу картой.", read: "Da-VAÏ a-DINN. Ia pla-TCHOU KAR-toï.", en: "Let's take one. I'll pay by card." },
+      { speaker: "her", text: "D'accord. Je prends un sac ?", read: "Дако́р. Жё пран зэн сак ?", en: "OK. Shall I take a bag?" },
+      { speaker: "me", text: "Не надо, у меня есть сумка.", read: "Ni NA-da, ou mi-NIA iést' SOUM-ka.", en: "No need, I've got a bag." }
+    ]
+  },
+  {
+    id: "weekend-plans",
+    title: "Weekend plans",
+    subtitle: "Deciding what to do together",
+    lines: [
+      { speaker: "her", text: "Qu'est-ce qu'on fait ce week-end ?", read: "Кэс кон фэ сё уикэ́ннд ?", en: "What shall we do this weekend?" },
+      { speaker: "me", text: "Может, погуляем в парке, если будет солнце?", read: "MO-jet, pa-gou-LIA-imm f PAR-ki, IÉS-li BOU-dit SONN-tsa ?", en: "Maybe a walk in the park, if it's sunny?", note: "In солнце the л is silent: «SONN-tsa»." },
+      { speaker: "her", text: "Bonne idée. Et samedi soir, on va au cinéma ?", read: "Бонн идэ. Э самди суар, он ва о синема́ ?", en: "Good idea. And on Saturday night, shall we go to the cinema?" },
+      { speaker: "me", text: "С удовольствием! Что идёт?", read: "S ou-da-VOL'-stvi-imm ! Chto i-DIOT ?", en: "With pleasure! What's on?" },
+      { speaker: "her", text: "Une comédie française, avec des sous-titres.", read: "Юнн комеди франсэз, авэк дэ сути́тр.", en: "A French comedy, with subtitles." },
+      { speaker: "me", text: "Отлично, будет хорошая практика.", read: "At-LITCH-na, BOU-dit kha-RO-cha-ïa PRAK-ti-ka.", en: "Great, that'll be good practice." },
+      { speaker: "her", text: "Et dimanche, on peut inviter tes amis à dîner.", read: "Э диманш, он пё энвите тэзами а дине́.", en: "And on Sunday, we could invite your friends for dinner." },
+      { speaker: "me", text: "Давай. Я им напишу сегодня.", read: "Da-VAÏ. Ia imm na-pi-CHOU si-VOD-nia.", en: "Let's do it. I'll text them today.", note: "In сегодня the г sounds like в." },
+      { speaker: "her", text: "Super, j'ai hâte !", read: "Сюпэр, жэ а́т !", en: "Great, I can't wait!" }
+    ]
+  },
+  {
+    id: "running-late",
+    title: "Running late",
+    subtitle: "Finding each other in the city",
+    lines: [
+      { speaker: "her", text: "Allô ? Tu es où ? Je t'attends devant le métro.", read: "Алло́ ? Тю э у́ ? Жё татан дёван лё метро́.", en: "Hello? Where are you? I'm waiting for you outside the metro." },
+      { speaker: "me", text: "Прости, я опаздываю. Автобус застрял в пробке.", read: "Pras-TI, ia a-PAZ-dy-va-iou. Af-TO-bouss za-STRIAL f PROP-ki.", en: "Sorry, I'm running late. The bus is stuck in traffic." },
+      { speaker: "her", text: "Pas de souci. Tu arrives dans combien de temps ?", read: "Пад суси́. Тю арив дан комбьен дё та́н ?", en: "No worries. How long until you get here?" },
+      { speaker: "me", text: "Минут через десять. Подожди меня в кафе.", read: "Mi-NOUT TCHÉ-riz DIÉ-sit'. Pa-daj-DI mi-NIA f ka-FÉ.", en: "In about ten minutes. Wait for me in the café.", note: "Putting the noun before the number (минут через десять) makes it approximate: \"about ten minutes\"." },
+      { speaker: "her", text: "Lequel ? Il y en a deux.", read: "Лёкэ́ль ? Иль ян на дё́.", en: "Which one? There are two." },
+      { speaker: "me", text: "Тот, что рядом с аптекой, на углу.", read: "Tot, chto RIA-damm s ap-TIÉ-kaï, na ou-GLOU.", en: "The one next to the pharmacy, on the corner." },
+      { speaker: "her", text: "Ok, je vois. Je prends une table en terrasse.", read: "Окэй, жё вуа́. Жё пран юнн табль ан тэра́с.", en: "OK, I see it. I'll grab a table outside." },
+      { speaker: "me", text: "Супер. Закажи мне чай, пожалуйста.", read: "SOU-pir. Za-ka-JY mnié tchaï, pa-JAL-sta.", en: "Great. Order me a tea, please." },
+      { speaker: "her", text: "C'est noté. À tout de suite !", read: "Сэ ноте́. А тут сюи́т !", en: "Got it. See you in a minute!" }
+    ]
+  },
+  {
+    id: "cooking-together",
+    title: "Cooking together",
+    subtitle: "Making dinner and sharing a meal",
+    lines: [
+      { speaker: "her", text: "On cuisine quoi ce soir ?", read: "Он кюизинн куа сё суа́р ?", en: "What are we cooking tonight?" },
+      { speaker: "me", text: "Давай сделаем борщ! Я покажу тебе рецепт.", read: "Da-VAÏ ZDIÉ-la-imm borchtch ! Ia pa-ka-JOU ti-BIÉ ri-TSEPT.", en: "Let's make borscht! I'll show you the recipe." },
+      { speaker: "her", text: "Avec plaisir ! Je coupe les légumes ?", read: "Авэк плэзи́р ! Жё куп лэ легю́м ?", en: "With pleasure! Shall I chop the vegetables?" },
+      { speaker: "me", text: "Да. Порежь свёклу, морковь и капусту.", read: "Da. Pa-RIÉCH SVIOK-lou, mar-KOF' i ka-POUS-tou.", en: "Yes. Slice the beetroot, the carrots and the cabbage." },
+      { speaker: "her", text: "Ça sent déjà très bon !", read: "Са сан дежа трэ бо́н !", en: "It already smells really good!" },
+      { speaker: "me", text: "Попробуй. Нужно ещё соли?", read: "Pa-PRO-bouï. NOUJ-na i-CHTCHO SO-li ?", en: "Taste it. Does it need more salt?" },
+      { speaker: "her", text: "Non, c'est parfait. Je mets la table ?", read: "Нон, сэ парфэ́. Жё мэ ла та́бль ?", en: "No, it's perfect. Shall I set the table?" },
+      { speaker: "me", text: "Да, спасибо. Приятного аппетита!", read: "Da, spa-SSI-ba. Pri-IAT-na-va a-pi-TI-ta !", en: "Yes, thanks. Enjoy your meal!" },
+      { speaker: "her", text: "Bon appétit ! Et merci pour la recette.", read: "Бо напети́ ! Э мэрси пур ла рёсэ́т.", en: "Enjoy! And thanks for the recipe.", note: "Bon appétit → liaison: «бо напети», the n moves to the next word." }
+    ]
+  }
+];
+
+</script>
+  <script>
+/* ===== data/dictionary.js ===== */
+/*
+ * DICTIONARY (permanent starter words)
+ * ---------------------------------------------------------------
+ * Each entry:
+ *   id        – unique, never reused (letters, digits, hyphens)
+ *   category  – one of TW_CATEGORIES below (or a new one)
+ *   en        – English meaning
+ *   ru        – Russian word / phrase
+ *   ruRead    – French-style reading of the Russian (CAPITALS = stress)
+ *   fr        – French word / phrase
+ *   frRead    – Cyrillic reading of the French (´ = phrase stress)
+ *   note      – optional short tip in English
+ *
+ * Words you add in the app are saved separately (see README.md).
+ * Use "Export" in the Dictionary tab to copy them in this exact format,
+ * then paste them at the end of this list to make them permanent.
+ */
+window.TW_CATEGORIES = [
+  "Greetings",
+  "Politeness",
+  "Time & days",
+  "Food & drinks",
+  "Feelings",
+  "Common verbs",
+  "Adjectives",
+  "Useful phrases"
+];
+
+window.TW_DICTIONARY = [
+  // Greetings
+  { id: "hi", category: "Greetings", en: "Hi (informal)", ru: "Привет", ruRead: "pri-VIÉT", fr: "Salut", frRead: "салю́" },
+  { id: "hello-formal", category: "Greetings", en: "Hello (formal)", ru: "Здравствуйте", ruRead: "ZDRAST-vouï-tié", fr: "Bonjour", frRead: "бонжу́р", note: "The first в in здравствуйте is silent." },
+  { id: "good-morning", category: "Greetings", en: "Good morning", ru: "Доброе утро", ruRead: "DO-bra-ïe OU-tra", fr: "Bonjour", frRead: "бонжу́р", note: "French simply says Bonjour in the morning; «bon matin» is Canadian." },
+  { id: "good-evening", category: "Greetings", en: "Good evening", ru: "Добрый вечер", ruRead: "DO-bryï VIÉ-tchir", fr: "Bonsoir", frRead: "бонсуа́р" },
+  { id: "good-night", category: "Greetings", en: "Good night", ru: "Спокойной ночи", ruRead: "spa-KOÏ-naï NO-tchi", fr: "Bonne nuit", frRead: "бонн нюи́" },
+  { id: "goodbye", category: "Greetings", en: "Goodbye", ru: "До свидания", ruRead: "da svi-DA-ni-ia", fr: "Au revoir", frRead: "о рёвуа́р" },
+  { id: "bye", category: "Greetings", en: "Bye / See you", ru: "Пока", ruRead: "pa-KA", fr: "À plus !", frRead: "а плю́с", note: "In «à plus» the s is pronounced." },
+  { id: "see-you-tomorrow", category: "Greetings", en: "See you tomorrow", ru: "До завтра", ruRead: "da ZAF-tra", fr: "À demain", frRead: "а дёмэ́н" },
+  { id: "how-are-you", category: "Greetings", en: "How are you?", ru: "Как дела?", ruRead: "kak di-LA ?", fr: "Ça va ?", frRead: "са ва́ ?" },
+  { id: "im-fine", category: "Greetings", en: "I'm fine / All good", ru: "Всё хорошо", ruRead: "fsio kha-ra-CHO", fr: "Ça va bien", frRead: "са ва бье́н" },
+  { id: "nice-to-meet", category: "Greetings", en: "Nice to meet you", ru: "Очень приятно", ruRead: "O-tchinn' pri-IAT-na", fr: "Enchanté(e)", frRead: "аншанте́", note: "A woman writes enchantée — it sounds the same." },
+  { id: "my-name-is", category: "Greetings", en: "My name is…", ru: "Меня зовут…", ruRead: "mi-NIA za-VOUT…", fr: "Je m'appelle…", frRead: "жё мапэ́ль…" },
+
+  // Politeness
+  { id: "please", category: "Politeness", en: "Please", ru: "Пожалуйста", ruRead: "pa-JAL-sta", fr: "S'il te plaît / S'il vous plaît", frRead: "сил тё плэ́ / сил ву плэ́", note: "te = informal, vous = formal. Пожалуйста also means \"you're welcome\"." },
+  { id: "thank-you", category: "Politeness", en: "Thank you", ru: "Спасибо", ruRead: "spa-SSI-ba", fr: "Merci", frRead: "мэрси́" },
+  { id: "thanks-a-lot", category: "Politeness", en: "Thank you very much", ru: "Большое спасибо", ruRead: "bal'-CHO-ïe spa-SSI-ba", fr: "Merci beaucoup", frRead: "мэрси боку́" },
+  { id: "youre-welcome", category: "Politeness", en: "You're welcome", ru: "Не за что", ruRead: "NIÉ-za-chta", fr: "De rien", frRead: "дё рье́н", note: "Said as one word, stress on НЕ." },
+  { id: "sorry", category: "Politeness", en: "Sorry / Excuse me", ru: "Извини / Извините", ruRead: "iz-vi-NI / iz-vi-NI-tié", fr: "Pardon / Excusez-moi", frRead: "пардо́н / экскюзэ муа́", note: "Извини = informal, извините = formal or plural." },
+  { id: "no-problem", category: "Politeness", en: "No problem", ru: "Ничего страшного", ruRead: "ni-tchi-VO STRACH-na-va", fr: "Pas de problème", frRead: "пад проблэ́м", note: "In ничего the г sounds like в." },
+  { id: "yes", category: "Politeness", en: "Yes", ru: "Да", ruRead: "da", fr: "Oui", frRead: "уи" },
+  { id: "no", category: "Politeness", en: "No", ru: "Нет", ruRead: "niét", fr: "Non", frRead: "нон" },
+  { id: "of-course", category: "Politeness", en: "Of course", ru: "Конечно", ruRead: "ka-NIÉCH-na", fr: "Bien sûr", frRead: "бьен сю́р", note: "In конечно, чн is said like шн." },
+
+  // Time & days
+  { id: "today", category: "Time & days", en: "Today", ru: "Сегодня", ruRead: "si-VOD-nia", fr: "Aujourd'hui", frRead: "ожурдюи́", note: "In сегодня the г sounds like в." },
+  { id: "tomorrow", category: "Time & days", en: "Tomorrow", ru: "Завтра", ruRead: "ZAF-tra", fr: "Demain", frRead: "дёмэ́н" },
+  { id: "yesterday", category: "Time & days", en: "Yesterday", ru: "Вчера", ruRead: "ftchi-RA", fr: "Hier", frRead: "йэ́р" },
+  { id: "now", category: "Time & days", en: "Now", ru: "Сейчас", ruRead: "si-TCHASS", fr: "Maintenant", frRead: "мэнтна́н" },
+  { id: "morning", category: "Time & days", en: "Morning", ru: "Утро", ruRead: "OU-tra", fr: "Le matin", frRead: "лё матэ́н" },
+  { id: "evening", category: "Time & days", en: "Evening", ru: "Вечер", ruRead: "VIÉ-tchir", fr: "Le soir", frRead: "лё суа́р" },
+  { id: "monday", category: "Time & days", en: "Monday", ru: "Понедельник", ruRead: "pa-ni-DIÉL'-nik", fr: "Lundi", frRead: "лэнди́" },
+  { id: "tuesday", category: "Time & days", en: "Tuesday", ru: "Вторник", ruRead: "FTOR-nik", fr: "Mardi", frRead: "марди́" },
+  { id: "wednesday", category: "Time & days", en: "Wednesday", ru: "Среда", ruRead: "sri-DA", fr: "Mercredi", frRead: "мэркрёди́" },
+  { id: "thursday", category: "Time & days", en: "Thursday", ru: "Четверг", ruRead: "tchit-VIÉRK", fr: "Jeudi", frRead: "жёди́" },
+  { id: "friday", category: "Time & days", en: "Friday", ru: "Пятница", ruRead: "PIAT-ni-tsa", fr: "Vendredi", frRead: "вандрёди́" },
+  { id: "saturday", category: "Time & days", en: "Saturday", ru: "Суббота", ruRead: "sou-BO-ta", fr: "Samedi", frRead: "самди́" },
+  { id: "sunday", category: "Time & days", en: "Sunday", ru: "Воскресенье", ruRead: "vas-kri-SSIÉ-nié", fr: "Dimanche", frRead: "дима́нш" },
+  { id: "week", category: "Time & days", en: "Week", ru: "Неделя", ruRead: "ni-DIÉ-lia", fr: "La semaine", frRead: "ла сёмэ́нн" },
+  { id: "weekend", category: "Time & days", en: "Weekend", ru: "Выходные", ruRead: "vy-khad-NY-ié", fr: "Le week-end", frRead: "лё уикэ́ннд" },
+  { id: "what-time", category: "Time & days", en: "What time is it?", ru: "Который час?", ruRead: "ka-TO-ryï tchass ?", fr: "Quelle heure est-il ?", frRead: "кэлёр этиль ?" },
+
+  // Food & drinks
+  { id: "water", category: "Food & drinks", en: "Water", ru: "Вода", ruRead: "va-DA", fr: "L'eau", frRead: "ло" },
+  { id: "coffee", category: "Food & drinks", en: "Coffee", ru: "Кофе", ruRead: "KO-fi", fr: "Le café", frRead: "лё кафе́", note: "Кофе is masculine: чёрный кофе." },
+  { id: "tea", category: "Food & drinks", en: "Tea", ru: "Чай", ruRead: "tchaï", fr: "Le thé", frRead: "лё те́" },
+  { id: "milk", category: "Food & drinks", en: "Milk", ru: "Молоко", ruRead: "ma-la-KO", fr: "Le lait", frRead: "лё лэ" },
+  { id: "bread", category: "Food & drinks", en: "Bread", ru: "Хлеб", ruRead: "khliép", fr: "Le pain", frRead: "лё пэн", note: "A final б sounds like п." },
+  { id: "cheese", category: "Food & drinks", en: "Cheese", ru: "Сыр", ruRead: "syr", fr: "Le fromage", frRead: "лё фрома́ж" },
+  { id: "egg", category: "Food & drinks", en: "Egg / eggs", ru: "Яйцо / яйца", ruRead: "ïaï-TSO / IAÏ-tsa", fr: "Un œuf / des œufs", frRead: "эн нёф / дэзё́", note: "In the plural des œufs, the f is silent." },
+  { id: "meat", category: "Food & drinks", en: "Meat", ru: "Мясо", ruRead: "MIA-ssa", fr: "La viande", frRead: "ла вья́нд" },
+  { id: "fish", category: "Food & drinks", en: "Fish", ru: "Рыба", ruRead: "RY-ba", fr: "Le poisson", frRead: "лё пуасо́н" },
+  { id: "vegetables", category: "Food & drinks", en: "Vegetables", ru: "Овощи", ruRead: "O-va-chtchi", fr: "Les légumes", frRead: "лэ легю́м" },
+  { id: "fruit", category: "Food & drinks", en: "Fruit", ru: "Фрукты", ruRead: "FROUK-ty", fr: "Les fruits", frRead: "лэ фрюи́" },
+  { id: "apple", category: "Food & drinks", en: "Apple", ru: "Яблоко", ruRead: "IA-bla-ka", fr: "La pomme", frRead: "ла по́м" },
+  { id: "wine", category: "Food & drinks", en: "Wine", ru: "Вино", ruRead: "vi-NO", fr: "Le vin", frRead: "лё вэ́н" },
+  { id: "beer", category: "Food & drinks", en: "Beer", ru: "Пиво", ruRead: "PI-va", fr: "La bière", frRead: "ла бьэ́р" },
+  { id: "breakfast", category: "Food & drinks", en: "Breakfast", ru: "Завтрак", ruRead: "ZAF-trak", fr: "Le petit-déjeuner", frRead: "лё пти дежёне́" },
+  { id: "dinner", category: "Food & drinks", en: "Dinner", ru: "Ужин", ruRead: "OU-jynn", fr: "Le dîner", frRead: "лё дине́" },
+  { id: "delicious", category: "Food & drinks", en: "It's delicious", ru: "Очень вкусно", ruRead: "O-tchinn' FKOUS-na", fr: "C'est délicieux", frRead: "сэ делисьё́" },
+  { id: "the-bill", category: "Food & drinks", en: "The bill, please", ru: "Счёт, пожалуйста", ruRead: "chtchiot, pa-JAL-sta", fr: "L'addition, s'il vous plaît", frRead: "ладисьо́н, сил ву плэ́" },
+  { id: "hungry", category: "Food & drinks", en: "I'm hungry", ru: "Я голоден / голодна", ruRead: "ia GO-la-dinn / ga-lad-NA", fr: "J'ai faim", frRead: "жэ фэ́н", note: "Russian: голоден (a man), голодна (a woman)." },
+
+  // Feelings
+  { id: "love-you", category: "Feelings", en: "I love you", ru: "Я тебя люблю", ruRead: "ia ti-BIA liou-BLIOU", fr: "Je t'aime", frRead: "жё тэ́м" },
+  { id: "miss-you", category: "Feelings", en: "I miss you", ru: "Я скучаю по тебе", ruRead: "ia skou-TCHA-iou pa ti-BIÉ", fr: "Tu me manques", frRead: "тю мё ма́нк", note: "French turns it around: literally \"you are missing to me\"." },
+  { id: "glad", category: "Feelings", en: "I'm glad", ru: "Я рад / рада", ruRead: "ia rat / RA-da", fr: "Je suis content(e)", frRead: "жё сюи конта́н / конта́нт", note: "Рад / content = a man; рада / contente = a woman." },
+  { id: "happy", category: "Feelings", en: "Happy", ru: "Счастливый / счастливая", ruRead: "chtchis-LI-vyï / chtchis-LI-va-ïa", fr: "Heureux / heureuse", frRead: "ёрё́ / ёрё́з", note: "The т in счастливый is silent." },
+  { id: "tired", category: "Feelings", en: "Tired", ru: "Устал / устала", ruRead: "ous-TAL / ous-TA-la", fr: "Fatigué(e)", frRead: "фатиге́" },
+  { id: "sad", category: "Feelings", en: "I feel sad", ru: "Мне грустно", ruRead: "mnié GROUS-na", fr: "Je suis triste", frRead: "жё сюи три́ст", note: "The т in грустно is silent." },
+  { id: "cold", category: "Feelings", en: "I'm cold", ru: "Мне холодно", ruRead: "mnié KHO-lad-na", fr: "J'ai froid", frRead: "жэ фруа́" },
+  { id: "hot", category: "Feelings", en: "I'm hot", ru: "Мне жарко", ruRead: "mnié JAR-ka", fr: "J'ai chaud", frRead: "жэ шо́" },
+  { id: "dont-know", category: "Feelings", en: "I don't know", ru: "Я не знаю", ruRead: "ia ni ZNA-iou", fr: "Je ne sais pas", frRead: "жённ сэ па́", note: "Spoken French often shortens it to «chais pas» (шэ па)." },
+  { id: "great", category: "Feelings", en: "Great!", ru: "Отлично!", ruRead: "at-LITCH-na !", fr: "Génial !", frRead: "женья́ль !" },
+
+  // Common verbs
+  { id: "to-want", category: "Common verbs", en: "To want", ru: "Хотеть", ruRead: "kha-TIÉT'", fr: "Vouloir", frRead: "вулуа́р" },
+  { id: "to-go", category: "Common verbs", en: "To go (on foot)", ru: "Идти", ruRead: "it-TI", fr: "Aller", frRead: "але́", note: "Идти = on foot; ехать = by car, bus or train." },
+  { id: "to-eat", category: "Common verbs", en: "To eat", ru: "Есть", ruRead: "iést'", fr: "Manger", frRead: "манже́" },
+  { id: "to-drink", category: "Common verbs", en: "To drink", ru: "Пить", ruRead: "pit'", fr: "Boire", frRead: "буа́р" },
+  { id: "to-sleep", category: "Common verbs", en: "To sleep", ru: "Спать", ruRead: "spat'", fr: "Dormir", frRead: "дорми́р" },
+  { id: "to-speak", category: "Common verbs", en: "To speak", ru: "Говорить", ruRead: "ga-va-RIT'", fr: "Parler", frRead: "парле́" },
+  { id: "to-understand", category: "Common verbs", en: "To understand", ru: "Понимать", ruRead: "pa-ni-MAT'", fr: "Comprendre", frRead: "компра́ндр" },
+  { id: "to-love", category: "Common verbs", en: "To love / to like", ru: "Любить", ruRead: "liou-BIT'", fr: "Aimer", frRead: "эме́" },
+  { id: "to-do", category: "Common verbs", en: "To do / to make", ru: "Делать", ruRead: "DIÉ-lat'", fr: "Faire", frRead: "фэ́р" },
+  { id: "to-know", category: "Common verbs", en: "To know", ru: "Знать", ruRead: "znat'", fr: "Savoir", frRead: "савуа́р" },
+  { id: "to-work", category: "Common verbs", en: "To work", ru: "Работать", ruRead: "ra-BO-tat'", fr: "Travailler", frRead: "травайе́" },
+
+  // Adjectives
+  { id: "good", category: "Adjectives", en: "Good", ru: "Хороший", ruRead: "kha-RO-chyï", fr: "Bon / bonne", frRead: "бон / бонн" },
+  { id: "bad", category: "Adjectives", en: "Bad", ru: "Плохой", ruRead: "pla-KHOÏ", fr: "Mauvais / mauvaise", frRead: "мовэ́ / мовэ́з" },
+  { id: "big", category: "Adjectives", en: "Big", ru: "Большой", ruRead: "bal'-CHOÏ", fr: "Grand / grande", frRead: "гран / гра́нд" },
+  { id: "small", category: "Adjectives", en: "Small", ru: "Маленький", ruRead: "MA-linn'-kiï", fr: "Petit / petite", frRead: "пёти́ / пёти́т" },
+  { id: "beautiful", category: "Adjectives", en: "Beautiful", ru: "Красивый", ruRead: "kra-SSI-vyï", fr: "Beau / belle", frRead: "бо / бэ́ль" },
+  { id: "expensive", category: "Adjectives", en: "Expensive / dear", ru: "Дорогой", ruRead: "da-ra-GOÏ", fr: "Cher / chère", frRead: "шэ́р", note: "Both words also mean \"dear\" (дорогой друг / cher ami)." },
+  { id: "cheap", category: "Adjectives", en: "Cheap", ru: "Дешёвый", ruRead: "di-CHO-vyï", fr: "Pas cher", frRead: "па шэ́р" },
+  { id: "easy", category: "Adjectives", en: "Easy", ru: "Лёгкий", ruRead: "LIOKH-kiï", fr: "Facile", frRead: "фаси́ль", note: "In лёгкий, гк is said like хк." },
+  { id: "difficult", category: "Adjectives", en: "Difficult", ru: "Трудный", ruRead: "TROUD-nyï", fr: "Difficile", frRead: "дифиси́ль" },
+
+  // Useful phrases
+  { id: "where-is", category: "Useful phrases", en: "Where is…?", ru: "Где…?", ruRead: "gdié… ?", fr: "Où est… ?", frRead: "у э… ?" },
+  { id: "how-much", category: "Useful phrases", en: "How much is it?", ru: "Сколько стоит?", ruRead: "SKOL'-ka STO-it ?", fr: "Combien ça coûte ?", frRead: "комбьен са ку́т ?" },
+  { id: "dont-understand", category: "Useful phrases", en: "I don't understand", ru: "Я не понимаю", ruRead: "ia ni pa-ni-MA-iou", fr: "Je ne comprends pas", frRead: "жённ компран па́" },
+  { id: "repeat", category: "Useful phrases", en: "Say it again, please", ru: "Повтори, пожалуйста", ruRead: "paf-ta-RI, pa-JAL-sta", fr: "Répète, s'il te plaît", frRead: "репэт, сил тё плэ́" },
+  { id: "slower", category: "Useful phrases", en: "Slower, please", ru: "Помедленнее, пожалуйста", ruRead: "pa-MIÉD-li-ni-ié, pa-JAL-sta", fr: "Plus lentement, s'il te plaît", frRead: "плю лантма́н, сил тё плэ́" },
+  { id: "what-means", category: "Useful phrases", en: "What does … mean?", ru: "Что значит…?", ruRead: "chto ZNA-tchit… ?", fr: "Ça veut dire quoi… ?", frRead: "са вё дир куа́… ?" },
+  { id: "how-say", category: "Useful phrases", en: "How do you say this?", ru: "Как это сказать?", ruRead: "kak È-ta ska-ZAT' ?", fr: "Comment on dit ça ?", frRead: "коман он ди са́ ?" },
+  { id: "lets-go", category: "Useful phrases", en: "Let's go!", ru: "Пошли!", ruRead: "pach-LI !", fr: "On y va !", frRead: "он ни ва́ !" }
+];
+
+</script>
+  <script>
+/* ===== js/storage.js ===== */
+/*
+ * STORAGE – where your own dictionary changes live.
+ * ---------------------------------------------------------------
+ * The starter words in data/dictionary.js never change at runtime.
+ * Everything you do in the app (add, edit, delete) is stored as a
+ * "change", keyed by the entry id:
+ *
+ *   { id, category, en, ru, ruRead, fr, frRead, note }  -> added or edited
+ *   { id, deleted: true }                                -> starter word hidden
+ *
+ * Two backends:
+ *   local   – the browser's localStorage (this device and browser only).
+ *   shared  – used automatically when the page runs as a hosted Claude
+ *             artifact with a database: both of you see the same words.
+ */
+window.TWStorage = (function () {
+  var KEY = "twoways.dictionary.changes.v1";
+  var FIELDS = ["category", "en", "ru", "ruRead", "fr", "frRead", "note"];
+  var listeners = [];
+  var changes = readLocal();
+  var mode = "local";
+  var col = null;
+  var writable = true;
+
+  function readLocal() {
+    try {
+      var raw = localStorage.getItem(KEY);
+      var parsed = raw ? JSON.parse(raw) : {};
+      return parsed && typeof parsed === "object" ? parsed : {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function writeLocal(obj) {
+    try {
+      localStorage.setItem(KEY, JSON.stringify(obj));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function clearLocal() {
+    try { localStorage.removeItem(KEY); } catch (e) {}
+  }
+
+  function emit() {
+    listeners.forEach(function (fn) { try { fn(); } catch (e) { console.error(e); } });
+  }
+
+  function sanitize(entry) {
+    var out = { id: String(entry.id) };
+    if (entry.deleted) { out.deleted = true; return out; }
+    FIELDS.forEach(function (f) {
+      var v = entry[f] == null ? "" : String(entry[f]).trim().slice(0, 400);
+      out[f] = v;
+    });
+    out.updatedAt = new Date().toISOString();
+    return out;
+  }
+
+  function newId() {
+    return "w-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 7);
+  }
+
+  async function writeShared(id, body) {
+    try {
+      if (body === null) await col.doc(id).delete();
+      else await col.doc(id).set(body);
+    } catch (err) {
+      if (err && err.code === "invalid_argument") {
+        writable = false;
+        emit();
+        throw new Error("read-only");
+      }
+      if (err && err.code === "unavailable") {
+        await new Promise(function (r) { setTimeout(r, 400 + Math.random() * 600); });
+        if (body === null) await col.doc(id).delete();
+        else await col.doc(id).set(body);
+        return;
+      }
+      throw err;
+    }
+  }
+
+  /** Save an added or edited entry (or a {id, deleted:true} marker). */
+  async function put(entry) {
+    var clean = sanitize(entry);
+    if (mode === "shared") {
+      await writeShared(clean.id, clean);
+      return clean;
+    }
+    changes = Object.assign({}, changes);
+    changes[clean.id] = clean;
+    if (!writeLocal(changes)) throw new Error("storage-full");
+    emit();
+    return clean;
+  }
+
+  /** Forget the change for this id (restores a starter word, removes a custom one). */
+  async function forget(id) {
+    if (mode === "shared") {
+      await writeShared(id, null);
+      return;
+    }
+    changes = Object.assign({}, changes);
+    delete changes[id];
+    writeLocal(changes);
+    emit();
+  }
+
+  async function clearAll() {
+    if (mode === "shared") {
+      var ids = Object.keys(changes);
+      for (var i = 0; i < ids.length; i++) await writeShared(ids[i], null);
+      return;
+    }
+    changes = {};
+    clearLocal();
+    emit();
+  }
+
+  /** Copy words saved locally on this device into the shared store, once. */
+  async function migrateLocal(sharedNow) {
+    var local = readLocal();
+    var ids = Object.keys(local).filter(function (id) { return !sharedNow[id]; });
+    if (!ids.length) return;
+    try {
+      for (var i = 0; i < ids.length; i++) await col.doc(ids[i]).set(sanitize(local[ids[i]]));
+      clearLocal();
+    } catch (e) {
+      /* keep local copy if the shared store refuses */
+    }
+  }
+
+  async function initShared() {
+    var c = window.claude;
+    if (!c || typeof c.use !== "function") return;
+    var db = null;
+    try { db = await c.use("db"); } catch (e) { db = null; }
+    if (!db) return;
+    try { col = db.collection("words"); } catch (e) { return; }
+    var first = true;
+    col.onSnapshot(function (snap) {
+      var next = {};
+      snap.docs.forEach(function (d) {
+        var v = d.data();
+        if (v && typeof v === "object") next[d.id] = Object.assign({}, v, { id: d.id });
+      });
+      if (first) {
+        first = false;
+        mode = "shared";
+        migrateLocal(next);
+      }
+      changes = next;
+      emit();
+    }, function () {
+      mode = "local";
+      changes = readLocal();
+      emit();
+    });
+  }
+
+  return {
+    init: function () { initShared(); },
+    all: function () { return changes; },
+    put: put,
+    forget: forget,
+    clearAll: clearAll,
+    newId: newId,
+    status: function () { return { mode: mode, writable: writable }; },
+    onChange: function (fn) { listeners.push(fn); }
+  };
+})();
+
+/* Small helper for UI preferences (toggles, last tab). Device-only. */
+window.TWPrefs = (function () {
+  var KEY = "twoways.prefs.v1";
+  var data = {};
+  try { data = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { data = {}; }
+  return {
+    get: function (k, fallback) { return k in data ? data[k] : fallback; },
+    set: function (k, v) {
+      data[k] = v;
+      try { localStorage.setItem(KEY, JSON.stringify(data)); } catch (e) {}
+    }
+  };
+})();
+
+</script>
+  <script>
+/* ===== js/speech.js ===== */
+/*
+ * SPEECH – optional "listen" buttons using the browser's Web Speech API.
+ * If the browser has no French or Russian voice, the buttons stay hidden
+ * for that language. Nothing is sent anywhere: voices are built in.
+ */
+window.TWSpeech = (function () {
+  var supported = typeof window.speechSynthesis !== "undefined" &&
+    typeof window.SpeechSynthesisUtterance !== "undefined";
+  var voices = [];
+  var listeners = [];
+
+  function load() {
+    try { voices = window.speechSynthesis.getVoices() || []; } catch (e) { voices = []; }
+    listeners.forEach(function (fn) { fn(); });
+  }
+
+  if (supported) {
+    load();
+    try { window.speechSynthesis.addEventListener("voiceschanged", load); } catch (e) {}
+  }
+
+  function voiceFor(lang) {
+    var want = lang === "ru" ? "ru" : "fr";
+    var list = voices.filter(function (v) { return (v.lang || "").toLowerCase().indexOf(want) === 0; });
+    return list.find(function (v) { return v.localService; }) || list[0] || null;
+  }
+
+  function canSpeak(lang) { return supported && !!voiceFor(lang); }
+
+  function speak(text, lang) {
+    if (!supported) return false;
+    try {
+      window.speechSynthesis.cancel();
+      var u = new SpeechSynthesisUtterance(text);
+      u.lang = lang === "ru" ? "ru-RU" : "fr-FR";
+      var v = voiceFor(lang);
+      if (v) u.voice = v;
+      u.rate = 0.85;
+      window.speechSynthesis.speak(u);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  return {
+    supported: supported,
+    canSpeak: canSpeak,
+    speak: speak,
+    onVoices: function (fn) { listeners.push(fn); }
+  };
+})();
+
+</script>
+  <script>
+/* ===== js/app.js ===== */
+/*
+ * APP – rendering and interactions. Data comes from data/*.js,
+ * saved changes from js/storage.js. No framework, no build step.
+ */
+(function () {
+  "use strict";
+
+  var DIALOGUES = window.TW_DIALOGUES || [];
+  var BASE = window.TW_DICTIONARY || [];
+  var BASE_CATS = window.TW_CATEGORIES || [];
+  var BASE_IDS = {};
+  BASE.forEach(function (e) { BASE_IDS[e.id] = e; });
+
+  var S = window.TWStorage, P = window.TWPrefs, SP = window.TWSpeech;
+  var $ = function (id) { return document.getElementById(id); };
+
+  var state = {
+    view: "dialogues",
+    scene: P.get("scene", DIALOGUES[0] && DIALOGUES[0].id),
+    phon: P.get("phon", true),
+    en: P.get("en", true),
+    dictPhon: P.get("dictPhon", true),
+    search: "",
+    cat: "All",
+    editing: null
+  };
+
+  /* ---------- helpers ---------- */
+  function esc(v) {
+    return String(v == null ? "" : v)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  }
+  function norm(s) {
+    return String(s || "").toLowerCase().normalize("NFD")
+      .replace(/[̀-ͯ]/g, "").replace(/ё/g, "е")
+      .replace(/[-'’ï]/g, function (c) { return c === "ï" ? "i" : ""; })
+      .replace(/ss/g, "s");
+  }
+  var ICON_SPEAK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>';
+  var ICON_EDIT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg>';
+  var ICON_TRASH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>';
+
+  function speakBtn(text, lang) {
+    if (!SP.canSpeak(lang)) return "";
+    var label = lang === "ru" ? "Listen in Russian" : "Listen in French";
+    return '<button class="speak" type="button" data-speak="' + esc(text) + '" data-lang="' + lang +
+      '" aria-label="' + label + '" title="' + label + '">' + ICON_SPEAK + "</button>";
+  }
+
+  /* target text + reading underneath; tap to peek when phonetics are hidden */
+  function lineHTML(text, read, lang, big) {
+    return '<div class="line-row">' +
+      '<div class="line-body" data-peek tabindex="0">' +
+        '<p class="target" lang="' + lang + '">' + esc(text) + "</p>" +
+        (read ? '<p class="read">' + esc(read) + "</p>" +
+          '<p class="peek">Tap to show the reading</p>' : "") +
+      "</div>" + speakBtn(text, lang) + "</div>";
+  }
+
+  var toastTimer = null;
+  function toast(msg, actionLabel, action) {
+    var t = $("toast");
+    t.innerHTML = "";
+    var span = document.createElement("span");
+    span.textContent = msg;
+    t.appendChild(span);
+    if (actionLabel) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.textContent = actionLabel;
+      b.className = "linkish";
+      b.style.marginLeft = "12px";
+      b.style.background = "transparent";
+      b.style.color = "inherit";
+      b.style.textDecoration = "underline";
+      b.addEventListener("click", function () { t.classList.remove("show"); action(); });
+      t.appendChild(b);
+      t.style.pointerEvents = "auto";
+    } else {
+      t.style.pointerEvents = "none";
+    }
+    t.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { t.classList.remove("show"); t.style.pointerEvents = "none"; }, actionLabel ? 6000 : 2600);
+  }
+
+  /* ---------- views & tabs ---------- */
+  function setView(v, fromHash) {
+    if (v !== "dialogues" && v !== "dictionary") v = "dialogues";
+    state.view = v;
+    document.querySelectorAll(".tab").forEach(function (t) {
+      var on = t.dataset.view === v;
+      t.setAttribute("aria-selected", on ? "true" : "false");
+      t.tabIndex = on ? 0 : -1;
+    });
+    $("view-dialogues").hidden = v !== "dialogues";
+    $("view-dictionary").hidden = v !== "dictionary";
+    if (!fromHash && location.hash !== "#" + v) {
+      try { history.replaceState(null, "", "#" + v); } catch (e) { location.hash = v; }
+    }
+  }
+
+  /* ---------- dialogues ---------- */
+  function renderScenes() {
+    $("scene-list").innerHTML = DIALOGUES.map(function (d, i) {
+      return '<button class="scene" type="button" data-scene="' + esc(d.id) + '"' +
+        (d.id === state.scene ? ' aria-current="true"' : "") + ">" +
+        '<span class="num">' + (i + 1) + "</span><b>" + esc(d.title) + "</b>" +
+        "<span>" + esc(d.subtitle || "") + "</span></button>";
+    }).join("");
+  }
+
+  function currentScene() {
+    return DIALOGUES.find(function (d) { return d.id === state.scene; }) || DIALOGUES[0];
+  }
+
+  function renderDialogue() {
+    var d = currentScene();
+    if (!d) return;
+    state.scene = d.id;
+    $("dlg-title").textContent = d.title;
+    $("dlg-sub").textContent = d.subtitle || "";
+    var art = $("dialogue");
+    art.classList.toggle("hide-phon", !state.phon);
+    art.classList.toggle("hide-en", !state.en);
+    $("t-phon").checked = state.phon;
+    $("t-en").checked = state.en;
+    $("turns").innerHTML = d.lines.map(function (l, i) {
+      var her = l.speaker === "her";
+      var lang = her ? "fr" : "ru";
+      return '<li class="turn ' + (her ? "her" : "me") + '" style="animation-delay:' + Math.min(i * 40, 400) + 'ms">' +
+        '<div class="who">' + (her ? "Her · French" : "Me · Russian") + "</div>" +
+        lineHTML(l.text, l.read, lang) +
+        (l.en ? '<p class="en">' + esc(l.en) + "</p>" : "") +
+        (l.note ? '<p class="note">' + esc(l.note) + "</p>" : "") +
+        "</li>";
+    }).join("");
+    var idx = DIALOGUES.indexOf(d);
+    $("prev-scene").disabled = idx <= 0;
+    $("prev-scene").style.visibility = idx <= 0 ? "hidden" : "visible";
+    $("next-scene").style.visibility = idx >= DIALOGUES.length - 1 ? "hidden" : "visible";
+    renderScenes();
+  }
+
+  function goScene(delta) {
+    var idx = DIALOGUES.indexOf(currentScene()) + delta;
+    if (idx < 0 || idx >= DIALOGUES.length) return;
+    state.scene = DIALOGUES[idx].id;
+    P.set("scene", state.scene);
+    renderDialogue();
+    $("dialogue").scrollIntoView({ block: "start", behavior: "smooth" });
+  }
+
+  /* ---------- dictionary data ---------- */
+  function mergedEntries() {
+    var ch = S.all();
+    var out = [];
+    BASE.forEach(function (e) {
+      var c = ch[e.id];
+      if (c && c.deleted) return;
+      if (c) out.push(Object.assign({}, e, c, { builtIn: true, edited: true }));
+      else out.push(Object.assign({}, e, { builtIn: true }));
+    });
+    Object.keys(ch).forEach(function (id) {
+      var c = ch[id];
+      if (!c || c.deleted || BASE_IDS[id]) return;
+      out.push(Object.assign({}, c, { id: id, custom: true }));
+    });
+    return out;
+  }
+
+  function categoryList(entries) {
+    var cats = BASE_CATS.slice();
+    entries.forEach(function (e) {
+      var c = e.category || "Other";
+      if (cats.indexOf(c) === -1) cats.push(c);
+    });
+    return cats;
+  }
+
+  function matches(e, q) {
+    if (!q) return true;
+    return [e.en, e.ru, e.fr, e.ruRead, e.frRead, e.note].some(function (f) { return norm(f).indexOf(q) !== -1; });
+  }
+
+  /* ---------- dictionary rendering ---------- */
+  function renderDictionary() {
+    var all = mergedEntries();
+    var cats = categoryList(all);
+    var q = norm(state.search.trim());
+    var found = all.filter(function (e) { return matches(e, q); });
+    if (state.cat !== "All" && cats.indexOf(state.cat) === -1) state.cat = "All";
+
+    var counts = {};
+    found.forEach(function (e) { var c = e.category || "Other"; counts[c] = (counts[c] || 0) + 1; });
+    $("chips").innerHTML = ["All"].concat(cats).map(function (c) {
+      var n = c === "All" ? found.length : (counts[c] || 0);
+      if (c !== "All" && !n && state.cat !== c) return "";
+      return '<button class="chip" type="button" data-cat="' + esc(c) + '" aria-pressed="' + (state.cat === c) + '">' +
+        esc(c) + '<span class="c">' + n + "</span></button>";
+    }).join("");
+
+    var mine = all.filter(function (e) { return e.custom; }).length;
+    $("dict-count").textContent = all.length + " words and phrases" + (mine ? " · " + mine + " added by you" : "");
+
+    var st = S.status();
+    $("sync-note").textContent = st.mode === "shared"
+      ? (st.writable ? "Shared dictionary — words you add or edit appear for both of you."
+                     : "You can read this shared dictionary. Ask its owner for Contributor access to add words.")
+      : "Words you add are saved in this browser. Use Export to make them permanent in the code.";
+
+    var list = $("dict-list");
+    list.classList.toggle("hide-phon", !state.dictPhon);
+    $("t-phon-dict").checked = state.dictPhon;
+
+    var shown = state.cat === "All" ? found : found.filter(function (e) { return (e.category || "Other") === state.cat; });
+    if (!shown.length) {
+      list.innerHTML = '<div class="empty"><b>No words match “' + esc(state.search.trim() || state.cat) + '”.</b>' +
+        "Try another spelling — or add it yourself.</div>";
+      return;
+    }
+    list.innerHTML = cats.map(function (c) {
+      var items = shown.filter(function (e) { return (e.category || "Other") === c; });
+      if (!items.length) return "";
+      return '<section class="cat-block"><h2 class="cat-title">' + esc(c) + "</h2><ul class=\"entries\">" +
+        items.map(entryHTML).join("") + "</ul></section>";
+    }).join("");
+  }
+
+  function entryHTML(e) {
+    var badge = e.custom ? '<span class="badge">added</span>' : (e.edited ? '<span class="badge">edited</span>' : "");
+    return '<li class="entry">' +
+      '<div class="entry-top"><span class="gloss">' + esc(e.en) + "</span>" + badge +
+        '<button class="icon-btn" type="button" data-edit="' + esc(e.id) + '" aria-label="Edit ' + esc(e.en) + '" title="Edit">' + ICON_EDIT + "</button>" +
+        '<button class="icon-btn" type="button" data-del="' + esc(e.id) + '" aria-label="Delete ' + esc(e.en) + '" title="Delete">' + ICON_TRASH + "</button>" +
+      "</div>" +
+      '<div class="pair">' +
+        '<div class="side ru"><div style="flex:1"><span class="lang-tag">RU</span>' + lineHTML(e.ru, e.ruRead, "ru") + "</div></div>" +
+        '<div class="side fr"><div style="flex:1"><span class="lang-tag">FR</span>' + lineHTML(e.fr, e.frRead, "fr") + "</div></div>" +
+      "</div>" +
+      (e.note ? '<p class="note">' + esc(e.note) + "</p>" : "") +
+      "</li>";
+  }
+
+  /* ---------- modals ---------- */
+  var lastFocus = null;
+  function openModal(id) {
+    lastFocus = document.activeElement;
+    var m = $(id);
+    m.hidden = false;
+    var f = m.querySelector("input:not([type=radio]), textarea, .primary, button");
+    if (f) setTimeout(function () { f.focus(); }, 20);
+  }
+  function closeModal(m) {
+    if (typeof m === "string") m = $(m);
+    m.hidden = true;
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+
+  function findEntry(id) {
+    return mergedEntries().find(function (e) { return e.id === id; });
+  }
+
+  function openWord(entry) {
+    state.editing = entry || null;
+    $("word-title").textContent = entry ? "Edit word" : "Add a word";
+    $("word-save").textContent = entry ? "Save changes" : "Save word";
+    ["en", "category", "ru", "ruRead", "fr", "frRead", "note"].forEach(function (f) {
+      $("f-" + f).value = entry ? (entry[f] || "") : (f === "category" && state.cat !== "All" ? state.cat : "");
+    });
+    $("cat-options").innerHTML = categoryList(mergedEntries()).map(function (c) { return '<option value="' + esc(c) + '">'; }).join("");
+    $("word-delete").hidden = !entry;
+    $("word-restore").hidden = !(entry && entry.builtIn && entry.edited);
+    $("form-error").textContent = "";
+    openModal("m-word");
+  }
+
+  async function saveWord(ev) {
+    ev.preventDefault();
+    var v = {};
+    ["en", "category", "ru", "ruRead", "fr", "frRead", "note"].forEach(function (f) { v[f] = $("f-" + f).value.trim(); });
+    if (!v.en || !v.ru || !v.fr) {
+      $("form-error").textContent = "Please fill in the English meaning, the Russian and the French.";
+      (!v.en ? $("f-en") : !v.ru ? $("f-ru") : $("f-fr")).focus();
+      return;
+    }
+    if (!v.category) v.category = "My words";
+    v.id = state.editing ? state.editing.id : S.newId();
+    try {
+      await S.put(v);
+      closeModal("m-word");
+      toast(state.editing ? "Changes saved" : "Word added");
+      if (!state.editing) { state.search = ""; $("search").value = ""; }
+    } catch (err) {
+      $("form-error").textContent = err && err.message === "read-only"
+        ? "This shared dictionary is read-only for you. Ask its owner for Contributor access."
+        : "Couldn't save. Your browser may be blocking storage.";
+    }
+  }
+
+  var pendingConfirm = null;
+  function askConfirm(title, text, yesLabel, fn) {
+    $("confirm-title").textContent = title;
+    $("confirm-text").textContent = text;
+    $("confirm-yes").textContent = yesLabel;
+    pendingConfirm = fn;
+    openModal("m-confirm");
+  }
+
+  function deleteEntry(id) {
+    var e = findEntry(id);
+    if (!e) return;
+    var prev = S.all()[id] ? Object.assign({}, S.all()[id]) : null;
+    askConfirm("Delete this word?", "“" + e.en + "” — " + e.ru + " / " + e.fr + ". You can undo right after.", "Delete", async function () {
+      try {
+        if (e.builtIn) await S.put({ id: id, deleted: true });
+        else await S.forget(id);
+        toast("Word deleted", "Undo", function () {
+          if (prev) S.put(prev); else S.forget(id);
+        });
+      } catch (err) {
+        toast("Couldn't delete — the dictionary is read-only for you.");
+      }
+    });
+  }
+
+  /* ---------- export ---------- */
+  function fmtEntry(e) {
+    var keys = ["id", "category", "en", "ru", "ruRead", "fr", "frRead", "note"];
+    return "  { " + keys.filter(function (k) { return k !== "note" || e.note; }).map(function (k) {
+      return k + ": " + JSON.stringify(e[k] || "");
+    }).join(", ") + " }";
+  }
+
+  function buildExport() {
+    var mode = document.querySelector('input[name="exp"]:checked').value;
+    var all = mergedEntries();
+    var ch = S.all();
+    var txt, help;
+    if (mode === "all") {
+      txt = "window.TW_DICTIONARY = [\n" + all.map(fmtEntry).join(",\n") + "\n];\n";
+      help = "Replace the whole TW_DICTIONARY list in data/dictionary.js with this. After that, use “Reset my changes” so nothing is counted twice.";
+    } else {
+      var mine = all.filter(function (e) { return e.custom || e.edited; });
+      var hidden = Object.keys(ch).filter(function (id) { return ch[id] && ch[id].deleted; });
+      txt = mine.length ? mine.map(fmtEntry).join(",\n") + "," : "// You haven't added or edited any words yet.";
+      if (hidden.length) txt += "\n\n// Starter words you deleted — remove these ids from the list:\n// " + hidden.join(", ");
+      help = "Paste these lines at the end of the TW_DICTIONARY list in data/dictionary.js (edited words: replace the line with the same id).";
+    }
+    $("export-text").value = txt;
+    $("export-help").textContent = help;
+  }
+
+  async function copyText(text) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch (e) {
+      var ta = $("export-text");
+      ta.focus(); ta.select();
+      try { return document.execCommand("copy"); } catch (e2) { return false; }
+    }
+  }
+
+  /* ---------- events ---------- */
+  function bind() {
+    document.querySelectorAll(".tab").forEach(function (t) {
+      t.addEventListener("click", function () { setView(t.dataset.view); });
+      t.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+          var next = state.view === "dialogues" ? "dictionary" : "dialogues";
+          setView(next);
+          document.querySelector('.tab[data-view="' + next + '"]').focus();
+        }
+      });
+    });
+    window.addEventListener("hashchange", function () { setView(location.hash.slice(1), true); });
+
+    $("scene-list").addEventListener("click", function (e) {
+      var b = e.target.closest("[data-scene]");
+      if (!b) return;
+      state.scene = b.dataset.scene;
+      P.set("scene", state.scene);
+      renderDialogue();
+    });
+    $("prev-scene").addEventListener("click", function () { goScene(-1); });
+    $("next-scene").addEventListener("click", function () { goScene(1); });
+    $("t-phon").addEventListener("change", function () { state.phon = this.checked; P.set("phon", state.phon); renderDialogue(); });
+    $("t-en").addEventListener("change", function () { state.en = this.checked; P.set("en", state.en); renderDialogue(); });
+    $("t-phon-dict").addEventListener("change", function () { state.dictPhon = this.checked; P.set("dictPhon", state.dictPhon); renderDictionary(); });
+
+    document.addEventListener("click", function (e) {
+      var sp = e.target.closest("[data-speak]");
+      if (sp) { SP.speak(sp.dataset.speak, sp.dataset.lang); return; }
+      var pk = e.target.closest("[data-peek]");
+      if (pk && pk.closest(".hide-phon")) { pk.parentElement.parentElement.classList.toggle("revealed"); return; }
+      var ed = e.target.closest("[data-edit]");
+      if (ed) { openWord(findEntry(ed.dataset.edit)); return; }
+      var dl = e.target.closest("[data-del]");
+      if (dl) { deleteEntry(dl.dataset.del); return; }
+      var ch = e.target.closest("[data-cat]");
+      if (ch) { state.cat = ch.dataset.cat; renderDictionary(); return; }
+      if (e.target.closest("[data-close]")) { closeModal(e.target.closest(".modal")); return; }
+      if (e.target.classList && e.target.classList.contains("modal")) closeModal(e.target);
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") {
+        var open = document.querySelector(".modal:not([hidden])");
+        if (open) closeModal(open);
+        return;
+      }
+      var pk = e.target.closest && e.target.closest("[data-peek]");
+      if (pk && (e.key === "Enter" || e.key === " ") && pk.closest(".hide-phon")) {
+        e.preventDefault();
+        pk.parentElement.parentElement.classList.toggle("revealed");
+        return;
+      }
+      var typing = /INPUT|TEXTAREA|SELECT/.test((e.target.tagName || "")) || document.querySelector(".modal:not([hidden])");
+      if (!typing && state.view === "dialogues" && !e.target.closest(".tabs")) {
+        if (e.key === "ArrowRight") goScene(1);
+        if (e.key === "ArrowLeft") goScene(-1);
+      }
+    });
+
+    var searchTimer;
+    $("search").addEventListener("input", function () {
+      var v = this.value;
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(function () { state.search = v; renderDictionary(); }, 80);
+    });
+
+    $("add-word").addEventListener("click", function () { openWord(null); });
+    $("word-form").addEventListener("submit", saveWord);
+    $("word-delete").addEventListener("click", function () {
+      var id = state.editing && state.editing.id;
+      closeModal("m-word");
+      if (id) deleteEntry(id);
+    });
+    $("word-restore").addEventListener("click", async function () {
+      var id = state.editing && state.editing.id;
+      if (!id) return;
+      try { await S.forget(id); closeModal("m-word"); toast("Original restored"); }
+      catch (e) { $("form-error").textContent = "Couldn't restore — the dictionary is read-only for you."; }
+    });
+    $("copy-accent").addEventListener("click", async function () {
+      var ok = false;
+      try { await navigator.clipboard.writeText("́"); ok = true; } catch (e) {}
+      toast(ok ? "Stress mark copied — paste it right after the vowel" : "Couldn't copy. Type ´ after the vowel instead.");
+    });
+
+    $("confirm-yes").addEventListener("click", function () {
+      var fn = pendingConfirm;
+      pendingConfirm = null;
+      closeModal("m-confirm");
+      if (fn) fn();
+    });
+
+    $("export-words").addEventListener("click", function () { buildExport(); openModal("m-export"); });
+    document.querySelectorAll('input[name="exp"]').forEach(function (r) { r.addEventListener("change", buildExport); });
+    $("copy-export").addEventListener("click", async function () {
+      var ok = await copyText($("export-text").value);
+      toast(ok ? "Copied to clipboard" : "Select the text and copy it manually");
+    });
+    $("reset-mine").addEventListener("click", function () {
+      closeModal("m-export");
+      askConfirm("Reset all your changes?", "This removes every word you added, edited or deleted, and brings back the starter dictionary exactly as it is in the code. Export first if you want to keep them.", "Reset", async function () {
+        try { await S.clearAll(); toast("Dictionary reset to the starter words"); }
+        catch (e) { toast("Couldn't reset — the dictionary is read-only for you."); }
+      });
+    });
+
+    $("open-help").addEventListener("click", function () { openModal("m-help"); });
+    $("tip-close").addEventListener("click", function () { $("tip").hidden = true; P.set("tipClosed", true); });
+  }
+
+  /* ---------- start ---------- */
+  function start() {
+    bind();
+    $("tip").hidden = !!P.get("tipClosed", false);
+    setView((location.hash || "#dialogues").slice(1), true);
+    renderDialogue();
+    renderDictionary();
+    S.onChange(renderDictionary);
+    SP.onVoices(function () { renderDialogue(); renderDictionary(); });
+    S.init();
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);
+  else start();
+})();
+
+</script>
+</body>
+</html>
